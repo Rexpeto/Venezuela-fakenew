@@ -9,7 +9,7 @@
 | Runtime | Bun |
 | Package manager | Bun (`bun add`, `bun run`, `bunx`) |
 
-**Rationale:** Bun provides fast installs, native TypeScript execution, and built-in dotenv loading. It is the single runtime across all workspaces — never `npm`, `npx`, or `yarn`. Environment variables are accessed via `Bun.env` (local) and `c.env` (Cloudflare Workers context in production), never `process.env`.
+**Rationale:** Bun provides fast installs and native TypeScript execution. It is the single runtime across all workspaces.
 
 ---
 
@@ -17,10 +17,9 @@
 
 | Layer | Choice |
 |---|---|
-| Language | TypeScript (strict mode throughout) |
-| Module system | Pure ESM — no `require()` or `module.exports` |
+| Language | TypeScript throughout |
 
-**Rationale:** All files are `.ts`. The full strict suite is enabled (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitReturns`, `noFallthroughCasesInSwitch`, `noPropertyAccessFromIndexSignature`). Relative imports always use `.js` extensions (TypeScript resolves them at emit time).
+**Rationale:** All packages and apps are TypeScript. Shared types in `packages/core` are the single source of truth across backend, frontend, and MCP server.
 
 ---
 
@@ -52,9 +51,7 @@ packages/
 | HTTP framework | Hono |
 | Deployment target | Cloudflare Workers (edge runtime) |
 
-**Rationale:** Hono is lightweight, edge-compatible, and has zero Node.js dependencies. It is the only place raw HTTP concerns (middleware, CORS, entry point) live. Business logic is never added as raw Hono route handlers — all procedures go through oRPC.
-
-**Hard constraint:** No Node.js built-ins (`fs`, `path`, `crypto`, `http`). Use Web APIs only (`fetch`, `Request`, `Response`, `crypto.subtle`). Any new dependency must be verified as edge-safe before adding.
+**Rationale:** Hono is lightweight and edge-compatible, making it the right fit for Cloudflare Workers. All business logic goes through oRPC procedures — not raw route handlers.
 
 ---
 
@@ -64,7 +61,7 @@ packages/
 |---|---|
 | RPC | oRPC |
 
-**Rationale:** oRPC provides a type-safe contract between server and client without generating code. Procedures are defined with Zod input/output schemas. The frontend imports the same router type and gets full autocompletion and type safety with zero boilerplate. oRPC is mounted as a Hono route (e.g., `app.use('/rpc', orpcHandler)`).
+**Rationale:** oRPC provides a type-safe contract between server and client without code generation. The frontend consumes the same router type for full type safety with zero boilerplate.
 
 **Procedures (MVP):**
 
@@ -86,9 +83,7 @@ packages/
 | Database | SQLite via Turso (libsql) |
 | Driver | `@libsql/client` |
 
-**Rationale:** Drizzle is SQL-first and generates zero-overhead queries, making it compatible with the Cloudflare Workers edge runtime. Turso provides remote SQLite with replication, configured via `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` environment variables (Cloudflare secrets in production). All DB access goes through Drizzle — no raw SQL strings or direct libsql queries.
-
-**Migrations:** Managed with `drizzle-kit`. Run `bunx drizzle-kit generate` then `bunx drizzle-kit migrate`.
+**Rationale:** Drizzle is SQL-first and edge-compatible with Cloudflare Workers. Turso provides remote SQLite with replication via `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`. Migrations are managed with `drizzle-kit`.
 
 ---
 
@@ -159,7 +154,7 @@ Exposes the same knowledge base as the backend API to AI agents via the Model Co
 |---|---|
 | Schema validation | Zod |
 
-All external trust boundaries (Claude API responses, Tavily results, user input) are validated with Zod schemas. No `as SomeType` casts without prior `.parse()`. oRPC procedure inputs and outputs are defined as Zod schemas living in `packages/core/types/`.
+All user input and external API responses (Claude, Tavily) are validated with Zod schemas. oRPC procedure inputs and outputs are defined as Zod schemas in `packages/core`.
 
 ---
 

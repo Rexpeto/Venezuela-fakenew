@@ -34,21 +34,17 @@
 
 ## Phase 2 — Post-MVP
 
-14. [ ] Verification History — Persistent and Shareable — Extend the `/verificar` page to display a list of recent verifications stored in DB, and add shareable result URLs so users can link directly to a specific verification result. `M`
+15. [ ] Admin Panel — Source and Pattern Management (optional) — Interface for adding/editing knowledge base sources and disinformation patterns without redeploying. `L`
 
-15. [ ] Admin Panel — Source and Pattern Management — Build a password-protected admin interface for adding/editing knowledge base sources and disinformation patterns without redeploying. `L`
+16. [ ] Image and Video Analysis — Extend `verifyClaim` to accept media URLs and analyze images/video thumbnails for manipulation indicators. `XL`
 
-16. [ ] Image and Video Analysis — Extend `verifyClaim` to accept media URLs; use Claude's vision capabilities or a third-party service to analyze images and video thumbnails for manipulation indicators. `XL`
+17. [ ] Multi-language Support — English-language UI and responses, language toggle on the frontend. `L`
 
-17. [ ] Multi-language Support — Add English-language UI and procedure responses, with a language toggle on the frontend and locale-aware prompts in the Claude API calls. `L`
+18. [ ] User Authentication — Optional user accounts so authenticated users can access personal verification history across devices. `L`
 
-18. [ ] User Authentication and Personal History — Add optional user accounts (email/OAuth) so authenticated users can access their personal verification history across devices. `L`
+19. [ ] User-submitted Claim Moderation Queue — Allow users to flag and submit claims for expert review; moderation queue for editors to approve, reject, or annotate before entering the knowledge base. `L`
 
-19. [ ] User-submitted Claim Moderation Queue — Allow users to flag and submit new claims for expert review; build a moderation queue in the admin panel where editors can approve, reject, or annotate submissions before they enter the knowledge base. `L`
-
-20. [ ] Mobile App — Build a React Native or Expo mobile client that exposes the same `verifyClaim` and `chat` functionality via the existing oRPC backend. `XL`
-
-21. [ ] Expanded Source Integrations — Integrate additional Venezuelan and Latin American monitoring organizations (e.g., automated ingestion from Observatorio Venezolano de Fake News RSS feeds, Factchequeado API) to keep the knowledge base current without manual updates. `M`
+20. [ ] Mobile App — Mobile client exposing `verifyClaim` and `chat` via the existing oRPC backend. `XL`
 
 ---
 
