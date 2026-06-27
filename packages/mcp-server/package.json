@@ -1,0 +1,33 @@
+{
+  "name": "@repo/mcp-server",
+  "version": "0.1.0",
+  "description": "Servidor MCP para combatir FakeNews sobre Venezuela.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-venezuela-fakenews": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc -w",
+    "inspect": "npx @modelcontextprotocol/inspector dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "fakenews",
+    "venezuela",
+    "factcheck"
+  ],
+  "author": "Alejandro (basado en investigación con Tavily)",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@repo/core": "workspace:*",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "typescript": "^6.0.3"
+  }
+}

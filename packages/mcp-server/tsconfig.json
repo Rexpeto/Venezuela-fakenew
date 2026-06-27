@@ -12,8 +12,7 @@
     "sourceMap": true,
     "declaration": true,
     "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "types": ["node"]
+    "isolatedModules": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
