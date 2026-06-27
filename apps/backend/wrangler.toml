@@ -1,0 +1,7 @@
+name = "backend"
+main = "src/index.ts"
+compatibility_date = "2026-06-27"
+
+[vars]
+TURSO_DATABASE_URL = ""
+# TURSO_AUTH_TOKEN → set via: wrangler secret put TURSO_AUTH_TOKEN

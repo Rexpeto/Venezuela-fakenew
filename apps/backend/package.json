@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@libsql/client": "0.17.4",
+    "@orpc/server": "1.14.6",
+    "@repo/core": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "hono": "4.12.27",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20260627.1",
+    "drizzle-kit": "0.31.10",
+    "wrangler": "4.105.0"
+  }
+}
