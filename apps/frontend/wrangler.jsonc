@@ -1,12 +1,15 @@
 {
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "frontend-verifica-venezuela",
+  // Entry point que genera el adapter @astrojs/cloudflare en build (SSR).
+  "main": "./dist/_worker.js/index.js",
   "compatibility_date": "2026-06-27",
-  // The Cloudflare SSR runtime needs node: builtins (oRPC client, etc.).
+  // El cliente oRPC y otras libs tiran de node: builtins en el runtime SSR.
   "compatibility_flags": ["nodejs_compat"],
-  // KV namespace backing Astro server sessions (binding auto-added by the adapter).
-  // Create it with: wrangler kv namespace create SESSION
-  // then paste the returned id below.
-  "kv_namespaces": [
-    { "binding": "SESSION", "id": "<ID>" }
-  ]
+  // Estáticos servidos por el binding de assets; SSR cae al worker.
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": { "enabled": true }
 }

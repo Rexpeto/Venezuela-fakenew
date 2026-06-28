@@ -69,14 +69,17 @@ curl -X POST https://<worker>.workers.dev/rpc/verifyClaim \
 
 ---
 
-## 2. Frontend → static host (Cloudflare Pages / etc.)
+## 2. Frontend → Cloudflare Workers (Astro SSR)
 
-From `apps/frontend/`. Build-time env (Astro inlines `PUBLIC_*`):
+From `apps/frontend/`. The `@astrojs/cloudflare` adapter builds an SSR Worker;
+`apps/frontend/wrangler.jsonc` points `main` at `./dist/_worker.js/index.js` and
+serves static files via the `ASSETS` binding. `PUBLIC_*` is inlined at build time.
 
 ```bash
 PUBLIC_MOCK_API=false \
-PUBLIC_API_URL=https://<worker>.workers.dev \
+PUBLIC_API_URL=https://<backend-worker>.workers.dev \
 bun run build
+wrangler deploy   # manual; en CI lo hace Workers Builds (ver §4)
 ```
 
 | Var | Effect |
@@ -97,3 +100,70 @@ Leave `PUBLIC_MOCK_API` unset (or not `false`) to run the UI fully on mock data.
 - [ ] Backend deployed; `/health` ok
 - [ ] Frontend built with `PUBLIC_MOCK_API=false` + `PUBLIC_API_URL`
 - [ ] `/verificar`, `/asistente`, `/patrones` work end-to-end against the live API
+
+---
+
+## 4. CI/CD — Cloudflare Workers Builds
+
+El deploy lo maneja **Cloudflare Workers Builds**: Cloudflare se conecta al repo
+vía su GitHub App y buildea/despliega desde su lado. **No hay tokens ni secrets de
+Cloudflare en GitHub.**
+
+- Solo **`main`** despliega (a producción). Los builds de ramas no productivas
+  quedan **deshabilitados** — no hay preview remoto.
+- Para previsualizar cambios, cada quien lo corre **local** (ver §5).
+
+### 4.1 Conectar cada worker (dashboard, una vez)
+
+Son dos workers, así que se conecta el repo a cada uno. En Cloudflare →
+**Workers & Pages → [worker] → Settings → Build → Connect** repo
+`Rexpeto/Venezuela-fakenew`:
+
+**Backend** (`backend`)
+- Root directory: `apps/backend`
+- Build command: `cd ../.. && bun install && bun run --filter '@repo/core' build`
+- Deploy command: `bunx wrangler deploy`
+- Production branch: `main` · **Non-production branch builds: deshabilitado**
+- Build watch paths (include): `apps/backend/*`, `packages/core/*`
+
+**Frontend** (`frontend-verifica-venezuela`)
+- Root directory: `apps/frontend`
+- Build command: `cd ../.. && bun install && bun run --filter '@repo/core' build && cd apps/frontend && bun run build`
+- Build environment variables: `PUBLIC_MOCK_API=false`, `PUBLIC_API_URL=https://backend.verificavenezuela.workers.dev`
+- Deploy command: `bunx wrangler deploy`
+- Production branch: `main` · **Non-production branch builds: deshabilitado**
+- Build watch paths (include): `apps/frontend/*`, `packages/core/*`
+
+> `bun install` corre desde la raíz del repo (workspace) y construye `@repo/core`
+> antes — sin eso los imports de `@repo/core` no resuelven. Workers Builds usa
+> `bun` automáticamente al detectar `bun.lock`.
+
+### 4.2 Secrets del backend (dashboard, una vez)
+
+No van en GitHub. Se setean en el worker (Settings → Variables and Secrets) o con
+`wrangler secret put` desde tu máquina: `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`,
+`LLM_API_KEY`, `TAVILY_API_KEY`, `LLM_MODEL`, `CORS_ORIGIN`. Y `db:push` contra la
+Turso de prod (§1.2). El frontend no tiene secrets propios.
+
+---
+
+## 5. Preview local
+
+No hay preview remoto. Para ver cambios antes de mergear, cada quien corre el
+proyecto localmente:
+
+```bash
+bun install
+bun run --filter '@repo/core' build     # una vez (o tras cambiar core)
+
+# Backend (Worker) → http://localhost:8787
+#   copia apps/backend/.dev.vars.example → .dev.vars y completa TURSO_*, LLM_API_KEY, TAVILY_API_KEY
+bun run dev:backend
+
+# Frontend (Astro) → http://localhost:4321
+#   copia apps/frontend/.env.example → .env (ya trae PUBLIC_API_URL=http://localhost:8787)
+bun run dev:frontend
+```
+
+Sin `TURSO_*` el backend no levanta; sin las keys de LLM/Tavily, verificar y chat no
+responden, pero el resto de la UI funciona con el backend local.
