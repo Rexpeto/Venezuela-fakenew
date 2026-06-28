@@ -10,6 +10,8 @@
     "@astrojs/cloudflare": "14.0.1",
     "@orpc/client": "1.14.6",
     "@repo/core": "workspace:*",
-    "astro": "7.0.3"
+    "@tailwindcss/vite": "^4.3.1",
+    "astro": "7.0.3",
+    "tailwindcss": "^4.3.1"
   }
 }

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VERIFY.VE - Verification Lab</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@700;800&amp;family=Source+Sans+3:wght@400;600&amp;family=IBM+Plex+Sans:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#191c1e",
+                      "on-surface": "#191c1e",
+                      "on-primary-fixed-variant": "#264191",
+                      "surface": "#f7f9fb",
+                      "surface-container-high": "#e6e8ea",
+                      "surface-container": "#eceef0",
+                      "on-error-container": "#93000a",
+                      "outline-variant": "#c5c5d3",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed-dim": "#adc6ff",
+                      "tertiary-fixed-dim": "#b7c8e1",
+                      "primary": "#00236f",
+                      "secondary-container": "#2170e4",
+                      "on-tertiary-fixed-variant": "#38485d",
+                      "on-primary": "#ffffff",
+                      "secondary": "#0058be",
+                      "outline": "#757682",
+                      "on-surface-variant": "#444651",
+                      "surface-variant": "#e0e3e5",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-primary-container": "#90a8ff",
+                      "tertiary-fixed": "#d3e4fe",
+                      "surface-container-highest": "#e0e3e5",
+                      "on-tertiary-fixed": "#0b1c30",
+                      "background": "#f7f9fb",
+                      "surface-bright": "#f7f9fb",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-container": "#1e3a8a",
+                      "on-error": "#ffffff",
+                      "on-secondary-container": "#fefcff",
+                      "on-primary-fixed": "#00164e",
+                      "surface-tint": "#4059aa",
+                      "surface-container-low": "#f2f4f6",
+                      "tertiary-container": "#314156",
+                      "on-tertiary-container": "#9dadc6",
+                      "inverse-primary": "#b6c4ff",
+                      "primary-fixed-dim": "#b6c4ff",
+                      "tertiary": "#1b2b3f",
+                      "error": "#ba1a1a",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#2d3133",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed": "#dce1ff",
+                      "surface-dim": "#d8dadc",
+                      "on-secondary-fixed": "#001a42",
+                      "secondary-fixed": "#d8e2ff",
+                      "on-secondary-fixed-variant": "#004395"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "md": "16px",
+                      "xl": "40px",
+                      "base": "4px",
+                      "xs": "4px",
+                      "gutter": "24px",
+                      "container-max": "1120px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Chivo"],
+                      "display-lg-mobile": ["Chivo"],
+                      "display-lg": ["Chivo"],
+                      "body-sm": ["\"Source Sans 3\""],
+                      "headline-sm": ["Chivo"],
+                      "body-lg": ["\"Source Sans 3\""],
+                      "label-caps": ["IBM Plex Sans"],
+                      "body-md": ["\"Source Sans 3\""]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .markdown-content p {
+            margin-bottom: 1rem;
+        }
+        .markdown-content strong {
+            font-weight: 700;
+            color: var(--tw-text-on-background);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-dim border-b border-outline-variant">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" style="font-size: 32px;">verified_user</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight">VERIFY.VE</span>
+</div>
+<div class="hidden md:flex gap-lg items-center">
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary hover:text-secondary transition-colors" href="#">Dashboard</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Fact Checks</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Archive</a>
+</div>
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed active:opacity-80 transition-opacity" style="font-size: 28px;">account_circle</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center py-xl px-md">
+<div class="w-full max-w-[720px] flex flex-col gap-xl">
+<!-- InputFormCard Block -->
+<section class="bg-surface-container-lowest border border-outline-variant p-lg rounded-lg">
+<div class="flex flex-col gap-md">
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Afirmación / Claim a verificar</label>
+<textarea class="w-full bg-surface border border-outline focus:border-secondary-container focus:ring-0 rounded p-sm font-body-md text-on-surface transition-all resize-none" placeholder="Pega el texto, tweet o cadena de WhatsApp aquí..." rows="4"></textarea>
+</div>
+<!-- Accordion (Collapsed State) -->
+<div class="group border-b border-outline-variant pb-base">
+<button class="w-full flex justify-between items-center py-base text-left transition-all" onclick="document.getElementById('accordion-content').classList.toggle('hidden')">
+<span class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+                                Añadir contexto o fuente de origen (opcional)
+                            </span>
+<span class="material-symbols-outlined text-on-surface-variant group-active:rotate-180 transition-transform">expand_more</span>
+</button>
+<div class="hidden mt-sm pb-sm" id="accordion-content">
+<input class="w-full bg-surface-container-low border border-outline-variant rounded p-sm font-body-sm" placeholder="URL o nombre de la fuente..." type="text"/>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-caps text-label-caps px-lg py-md rounded transition-colors active:scale-95 duration-150 flex items-center gap-sm">
+                            VERIFICAR CLAIM
+                            <span class="material-symbols-outlined text-[18px]">search</span>
+</button>
+</div>
+</div>
+</section>
+<!-- VerificationResult Block (Active - FALSO State) -->
+<section class="flex flex-col border border-outline-variant bg-surface-container-lowest rounded-lg overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+<!-- VerdictHeaderBanner -->
+<div class="border-t-[6px] border-error p-lg bg-error-container/10 flex justify-between items-center">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-error" style="font-size: 32px; font-variation-settings: 'FILL' 1;">warning</span>
+<h2 class="font-headline-md text-headline-md text-error tracking-widest uppercase">FALSO</h2>
+</div>
+<div class="bg-surface-container-high px-sm py-xs rounded flex items-center gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant">CONFIANZA:</span>
+<span class="font-label-caps text-label-caps text-primary">ALTA</span>
+</div>
+</div>
+<!-- ExplanationBody -->
+<div class="p-lg border-t border-outline-variant markdown-content">
+<div class="font-body-lg text-body-lg text-on-surface leading-[1.6]">
+<p>La información difundida sobre la supuesta declaración oficial de emergencia alimentaria nacional es <strong>totalmente falsa</strong>. Tras una exhaustiva verificación con el Ministerio de Alimentación y organismos internacionales vinculados a las Naciones Unidas, se confirma que no existe tal decreto.</p>
+<p>Nuestro equipo técnico analizó el rastro digital de la cadena de WhatsApp compartida y determinó que se trata de una campaña coordinada de desinformación:</p>
+<ul class="list-disc pl-lg space-y-sm text-on-surface-variant font-body-md mt-sm">
+<li>El documento digital mostrado en la imagen carece de firma electrónica válida y sello de la Gaceta Oficial.</li>
+<li>La tipografía utilizada no corresponde a los manuales de identidad visual institucional.</li>
+<li>Las cuentas oficiales no han emitido alertas similares en las últimas 72 horas.</li>
+</ul>
+</div>
+</div>
+<!-- MetadataRows -->
+<div class="p-lg bg-surface-container-low flex flex-col gap-lg border-t border-outline-variant">
+<!-- CompactPatternCard -->
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Patrón Detectado</h4>
+<div class="bg-surface-container-lowest border border-outline-variant p-md flex items-center gap-md rounded group hover:border-secondary transition-colors cursor-default">
+<div class="bg-error/10 p-sm rounded">
+<span class="material-symbols-outlined text-error">hub</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-primary">SUPUESTA RÉPLICA MASIVA</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Mensaje idéntico detectado en más de 45 grupos públicos.</span>
+</div>
+</div>
+</div>
+<!-- Sources List -->
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Fuentes y Evidencias</h4>
+<div class="flex flex-col gap-base">
+<!-- SourceRowLink 1 -->
+<a class="flex items-center justify-between p-sm hover:bg-surface-container-high transition-colors rounded" href="#">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">description</span>
+<span class="font-body-md text-body-md text-on-surface">Consulta de Gacetas Oficiales (Portal Digital)</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">open_in_new</span>
+</a>
+<!-- SourceRowLink 2 -->
+<a class="flex items-center justify-between p-sm hover:bg-surface-container-high transition-colors rounded" href="#">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">public</span>
+<span class="font-body-md text-body-md text-on-surface">Comunicado FAO - Venezuela Region</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">open_in_new</span>
+</a>
+<!-- SourceRowLink 3 -->
+<a class="flex items-center justify-between p-sm hover:bg-surface-container-high transition-colors rounded" href="#">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">fact_check</span>
+<span class="font-body-md text-body-md text-on-surface">Archivo de Verificaciones VERIFY.VE</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- NavigationDrawer (Hidden on mobile per prompt logic, using TOP bar) -->
+<aside class="hidden lg:flex fixed left-0 top-16 bottom-0 w-64 bg-surface dark:bg-surface-dim border-r border-outline-variant flex-col p-md gap-base">
+<h3 class="font-headline-sm text-headline-sm text-primary p-sm">Verification Lab</h3>
+<nav class="flex flex-col gap-base">
+<a class="flex items-center gap-md p-sm bg-secondary-container text-on-secondary-container font-bold rounded-full scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-caps text-label-caps">Fact Checks</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-caps text-label-caps">Methodology</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-caps text-label-caps">Archive</span>
+</a>
+</nav>
+</aside>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface border-t border-outline-variant w-full mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-center px-gutter py-xl max-w-container-max mx-auto gap-md text-center md:text-left">
+<div class="flex flex-col gap-sm">
+<span class="font-label-caps text-label-caps text-primary">VERIFY.VE</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-[400px]">
+                    © 2024 FactCheck Venezuela. All rights reserved. Precise verification for a resilient public sphere.
+                </p>
+</div>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Reporting Guidelines</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</body></html>
