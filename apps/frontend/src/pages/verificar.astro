@@ -102,26 +102,36 @@ export const prerender = true
         </form>
       </section>
 
-      <!-- Resultado de ejemplo (oculto hasta verificar) -->
+      <!-- Estado de error (oculto por defecto) -->
+      <section
+        id="verify-error"
+        class="hidden border border-error bg-error-container/10 rounded-lg p-lg"
+        role="alert"
+      >
+        <p id="verify-error-msg" class="font-body-md text-body-md text-error"></p>
+      </section>
+
+      <!-- Resultado (oculto hasta verificar) -->
       <section
         id="verify-result"
         class="hidden flex-col border border-outline-variant bg-surface-container-lowest rounded-lg overflow-hidden"
       >
         <!-- Banner de veredicto -->
         <div
-          class="border-t-[6px] border-error p-lg bg-error-container/10 flex justify-between items-center"
+          id="result-banner"
+          class="border-t-[6px] p-lg flex justify-between items-center"
         >
           <div class="flex items-center gap-md">
             <span
-              class="material-symbols-outlined text-error"
+              id="result-icon"
+              class="material-symbols-outlined"
               style="font-size: 32px; font-variation-settings: 'FILL' 1;"
-              aria-hidden="true">warning</span
+              aria-hidden="true"></span
             >
             <h2
-              class="font-headline-md text-headline-md text-error tracking-widest uppercase"
-            >
-              FALSO
-            </h2>
+              id="result-verdict"
+              class="font-headline-md text-headline-md tracking-widest uppercase"
+            ></h2>
           </div>
           <div
             class="bg-surface-container-high px-sm py-xs rounded flex items-center gap-xs"
@@ -129,56 +139,32 @@ export const prerender = true
             <span class="font-label-caps text-[10px] text-on-surface-variant"
               >CONFIANZA:</span
             >
-            <span class="font-label-caps text-label-caps text-primary">ALTA</span>
+            <span
+              id="result-confidence"
+              class="font-label-caps text-label-caps text-primary"
+            ></span>
           </div>
         </div>
 
         <!-- Explicación -->
         <div class="p-lg border-t border-outline-variant">
-          <div class="font-body-lg text-body-lg text-on-surface leading-[1.6] space-y-md">
-            <p>
-              <strong>Ejemplo demostrativo.</strong> Este es el formato del
-              resultado que devolverá la herramienta una vez conectada al backend.
-              La información mostrada no corresponde a una verificación real.
-            </p>
-            <ul
-              class="list-disc pl-lg space-y-sm text-on-surface-variant font-body-md"
-            >
-              <li>El documento digital carece de firma electrónica válida y sello oficial.</li>
-              <li>La tipografía no corresponde a los manuales de identidad institucional.</li>
-              <li>Las cuentas oficiales no han emitido alertas similares en 72 horas.</li>
-            </ul>
-          </div>
+          <p
+            id="result-explanation"
+            class="font-body-lg text-body-lg text-on-surface leading-[1.6] whitespace-pre-line"
+          ></p>
         </div>
 
-        <!-- Metadatos: patrón y fuentes -->
+        <!-- Metadatos: patrones y fuentes -->
         <div
           class="p-lg bg-surface-container-low flex flex-col gap-lg border-t border-outline-variant"
         >
-          <div class="flex flex-col gap-sm">
+          <div id="result-patterns-wrap" class="hidden flex-col gap-sm">
             <h3
               class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider"
             >
-              Patrón detectado
+              Patrones detectados
             </h3>
-            <a
-              href="/patrones"
-              class="bg-surface-container-lowest border border-outline-variant p-md flex items-center gap-md rounded hover:border-secondary transition-colors"
-            >
-              <div class="bg-error/10 p-sm rounded">
-                <span class="material-symbols-outlined text-error" aria-hidden="true"
-                  >hub</span
-                >
-              </div>
-              <div class="flex flex-col">
-                <span class="font-label-caps text-label-caps text-primary"
-                  >SUPUESTA RÉPLICA MASIVA</span
-                >
-                <span class="font-body-sm text-body-sm text-on-surface-variant"
-                  >Mensaje idéntico detectado en más de 45 grupos públicos.</span
-                >
-              </div>
-            </a>
+            <div id="result-patterns" class="flex flex-col gap-sm"></div>
           </div>
 
           <div class="flex flex-col gap-sm">
@@ -187,9 +173,12 @@ export const prerender = true
             >
               Fuentes y evidencias
             </h3>
-            <p class="font-body-sm text-body-sm text-on-surface-variant">
-              Las fuentes verificadas aparecerán aquí cuando la consulta se
-              procese en el backend.
+            <ul id="result-sources" class="flex flex-col gap-xs"></ul>
+            <p
+              id="result-sources-empty"
+              class="hidden font-body-sm text-body-sm text-on-surface-variant"
+            >
+              No se encontraron fuentes para esta consulta.
             </p>
           </div>
         </div>
@@ -201,6 +190,8 @@ export const prerender = true
 </Layout>
 
 <script>
+  import { api } from '../lib/api'
+
   // Acordeón de contexto opcional
   const ctxToggle = document.getElementById('context-toggle')
   const ctxContent = document.getElementById('context-content')
@@ -209,18 +200,168 @@ export const prerender = true
     ctxToggle.setAttribute('aria-expanded', String(open))
   })
 
-  // Envío del formulario.
-  // TODO: conectar con el backend ->
-  //   import { orpc } from '../lib/orpc'
-  //   const result = await orpc.verify({ claim, source })
-  // Por ahora se revela un resultado de ejemplo para validar el flujo de la UI.
+  // Estilos por veredicto. Clases literales para que Tailwind las genere.
+  const VERDICT_CONFIG = {
+    verdadero: {
+      banner: 'border-secondary bg-secondary-container/10',
+      text: 'text-secondary',
+      icon: 'check_circle',
+      label: 'VERDADERO',
+    },
+    falso: {
+      banner: 'border-error bg-error-container/10',
+      text: 'text-error',
+      icon: 'cancel',
+      label: 'FALSO',
+    },
+    dudoso: {
+      banner: 'border-tertiary bg-tertiary-container/10',
+      text: 'text-tertiary',
+      icon: 'help',
+      label: 'DUDOSO',
+    },
+  } as const
+
+  type Verdict = keyof typeof VERDICT_CONFIG
+
+  function confidenceLabel(c: number): string {
+    const pct = Math.round(c * 100)
+    const tier = c >= 0.7 ? 'ALTA' : c >= 0.4 ? 'MEDIA' : 'BAJA'
+    return `${tier} · ${pct}%`
+  }
+
+  const $ = (id: string) => document.getElementById(id)
+
   const form = document.getElementById('verify-form') as HTMLFormElement | null
-  const result = document.getElementById('verify-result')
-  form?.addEventListener('submit', (e) => {
+  const result = $('verify-result')
+  const errorBox = $('verify-error')
+  const errorMsg = $('verify-error-msg')
+  const submitBtn = form?.querySelector(
+    'button[type="submit"]',
+  ) as HTMLButtonElement | null
+  const submitHtml = submitBtn?.innerHTML ?? ''
+
+  function setLoading(loading: boolean) {
+    if (!submitBtn) return
+    submitBtn.disabled = loading
+    submitBtn.innerHTML = loading
+      ? 'VERIFICANDO<span class="material-symbols-outlined text-[18px] animate-spin" aria-hidden="true">progress_activity</span>'
+      : submitHtml
+  }
+
+  function renderResult(res: {
+    verdict: string
+    confidence: number
+    explanation: string
+    patterns: string[]
+    sources: string[]
+  }) {
+    const cfg = VERDICT_CONFIG[res.verdict as Verdict] ?? VERDICT_CONFIG.dudoso
+
+    const banner = $('result-banner')
+    if (banner) banner.className = `border-t-[6px] p-lg flex justify-between items-center ${cfg.banner}`
+
+    const icon = $('result-icon')
+    if (icon) {
+      icon.className = `material-symbols-outlined ${cfg.text}`
+      icon.textContent = cfg.icon
+    }
+
+    const verdict = $('result-verdict')
+    if (verdict) {
+      verdict.className = `font-headline-md text-headline-md tracking-widest uppercase ${cfg.text}`
+      verdict.textContent = cfg.label
+    }
+
+    const conf = $('result-confidence')
+    if (conf) conf.textContent = confidenceLabel(res.confidence)
+
+    const explanation = $('result-explanation')
+    if (explanation) explanation.textContent = res.explanation
+
+    // Patrones detectados
+    const patternsWrap = $('result-patterns-wrap')
+    const patterns = $('result-patterns')
+    if (patterns && patternsWrap) {
+      patterns.innerHTML = ''
+      if (res.patterns.length > 0) {
+        patternsWrap.classList.remove('hidden')
+        patternsWrap.classList.add('flex')
+        for (const p of res.patterns) {
+          const row = document.createElement('div')
+          row.className =
+            'bg-surface-container-lowest border border-outline-variant p-md flex items-center gap-md rounded'
+          row.innerHTML = `<span class="material-symbols-outlined ${cfg.text}" aria-hidden="true">hub</span><span class="font-label-caps text-label-caps text-on-surface"></span>`
+          row.querySelector('span:last-child')!.textContent = p
+          patterns.appendChild(row)
+        }
+      } else {
+        patternsWrap.classList.add('hidden')
+        patternsWrap.classList.remove('flex')
+      }
+    }
+
+    // Fuentes
+    const sources = $('result-sources') as HTMLUListElement | null
+    const sourcesEmpty = $('result-sources-empty')
+    if (sources && sourcesEmpty) {
+      sources.innerHTML = ''
+      if (res.sources.length > 0) {
+        sourcesEmpty.classList.add('hidden')
+        for (const url of res.sources) {
+          let host = url
+          try {
+            host = new URL(url).hostname.replace(/^www\./, '')
+          } catch {}
+          const li = document.createElement('li')
+          const a = document.createElement('a')
+          a.href = url
+          a.target = '_blank'
+          a.rel = 'noopener noreferrer'
+          a.className =
+            'font-body-sm text-body-sm text-secondary hover:underline break-all flex items-center gap-xs'
+          a.innerHTML = `<span class="material-symbols-outlined text-[16px]" aria-hidden="true">open_in_new</span>`
+          a.append(host)
+          li.appendChild(a)
+          sources.appendChild(li)
+        }
+      } else {
+        sourcesEmpty.classList.remove('hidden')
+      }
+    }
+
+    result?.classList.remove('hidden')
+    result?.classList.add('flex')
+    result?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault()
-    if (!result) return
-    result.classList.remove('hidden')
-    result.classList.add('flex')
-    result.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (!form) return
+    const data = new FormData(form)
+    const claim = String(data.get('claim') ?? '').trim()
+    const source = String(data.get('source') ?? '').trim()
+    if (!claim) return
+
+    errorBox?.classList.add('hidden')
+    result?.classList.add('hidden')
+    setLoading(true)
+
+    try {
+      const res = await api.verifyClaim({
+        claim,
+        context: source || undefined,
+      })
+      renderResult(res)
+    } catch (err) {
+      console.error('verifyClaim failed', err)
+      if (errorMsg)
+        errorMsg.textContent =
+          'No se pudo completar la verificación. Intenta de nuevo en unos segundos.'
+      errorBox?.classList.remove('hidden')
+      errorBox?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    } finally {
+      setLoading(false)
+    }
   })
 </script>
