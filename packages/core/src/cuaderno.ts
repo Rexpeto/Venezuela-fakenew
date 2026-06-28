@@ -2,8 +2,11 @@
 // Conocimiento base del Cuaderno de FakeNews Venezuela
 // ============================================================
 
-export const PATTERNS = [
+import type { Pattern } from "./types.js";
+
+export const PATTERNS: Pattern[] = [
   {
+    id: "p-1",
     name: "Videos e imágenes descontextualizados",
     description:
       "Material viejo o de otros países presentado como actual (tsunami Japón 2011, sismos de Filipinas o Lara 2025).",
@@ -12,8 +15,10 @@ export const PATTERNS = [
       "Puente Yacural colapsado (mayo 2026 usado como junio)",
     ],
     detection: "Buscar fecha original del video/imagen y fuente geográfica.",
+    severity: "alta",
   },
   {
+    id: "p-2",
     name: "Contenido generado con IA",
     description:
       "Imágenes de edificios derrumbados o eventos falsos detectables con SynthID u otras herramientas.",
@@ -22,15 +27,19 @@ export const PATTERNS = [
     ],
     detection:
       "Usar herramientas de detección de IA y verificar con fuentes oficiales (USGS, Protección Civil).",
+    severity: "alta",
   },
   {
+    id: "p-3",
     name: "Usurpación de grupos de WhatsApp y canales periodísticos",
     description:
       "Clonación de grupos de medios reales para difundir desinformación.",
     examples: ["Grupos de El Diario, Venevisión suplantados"],
     detection: "Verificar administrador y origen del mensaje.",
+    severity: "media",
   },
   {
+    id: "p-4",
     name: "Falsos anuncios oficiales",
     description:
       "Alertas de tsunami, apagones nacionales o comunicados falsos de Corpoelec.",
@@ -40,8 +49,10 @@ export const PATTERNS = [
     ],
     detection:
       "Confirmar siempre en cuentas oficiales y sitios .gob.ve o USGS.",
+    severity: "alta",
   },
   {
+    id: "p-5",
     name: "Operaciones de influencia en YouTube",
     description:
       "Canales narrativos con actores que presentan propaganda como noticias (14 canales falsos, +47M vistas).",
@@ -50,8 +61,10 @@ export const PATTERNS = [
     ],
     detection:
       "Revisar historial del canal y si usa narradores pagados (FG Medios SA).",
+    severity: "media",
   },
   {
+    id: "p-6",
     name: "Desinformación salarial y de Delcy Rodríguez",
     description:
       "13 contenidos falsos en 18 días: muerte, aumentos de $800-1000 (cuando salario real ~$7).",
@@ -59,5 +72,6 @@ export const PATTERNS = [
       "Aumento salarial ficticio de $800-$1000/mes para Delcy Rodríguez",
     ],
     detection: "Cruzar con Ecoanalítica, BCV y fuentes independientes.",
+    severity: "media",
   },
 ];

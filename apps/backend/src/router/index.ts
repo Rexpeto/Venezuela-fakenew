@@ -3,7 +3,7 @@ import { generateObject, generateText } from 'ai'
 import type { ModelMessage } from 'ai'
 import { asc, desc, eq, sql } from 'drizzle-orm'
 import { z } from 'zod'
-import { KEY_FACTS, PATTERNS, detectPatterns } from '@repo/core'
+import { KEY_FACT_CHECKS, PATTERNS, RECENT_PATTERN_PREVIEWS, detectPatterns } from '@repo/core'
 import { createDb } from '../db/client'
 import { claims, chatMessages, chatSessions, sources, verifications } from '../db/schema'
 import type { Bindings } from '../types'
@@ -85,7 +85,9 @@ Devuelve un veredicto con: verdict (verdadero/falso/dudoso), confidence (0-1), e
 
   getAllPatterns: pub.handler(async () => PATTERNS),
 
-  getKeyFacts: pub.handler(async () => KEY_FACTS),
+  getKeyFacts: pub.handler(async () => KEY_FACT_CHECKS),
+
+  getRecentPatternPreviews: pub.handler(async () => RECENT_PATTERN_PREVIEWS),
 
   getRecentVerifications: pub
     .input(z.object({
