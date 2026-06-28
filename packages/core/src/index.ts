@@ -75,6 +75,7 @@ export { KEY_FACTS, KEY_FACT_CHECKS } from "./keyfacts.js";
 export { RECENT_PATTERN_PREVIEWS } from "./recent.js";
 export type {
   Pattern,
+  PatternIndicator,
   KeyFact,
   RecentPatternPreview,
   Severity,
