@@ -20,7 +20,10 @@ app.use('*', (c, next) => {
 app.use('/rpc/*', async (c, next) => {
   const { matched, response } = await handler.handle(c.req.raw, {
     prefix: '/rpc',
-    context: { env: c.env },
+    context: {
+      env: c.env,
+      ip: c.req.header('CF-Connecting-IP') ?? c.req.header('x-forwarded-for') ?? null,
+    },
   })
   if (matched) return c.newResponse(response.body, response)
   await next()

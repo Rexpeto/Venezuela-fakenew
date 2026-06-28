@@ -1,18 +1,18 @@
 import { os, ORPCError } from '@orpc/server'
 import { generateObject, generateText } from 'ai'
 import type { ModelMessage } from 'ai'
-import { asc, eq } from 'drizzle-orm'
+import { asc, desc, eq, sql } from 'drizzle-orm'
 import { z } from 'zod'
-import { KEY_FACTS, PATTERNS } from '@repo/core'
+import { KEY_FACTS, PATTERNS, detectPatterns } from '@repo/core'
 import { createDb } from '../db/client'
-import { claims, chatMessages, chatSessions, verifications } from '../db/schema'
+import { claims, chatMessages, chatSessions, sources, verifications } from '../db/schema'
 import type { Bindings } from '../types'
 import { createLLM } from '../lib/llm'
 import { CHAT_SYSTEM, VERIFY_CLAIM_SYSTEM } from '../lib/prompts'
 import { VerdictSchema } from '../lib/schemas'
 import { searchTavily } from '../lib/tavily'
 
-type Context = { env: Bindings }
+type Context = { env: Bindings; ip?: string | null }
 const pub = os.$context<Context>()
 
 // Cap chat history sent to the LLM to bound token cost
@@ -54,6 +54,10 @@ Devuelve un veredicto con: verdict (verdadero/falso/dudoso), confidence (0-1), e
       // Use real Tavily URLs — never LLM-generated ones which may be hallucinated
       const sourceUrls = tavilyResults.map(r => r.url)
 
+      // Merge LLM-detected patterns with deterministic core keyword matcher
+      const corePatterns = detectPatterns(input.claim)
+      const allPatterns = [...new Set([...object.patterns, ...corePatterns])]
+
       const claimId = crypto.randomUUID()
       const now = new Date()
 
@@ -61,6 +65,7 @@ Devuelve un veredicto con: verdict (verdadero/falso/dudoso), confidence (0-1), e
         id: claimId,
         claimText: input.claim,
         context: input.context ?? null,
+        userIp: ctx.ip ?? null,
         createdAt: now,
       })
 
@@ -70,17 +75,41 @@ Devuelve un veredicto con: verdict (verdadero/falso/dudoso), confidence (0-1), e
         verdict: object.verdict,
         confidence: object.confidence,
         explanation: object.explanation,
-        patternsDetected: object.patterns,
+        patternsDetected: allPatterns,
         sources: sourceUrls,
         createdAt: now,
       })
 
-      return { ...object, sources: sourceUrls }
+      return { ...object, patterns: allPatterns, sources: sourceUrls }
     }),
 
   getAllPatterns: pub.handler(async () => PATTERNS),
 
   getKeyFacts: pub.handler(async () => KEY_FACTS),
+
+  getRecentVerifications: pub
+    .input(z.object({
+      limit: z.number().int().min(1).max(50).optional(),
+    }).optional())
+    .handler(async ({ input, context: ctx }) => {
+      const db = createDb(ctx.env)
+      return db
+        .select({
+          id: verifications.id,
+          claimId: verifications.claimId,
+          claimText: claims.claimText,
+          verdict: verifications.verdict,
+          confidence: verifications.confidence,
+          explanation: verifications.explanation,
+          patternsDetected: verifications.patternsDetected,
+          sources: verifications.sources,
+          createdAt: verifications.createdAt,
+        })
+        .from(verifications)
+        .innerJoin(claims, eq(claims.id, verifications.claimId))
+        .orderBy(desc(verifications.createdAt))
+        .limit(input?.limit ?? 10)
+    }),
 
   searchSources: pub
     .input(z.object({
@@ -89,15 +118,33 @@ Devuelve un veredicto con: verdict (verdadero/falso/dudoso), confidence (0-1), e
     }))
     .handler(async ({ input, context: ctx }) => {
       const results = await searchTavily(ctx.env.TAVILY_API_KEY, input.topic, input.limit ?? 5)
-      return results.map(r => ({
+      const now = new Date()
+      const mapped = results.map(r => ({
         // URL is the natural stable identifier for a search result
         id: r.url,
         url: r.url,
         title: r.title,
         topic: input.topic,
         verified: false as const,
-        lastChecked: new Date(),
+        lastChecked: now,
       }))
+
+      if (mapped.length > 0) {
+        const db = createDb(ctx.env)
+        await db
+          .insert(sources)
+          .values(mapped)
+          .onConflictDoUpdate({
+            target: sources.id,
+            set: {
+              lastChecked: sql`excluded.last_checked`,
+              title: sql`excluded.title`,
+              topic: sql`excluded.topic`,
+            },
+          })
+      }
+
+      return mapped
     }),
 
   chat: pub
