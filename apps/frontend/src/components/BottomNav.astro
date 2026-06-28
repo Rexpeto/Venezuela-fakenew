@@ -1,0 +1,49 @@
+---
+interface NavItem {
+  label: string
+  icon: string
+  href: string
+}
+
+interface Props {
+  /** Etiqueta del item activo. */
+  active?: string
+}
+
+const { active } = Astro.props
+
+const items: NavItem[] = [
+  { label: 'Home', icon: 'home', href: '/' },
+  { label: 'Patterns', icon: 'query_stats', href: '/patrones' },
+  { label: 'Cases', icon: 'history_edu', href: '#' },
+  { label: 'About', icon: 'info', href: '#' },
+]
+---
+
+<nav
+  class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface border-t border-outline-variant"
+  aria-label="Navegación inferior"
+>
+  {
+    items.map((item) =>
+      item.label === active ? (
+        <a
+          href={item.href}
+          aria-current="page"
+          class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1"
+        >
+          <span class="material-symbols-outlined">{item.icon}</span>
+          <span class="font-label-caps text-label-caps">{item.label}</span>
+        </a>
+      ) : (
+        <a
+          href={item.href}
+          class="flex flex-col items-center justify-center text-on-surface-variant"
+        >
+          <span class="material-symbols-outlined">{item.icon}</span>
+          <span class="font-label-caps text-label-caps">{item.label}</span>
+        </a>
+      ),
+    )
+  }
+</nav>

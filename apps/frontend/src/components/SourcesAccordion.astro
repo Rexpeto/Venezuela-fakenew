@@ -1,0 +1,53 @@
+---
+import type { ChatSource } from '../lib/chat'
+
+interface Props {
+  sources: ChatSource[]
+}
+
+const { sources } = Astro.props
+---
+
+<div class="mt-md border-t border-surface-variant pt-sm">
+  <details class="group">
+    <summary
+      class="flex items-center justify-between cursor-pointer list-none text-secondary hover:underline transition-all"
+    >
+      <div class="flex items-center gap-xs">
+        <span class="material-symbols-outlined text-[18px]" aria-hidden="true">verified</span>
+        <span class="font-label-caps text-label-caps uppercase">
+          Ver fuentes consultadas ({sources.length})
+        </span>
+      </div>
+      <span
+        class="material-symbols-outlined group-open:rotate-180 transition-transform"
+        aria-hidden="true">expand_more</span
+      >
+    </summary>
+
+    <ul class="mt-sm space-y-2 bg-surface-container-lowest p-sm rounded border border-surface-variant">
+      {
+        sources.map((source) => (
+          <li class="flex items-center gap-sm">
+            <span class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-sm" aria-hidden="true">
+                {source.icon}
+              </span>
+            </span>
+            <span class="flex flex-col min-w-0">
+              <span class="font-label-caps text-[11px] text-on-surface">{source.title}</span>
+              <a
+                href={`https://${source.url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-[10px] text-on-surface-variant truncate hover:underline"
+              >
+                {source.url}
+              </a>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </details>
+</div>

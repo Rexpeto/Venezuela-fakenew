@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Header from '../components/Header.astro'
+import BottomNav from '../components/BottomNav.astro'
+import PatternCard from '../components/PatternCard.astro'
+import { PATTERNS } from '../lib/patterns'
+
+// Contenido estático por ahora: se puede pre-renderizar.
+export const prerender = true
+---
+
+<Layout
+  title="Catálogo de Patrones - VerificaVzla"
+  description="Análisis técnico de las estrategias estructurales utilizadas para propagar fake news en Venezuela."
+>
+  <Header active="Patterns" />
+
+  <main class="max-w-[1120px] mx-auto px-lg py-xl pb-24 md:pb-xl">
+    <!-- Encabezado -->
+    <div class="mb-xl max-w-3xl">
+      <div
+        class="inline-block bg-primary-container text-on-primary-container px-3 py-1 rounded-sm mb-md font-label-caps text-label-caps"
+      >
+        RECURSOS TÉCNICOS
+      </div>
+      <h1
+        class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-md leading-tight"
+      >
+        Catálogo de Patrones de Desinformación
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant">
+        Análisis técnico de las estrategias estructurales utilizadas para
+        propagar fake news en Venezuela. Este catálogo identifica firmas
+        digitales y heurísticas de manipulación.
+      </p>
+    </div>
+
+    <!-- Grilla de patrones -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+      {PATTERNS.map((pattern) => <PatternCard pattern={pattern} />)}
+    </div>
+
+    <!-- Banda decorativa -->
+    <div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-md" aria-hidden="true">
+      <div
+        class="bg-primary-container p-md border-l-4 border-primary h-32 flex items-end"
+      >
+        <p class="text-on-primary-container font-label-caps text-[10px] leading-none opacity-60">
+          ANALYSIS_LAYER_01: COORDINATED_REPLICATION
+        </p>
+      </div>
+      <div
+        class="bg-surface-container-highest p-md h-32 flex items-center justify-center opacity-30"
+      >
+        <span class="material-symbols-outlined text-outline text-[64px]">fingerprint</span>
+      </div>
+      <div class="bg-secondary-container p-md h-32 flex flex-col justify-between">
+        <div class="flex justify-between">
+          <div class="w-2 h-2 bg-on-secondary-container rounded-full"></div>
+          <div class="w-2 h-2 bg-on-secondary-container rounded-full"></div>
+        </div>
+        <p class="text-on-secondary-container font-bold font-label-caps text-[12px] uppercase">
+          Data Laboratory Active
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <BottomNav active="Patterns" />
+</Layout>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Catálogo de Patrones - VerificaVzla</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;800&amp;family=IBM+Plex+Sans:wght@600&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "tertiary": "#1b2b3f",
+                        "outline-variant": "#c5c5d3",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#d8e2ff",
+                        "inverse-primary": "#b6c4ff",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#2170e4",
+                        "on-background": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "tertiary-container": "#314156",
+                        "on-surface-variant": "#444651",
+                        "on-error": "#ffffff",
+                        "secondary": "#0058be",
+                        "outline": "#757682",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "primary": "#00236f",
+                        "on-tertiary-container": "#9dadc6",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#90a8ff",
+                        "primary-container": "#1e3a8a",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-secondary-fixed": "#001a42",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-primary-fixed-variant": "#264191",
+                        "surface-tint": "#4059aa",
+                        "surface": "#f7f9fb",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container": "#eceef0",
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dce1ff",
+                        "on-primary-fixed": "#00164e",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#d3e4fe",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-container": "#fefcff",
+                        "on-surface": "#191c1e",
+                        "background": "#f7f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "gutter": "24px",
+                        "container-max": "1120px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "xl": "40px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Chivo"],
+                        "label-caps": ["IBM Plex Sans"],
+                        "body-lg": ["\"Source Sans 3\""],
+                        "body-md": ["\"Source Sans 3\""],
+                        "display-lg-mobile": ["Chivo"],
+                        "body-sm": ["\"Source Sans 3\""],
+                        "headline-md": ["Chivo"],
+                        "display-lg": ["Chivo"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #F8FAFC;
+            color: #191C1E;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .verification-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .verification-card:hover {
+            box-shadow: 0px 4px 12px rgba(30, 58, 138, 0.05);
+        }
+        .border-left-accent {
+            border-left: 4px solid #1E3A8A;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md antialiased">
+<!-- Top Navigation (Shell Component) -->
+<header class="bg-surface sticky top-0 z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center px-lg py-sm max-w-container-max mx-auto">
+<div class="flex items-center gap-md cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined text-primary" data-icon="shield">shield</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">VerificaVzla</h1>
+</div>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-1" href="#">Fact-Checks</a>
+<a class="text-primary font-bold border-b-2 border-primary px-3 py-1" href="#">Patterns</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-1" href="#">Cases</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-1" href="#">About</a>
+</nav>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="search">search</span>
+<button class="md:hidden material-symbols-outlined text-primary" data-icon="menu">menu</button>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-lg py-xl">
+<!-- Page Header -->
+<div class="mb-xl max-w-3xl">
+<div class="inline-block bg-primary-container text-on-primary-container px-3 py-1 rounded-sm mb-md font-label-caps text-label-caps">
+                RECURSOS TÉCNICOS
+            </div>
+<h2 class="font-display-lg text-display-lg text-primary mb-md leading-tight">
+                Catálogo de Patrones de Desinformación
+            </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                Análisis técnico de las estrategias estructurales utilizadas para propagar fake news en Venezuela. Este catálogo identifica firmas digitales y heurísticas de manipulación.
+            </p>
+</div>
+<!-- Patterns Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Card 1: Supuesta Réplica Masiva -->
+<div class="verification-card p-lg flex flex-col gap-md relative overflow-hidden">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">Patrón ESTRUCTURAL</span>
+<span class="bg-error text-white px-3 py-1 text-[11px] font-bold uppercase rounded-sm">Riesgo: Alta</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-sm">Supuesta Réplica Masiva</h3>
+<p class="font-body-md text-on-surface-variant">Distribución artificial y coordinada de contenido idéntico a través de múltiples canales en un corto periodo de tiempo para simular consenso.</p>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg">
+<h4 class="font-label-caps text-label-caps text-primary mb-xs">INDICADORES TÉCNICOS</h4>
+<ul class="space-y-1">
+<li class="flex items-center gap-2 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="schedule">schedule</span>
+                            Marcas de tiempo idénticas o secuenciales.
+                        </li>
+<li class="flex items-center gap-2 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="smart_toy">smart_toy</span>
+                            Comportamiento automatizado (Bot-like behavior).
+                        </li>
+</ul>
+</div>
+<div class="border-t border-outline-variant pt-md mt-auto">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="history_edu">history_edu</span>
+<span class="font-label-caps text-label-caps text-primary">ESTUDIO DE CASO</span>
+</div>
+<p class="font-body-sm italic text-on-surface-variant">"Cadenas de WhatsApp sobre desabastecimiento generalizado en 24 estados."</p>
+</div>
+</div>
+<!-- Card 2: Descontextualización Visual -->
+<div class="verification-card p-lg flex flex-col gap-md relative overflow-hidden">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">Patrón MULTIMEDIA</span>
+<span class="bg-error text-white px-3 py-1 text-[11px] font-bold uppercase rounded-sm">Riesgo: Alta</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-sm">Descontextualización Visual</h3>
+<p class="font-body-md text-on-surface-variant">Uso de material audiovisual real pero perteneciente a un evento, fecha o ubicación geográfica distinta para ilustrar una narrativa falsa.</p>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg">
+<h4 class="font-label-caps text-label-caps text-primary mb-xs">INDICADORES TÉCNICOS</h4>
+<ul class="space-y-1">
+<li class="flex items-center gap-2 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="image_search">image_search</span>
+                            Fotografías antiguas o de archivo.
+                        </li>
+<li class="flex items-center gap-2 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="info_i">info_i</span>
+                            Metadatos alterados o eliminados (EXIF data).
+                        </li>
+</ul>
+</div>
+<div class="border-t border-outline-variant pt-md mt-auto">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="history_edu">history_edu</span>
+<span class="font-label-caps text-label-caps text-primary">ESTUDIO DE CASO</span>
+</div>
+<p class="font-body-sm italic text-on-surface-variant">"Videos de incendios forestales de 2019 usados como evidencia de ataques en 2024."</p>
+</div>
+</div>
+<!-- Card 3: Suplantación de Identidad -->
+<div class="verification-card p-lg flex flex-col gap-md relative overflow-hidden">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">Patrón DE AUTORIDAD</span>
+<span class="bg-[#F59E0B] text-white px-3 py-1 text-[11px] font-bold uppercase rounded-sm">Riesgo: Media</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-sm">Suplantación de Identidad</h3>
+<p class="font-body-md text-on-surface-variant">Clonación de elementos visuales de instituciones oficiales o medios de comunicación para otorgar credibilidad a documentos apócrifos.</p>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg">
+<h4 class="font-label-caps text-label-caps text-primary mb-xs">INDICADORES TÉCNICOS</h4>
+<ul class="space-y-1">
+<li class="flex items-center gap-2 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="link">link</span>
+                            Dominios visualmente similares (typosquatting).
+                        </li>
+<li class="flex items-center gap-2 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="text_fields">text_fields</span>
+                            Uso de tipografías no oficiales o logos deformados.
+                        </li>
+</ul>
+</div>
+<div class="border-t border-outline-variant pt-md mt-auto">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="history_edu">history_edu</span>
+<span class="font-label-caps text-label-caps text-primary">ESTUDIO DE CASO</span>
+</div>
+<p class="font-body-sm italic text-on-surface-variant">"Falsas Gacetas Oficiales circuladas en PDF con anuncios de expropiaciones."</p>
+</div>
+</div>
+<!-- Card 4: Sesgo de Autoridad Inexistente -->
+<div class="verification-card p-lg flex flex-col gap-md relative overflow-hidden">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">Patrón PSICOLÓGICO</span>
+<span class="bg-[#F59E0B] text-white px-3 py-1 text-[11px] font-bold uppercase rounded-sm">Riesgo: Media</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-sm">Sesgo de Autoridad Inexistente</h3>
+<p class="font-body-md text-on-surface-variant">Atribución de afirmaciones a expertos, científicos o instituciones de prestigio que no existen o que no han emitido tal declaración.</p>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg">
+<h4 class="font-label-caps text-label-caps text-primary mb-xs">INDICADORES TÉCNICOS</h4>
+<ul class="space-y-1">
+<li class="flex items-center gap-2 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="person_search">person_search</span>
+                            Referencias vagas a "expertos internacionales".
+                        </li>
+<li class="flex items-center gap-2 font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="format_quote">format_quote</span>
+                            Ausencia de fuentes citadas o enlaces a estudios.
+                        </li>
+</ul>
+</div>
+<div class="border-t border-outline-variant pt-md mt-auto">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="history_edu">history_edu</span>
+<span class="font-label-caps text-label-caps text-primary">ESTUDIO DE CASO</span>
+</div>
+<p class="font-body-sm italic text-on-surface-variant">"Audio atribuido a un médico inexistente del Hospital Vargas alertando sobre virus letales."</p>
+</div>
+</div>
+</div>
+<!-- Atmospheric Element: Abstract Pattern Decoration -->
+<div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-md">
+<div class="bg-primary-container p-md border-left-accent h-32 flex items-end">
+<p class="text-on-primary-container font-label-caps text-[10px] leading-none opacity-60">ANALYSIS_LAYER_01: COORDINATED_REPLICATION</p>
+</div>
+<div class="bg-surface-container-highest p-md h-32 flex items-center justify-center opacity-30">
+<span class="material-symbols-outlined text-outline text-[64px]" data-icon="fingerprint">fingerprint</span>
+</div>
+<div class="bg-secondary-container p-md h-32 flex flex-col justify-between">
+<div class="flex justify-between">
+<div class="w-2 h-2 bg-on-secondary-container rounded-full"></div>
+<div class="w-2 h-2 bg-on-secondary-container rounded-full"></div>
+</div>
+<p class="text-on-secondary-container font-bold font-label-caps text-[12px] uppercase">Data Laboratory Active</p>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation for Mobile (Shell Component) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface border-t border-outline-variant">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+<span class="font-label-caps text-label-caps">Patterns</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+<span class="font-label-caps text-label-caps">Cases</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+<span class="font-label-caps text-label-caps">About</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions for cards
+        document.querySelectorAll('.verification-card').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.98)';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>
