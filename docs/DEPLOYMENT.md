@@ -72,12 +72,12 @@ curl -X POST https://<worker>.workers.dev/rpc/verifyClaim \
 ## 2. Frontend → Cloudflare Workers (Astro SSR)
 
 From `apps/frontend/`. The `@astrojs/cloudflare` adapter builds an SSR Worker;
-`apps/frontend/wrangler.jsonc` points `main` at `./dist/_worker.js/index.js` and
-serves static files via the `ASSETS` binding. `PUBLIC_*` is inlined at build time.
+`apps/frontend/wrangler.jsonc` points `main` at `@astrojs/cloudflare/entrypoints/server`
+and serves static files via the `ASSETS` binding. `PUBLIC_*` is inlined at build time.
 
 ```bash
 PUBLIC_MOCK_API=false \
-PUBLIC_API_URL=https://<backend-worker>.workers.dev \
+PUBLIC_API_URL=https://api.verificavenezuela.com \
 bun run build
 wrangler deploy   # manual; en CI lo hace Workers Builds (ver §4)
 ```
