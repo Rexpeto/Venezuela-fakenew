@@ -1,13 +1,13 @@
 ---
-import type { RiskLevel } from '../lib/patterns'
+import type { Severity } from '@repo/core'
 
 interface Props {
-  level: RiskLevel
+  level: Severity
 }
 
 const { level } = Astro.props
 
-const styles: Record<RiskLevel, { bg: string; text: string; label: string }> = {
+const styles: Record<Severity, { bg: string; text: string; label: string }> = {
   alta: { bg: 'bg-error', text: 'text-on-error', label: 'Alta' },
   media: { bg: 'bg-warning', text: 'text-on-warning', label: 'Media' },
   baja: { bg: 'bg-secondary', text: 'text-on-secondary', label: 'Baja' },
