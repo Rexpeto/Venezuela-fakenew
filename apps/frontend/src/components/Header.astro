@@ -1,5 +1,7 @@
 ---
 import Icon from './Icon.astro'
+import LangSwitcher from './LangSwitcher.astro'
+import { i18n } from '../i18n'
 
 interface Props {
   /** En la vista de chat el hamburguesa abre el sidebar de consultas, no el menú de navegación. */
@@ -7,13 +9,14 @@ interface Props {
 }
 
 const { hasSidebar = false } = Astro.props
+const { t, href } = i18n(Astro)
 ---
 
 <nav
     class="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-outline-variant bg-surface/95 px-gutter backdrop-blur-sm"
 >
     <div class="flex items-center gap-sm">
-        <a href="/" class="flex items-center gap-sm">
+        <a href={href('/')} class="flex items-center gap-sm">
             <Icon name="shield-check" size={28} class="text-primary" />
             <span
                 class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary"
@@ -25,26 +28,29 @@ const { hasSidebar = false } = Astro.props
     <!-- Desktop nav -->
     <div class="hidden items-center gap-lg md:flex">
         <a
-            href="/verificar"
+            href={href('/verificar')}
             class="font-medium text-on-surface-variant transition-colors duration-200 hover:text-secondary"
         >
-            Verificar
+            {t('nav.verificar')}
         </a>
         <a
-            href="/asistente"
+            href={href('/asistente')}
             class="font-medium text-on-surface-variant transition-colors duration-200 hover:text-secondary"
         >
-            Asistente
+            {t('nav.asistente')}
         </a>
         <a
-            href="/patrones"
+            href={href('/patrones')}
             class="font-medium text-on-surface-variant transition-colors duration-200 hover:text-secondary"
         >
-            Patrones
+            {t('nav.patrones')}
         </a>
     </div>
 
     <div class="flex items-center gap-sm">
+        <div class="hidden md:flex">
+            <LangSwitcher />
+        </div>
         <a
             href="https://github.com/Rexpeto/Venezuela-fakenew"
             target="_blank"
@@ -57,7 +63,7 @@ const { hasSidebar = false } = Astro.props
             <button
                 id="sidebar-toggle"
                 class="flex cursor-pointer p-2 text-on-surface md:hidden"
-                aria-label="Abrir consultas frecuentes"
+                aria-label={t('nav.openQueries')}
                 aria-controls="sidebar"
                 aria-expanded="false"
             >
@@ -67,7 +73,9 @@ const { hasSidebar = false } = Astro.props
             <button
                 id="menu-toggle"
                 class="flex cursor-pointer p-2 text-on-surface md:hidden"
-                aria-label="Abrir menú"
+                aria-label={t('nav.openMenu')}
+                data-open-label={t('nav.openMenu')}
+                data-close-label={t('nav.closeMenu')}
             >
                 <Icon name="menu" size={24} />
             </button>
@@ -82,27 +90,30 @@ const { hasSidebar = false } = Astro.props
     class="fixed inset-0 z-40 flex flex-col bg-surface pt-16 transition-all duration-300 ease-out md:hidden invisible opacity-0 -translate-y-2 pointer-events-none"
     role="dialog"
     aria-modal="true"
-    aria-label="Menú de navegación"
+    aria-label={t('nav.menuDialog')}
 >
     <nav class="flex flex-col gap-2 px-gutter py-lg">
         <a
-            href="/verificar"
+            href={href('/verificar')}
             class="mobile-link rounded-md px-md py-lg text-headline-md font-bold text-on-surface transition-colors hover:bg-surface-container"
         >
-            Verificar
+            {t('nav.verificar')}
         </a>
         <a
-            href="/asistente"
+            href={href('/asistente')}
             class="mobile-link rounded-md px-md py-lg text-headline-md font-bold text-on-surface transition-colors hover:bg-surface-container"
         >
-            Asistente
+            {t('nav.asistente')}
         </a>
         <a
-            href="/patrones"
+            href={href('/patrones')}
             class="mobile-link rounded-md px-md py-lg text-headline-md font-bold text-on-surface transition-colors hover:bg-surface-container"
         >
-            Patrones
+            {t('nav.patrones')}
         </a>
+        <div class="px-md py-lg">
+            <LangSwitcher />
+        </div>
     </nav>
 </div>
 )}
@@ -113,6 +124,8 @@ const { hasSidebar = false } = Astro.props
 
     if (toggle && menu) {
         let isOpen = false
+        const openLabel = toggle.dataset.openLabel ?? 'Open menu'
+        const closeLabel = toggle.dataset.closeLabel ?? 'Close menu'
 
         toggle.addEventListener('click', () => {
             isOpen = !isOpen
@@ -126,10 +139,7 @@ const { hasSidebar = false } = Astro.props
             menu.classList.toggle('translate-y-0', isOpen)
             menu.classList.toggle('pointer-events-auto', isOpen)
 
-            toggle.setAttribute(
-                'aria-label',
-                isOpen ? 'Cerrar menú' : 'Abrir menú',
-            )
+            toggle.setAttribute('aria-label', isOpen ? closeLabel : openLabel)
             document.body.classList.toggle('overflow-hidden', isOpen)
         })
 
@@ -148,7 +158,7 @@ const { hasSidebar = false } = Astro.props
                     'translate-y-0',
                     'pointer-events-auto',
                 )
-                toggle.setAttribute('aria-label', 'Abrir menú')
+                toggle.setAttribute('aria-label', openLabel)
                 document.body.classList.remove('overflow-hidden')
             })
         })
@@ -168,7 +178,7 @@ const { hasSidebar = false } = Astro.props
                     'translate-y-0',
                     'pointer-events-auto',
                 )
-                toggle.setAttribute('aria-label', 'Abrir menú')
+                toggle.setAttribute('aria-label', openLabel)
                 document.body.classList.remove('overflow-hidden')
             }
         })

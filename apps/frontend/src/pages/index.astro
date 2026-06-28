@@ -10,6 +10,9 @@ import {
     MOCK_RECENT_PATTERN_PREVIEWS,
     type RecentPatternPreview,
 } from "../lib/recent-pattern-previews";
+import { i18n } from "../i18n";
+
+const { t, href } = i18n(Astro);
 
 const recentPatterns: RecentPatternPreview[] =
     "getRecentPatternPreviews" in api &&
@@ -18,10 +21,7 @@ const recentPatterns: RecentPatternPreview[] =
         : MOCK_RECENT_PATTERN_PREVIEWS;
 ---
 
-<Layout
-    title="VerificaVzla - Combatiendo la desinformación"
-    description="Portal de verificación de noticias sobre Venezuela. Analiza afirmaciones virales y consulta datos verificados sobre el sismo de junio 2026."
->
+<Layout title={t("home.meta.title")} description={t("home.meta.description")}>
     <Header />
 
     <main>
@@ -33,33 +33,31 @@ const recentPatterns: RecentPatternPreview[] =
                 <div
                     class="mb-md inline-block animate-pulse rounded-full bg-secondary-fixed px-md py-xs font-label-caps text-label-caps text-on-secondary-fixed-variant"
                 >
-                     Actualización: 15 de junio, 2026
-
+                    {t("home.hero.badge")}
                 </div>
 
                 <h1
                     class="mb-md font-display-lg-mobile text-display-lg-mobile font-extrabold tracking-tight text-primary md:text-display-lg md:leading-[56px]"
                 >
-                    Combatiendo la desinformación en momentos de crisis
+                    {t("home.hero.title")}
                 </h1>
 
                 <p
                     class="mx-auto mb-xl max-w-2xl font-body-lg text-body-lg text-on-surface-variant"
                 >
-                    Analiza afirmaciones virales y consulta datos verificados
-                    sobre la situación actual en Venezuela.
+                    {t("home.hero.subtitle")}
                 </p>
 
                 <div
                     class="flex flex-col items-stretch justify-center gap-md md:flex-row md:items-center"
                 >
-                    <Button href="/verificar" variant="solid">
+                    <Button href={href("/verificar")} variant="solid">
                         <Icon name="search-check" size={20} />
-                        Verificar una noticia
+                        {t("home.hero.ctaVerify")}
                     </Button>
-                    <Button href="/asistente" variant="outline">
+                    <Button href={href("/asistente")} variant="outline">
                         <Icon name="bot" size={20} />
-                        Preguntar al Asistente
+                        {t("home.hero.ctaAsk")}
                     </Button>
                 </div>
             </div>
@@ -86,7 +84,7 @@ const recentPatterns: RecentPatternPreview[] =
                 <p
                     class="mb-md text-center font-label-caps text-label-caps uppercase tracking-widest text-outline"
                 >
-                    Fuentes de Confianza &amp; Aliados
+                    {t("home.trust.title")}
                 </p>
                 <div
                     class="scrolling-wrapper flex items-center justify-between gap-xl overflow-x-auto whitespace-nowrap opacity-60 md:justify-center"
@@ -115,13 +113,13 @@ const recentPatterns: RecentPatternPreview[] =
         <section class="mx-auto w-full max-w-container px-gutter py-xl">
             <div class="mb-lg flex items-end justify-between">
                 <h2 class="font-headline-md text-headline-md text-primary">
-                    Patrones de Desinformación Recientes
+                    {t("home.patterns.title")}
                 </h2>
                 <a
-                    href="/patrones"
+                    href={href("/patrones")}
                     class="hidden items-center gap-xs font-bold text-secondary hover:underline md:flex"
                 >
-                    Ver todos
+                    {t("home.patterns.viewAll")}
                     <Icon name="arrow-right" size={18} />
                 </a>
             </div>
@@ -136,10 +134,10 @@ const recentPatterns: RecentPatternPreview[] =
 
             <div class="mt-lg md:hidden">
                 <a
-                    href="/patrones"
+                    href={href("/patrones")}
                     class="flex w-full items-center justify-center gap-sm rounded-md bg-surface-container py-md font-bold text-primary"
                 >
-                    Ver todos los patrones
+                    {t("home.patterns.viewAllMobile")}
                     <Icon name="arrow-right" size={20} />
                 </a>
             </div>
@@ -152,23 +150,22 @@ const recentPatterns: RecentPatternPreview[] =
             >
                 <div class="w-full md:w-1/2">
                     <h2 class="mb-sm font-headline-md text-headline-md text-white">
-                        Recibe alertas críticas en tiempo real
+                        {t("home.newsletter.title")}
                     </h2>
                     <p class="text-body-md text-on-tertiary-container">
-                        Suscríbete a nuestro canal de verificación para recibir
-                        solo información confirmada durante emergencias.
+                        {t("home.newsletter.subtitle")}
                     </p>
                 </div>
                 <div class="flex w-full gap-sm md:w-1/2">
                     <input
                         type="email"
-                        placeholder="correo@ejemplo.com"
+                        placeholder={t("home.newsletter.placeholder")}
                         class="grow rounded-md bg-white/10 px-md py-sm text-white placeholder-on-tertiary-container focus:border-secondary focus:ring-secondary"
                     />
                     <button
                         class="rounded-md bg-secondary px-lg py-md font-bold text-white transition-all hover:bg-secondary/90"
                     >
-                        Unirme
+                        {t("home.newsletter.submit")}
                     </button>
                 </div>
             </div>

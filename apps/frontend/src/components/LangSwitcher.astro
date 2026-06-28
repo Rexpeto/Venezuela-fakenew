@@ -1,0 +1,69 @@
+---
+import { LOCALES, LOCALE_NAMES, localizeUrl, i18n } from '../i18n'
+
+const { lang, path, t } = i18n(Astro)
+---
+
+<details class="lang-switcher group relative">
+  <summary
+    class="flex w-fit cursor-pointer select-none list-none items-center gap-0.5 rounded-md p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary [&::-webkit-details-marker]:hidden"
+    aria-label={t('lang.switch')}
+    title={t('lang.switch')}
+    aria-haspopup="listbox"
+  >
+    <span class="material-symbols-outlined pointer-events-none text-[22px]" aria-hidden="true">translate</span>
+    <span
+      class="material-symbols-outlined pointer-events-none text-[16px] transition-transform group-open:rotate-180"
+      aria-hidden="true">expand_more</span
+    >
+  </summary>
+
+  <ul
+    class="absolute right-0 z-50 mt-xs min-w-[170px] overflow-hidden rounded-md border border-outline-variant bg-surface py-xs shadow-lg"
+    role="listbox"
+    aria-label={t('lang.switch')}
+  >
+    {
+      LOCALES.map((l) => (
+        <li>
+          <a
+            href={localizeUrl(l, path)}
+            hreflang={l}
+            data-locale={l}
+            role="option"
+            aria-selected={l === lang ? 'true' : 'false'}
+            class:list={[
+              'flex items-center gap-sm px-md py-sm font-body-md text-body-md transition-colors hover:bg-surface-container',
+              l === lang ? 'font-bold text-primary' : 'text-on-surface',
+            ]}
+          >
+            <span class="material-symbols-outlined w-[18px] text-[18px] text-primary" aria-hidden="true">
+              {l === lang ? 'check' : ''}
+            </span>
+            {LOCALE_NAMES[l]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</details>
+
+<script>
+  // Recuerda la elección de idioma (el middleware le da prioridad sobre el
+  // navegador) y cierra el dropdown al hacer clic afuera.
+  document
+    .querySelectorAll<HTMLAnchorElement>('.lang-switcher a[data-locale]')
+    .forEach((a) => {
+      a.addEventListener('click', () => {
+        document.cookie = `locale=${a.dataset.locale};path=/;max-age=31536000;samesite=lax`
+      })
+    })
+
+  document.addEventListener('click', (e) => {
+    document
+      .querySelectorAll<HTMLDetailsElement>('details.lang-switcher[open]')
+      .forEach((d) => {
+        if (!d.contains(e.target as Node)) d.removeAttribute('open')
+      })
+  })
+</script>

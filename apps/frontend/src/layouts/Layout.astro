@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import { LOCALES, DEFAULT_LOCALE, localizeUrl, i18n } from '../i18n'
 
 interface Props {
   title: string
@@ -7,15 +8,21 @@ interface Props {
 }
 
 const { title, description } = Astro.props
+const { lang, path } = i18n(Astro)
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+
+    {LOCALES.map((l) => (
+      <link rel="alternate" hreflang={l} href={localizeUrl(l, path)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={localizeUrl(DEFAULT_LOCALE, path)} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

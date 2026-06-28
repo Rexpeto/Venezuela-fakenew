@@ -2,21 +2,20 @@
 import Card from "./Card.astro";
 import PatternBadge from "./PatternBadge.astro";
 import type { RecentPatternPreview } from "../lib/recent-pattern-previews";
+import { i18n } from "../i18n";
 
 const { item } = Astro.props as { item: RecentPatternPreview };
+const { lang, t, href } = i18n(Astro);
 
+// Intl.RelativeTimeFormat localiza "hace X" / "X ago" / "há X" sin diccionario.
 function timeAgoLabel(iso: string): string {
-    const then = new Date(iso).getTime();
-    const now = Date.now();
-    const diffMinutes = Math.max(0, Math.round((now - then) / 60000));
-
-    if (diffMinutes < 60) return `Hace ${diffMinutes} minutos`;
-
-    const diffHours = Math.round(diffMinutes / 60);
-    if (diffHours < 24) return `Hace ${diffHours} horas`;
-
-    const diffDays = Math.round(diffHours / 24);
-    return `Hace ${diffDays} días`;
+    const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+    const diffMs = new Date(iso).getTime() - Date.now(); // negativo = pasado
+    const minutes = Math.round(diffMs / 60000);
+    if (Math.abs(minutes) < 60) return rtf.format(minutes, "minute");
+    const hours = Math.round(minutes / 60);
+    if (Math.abs(hours) < 24) return rtf.format(hours, "hour");
+    return rtf.format(Math.round(hours / 24), "day");
 }
 ---
 
@@ -38,9 +37,9 @@ function timeAgoLabel(iso: string): string {
             >{timeAgoLabel(item.createdAt)}</span
         >
         <a
-            href={item.href}
+            href={href(item.href)}
             class="font-label-caps text-label-caps font-bold text-primary"
-            >LEER MÁS</a
+            >{t('recentCard.readMore')}</a
         >
     </div>
 </Card>

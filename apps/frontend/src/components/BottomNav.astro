@@ -1,47 +1,52 @@
 ---
+import { i18n, type UIKey } from '../i18n'
+
 interface NavItem {
-  label: string
+  /** Clave estable del item (no cambia entre idiomas). */
+  key: string
+  labelKey: UIKey
   icon: string
-  href: string
+  path: string
 }
 
 interface Props {
-  /** Etiqueta del item activo. */
+  /** Clave del item activo: 'inicio' | 'verificar' | 'patrones' | 'asistente'. */
   active?: string
 }
 
 const { active } = Astro.props
+const { t, href } = i18n(Astro)
 
 const items: NavItem[] = [
-  { label: 'Inicio', icon: 'home', href: '/' },
-  { label: 'Verificar', icon: 'fact_check', href: '/verificar' },
-  { label: 'Patrones', icon: 'query_stats', href: '/patrones' },
-  { label: 'Asistente', icon: 'chat', href: '/asistente' },
+  { key: 'inicio', labelKey: 'nav.inicio', icon: 'home', path: '/' },
+  { key: 'verificar', labelKey: 'nav.verificar', icon: 'fact_check', path: '/verificar' },
+  { key: 'patrones', labelKey: 'nav.patrones', icon: 'query_stats', path: '/patrones' },
+  { key: 'asistente', labelKey: 'nav.asistente', icon: 'chat', path: '/asistente' },
 ]
 ---
 
 <nav
   class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface border-t border-outline-variant"
-  aria-label="Navegación inferior"
+  aria-label={t('nav.bottomNav')}
 >
   {
     items.map((item) =>
-      item.label === active ? (
+      item.key === active ? (
         <a
-          href={item.href}
+          href={href(item.path)}
           aria-current="page"
           class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1"
         >
           <span class="material-symbols-outlined">{item.icon}</span>
-          <span class="font-label-caps text-label-caps">{item.label}</span>
+          <span class="font-label-caps text-label-caps">{t(item.labelKey)}</span>
         </a>
       ) : (
         <a
-          href={item.href}
+          href={href(item.path)}
           class="flex flex-col items-center justify-center text-on-surface-variant"
         >
           <span class="material-symbols-outlined">{item.icon}</span>
-          <span class="font-label-caps text-label-caps">{item.label}</span>
+          <span class="font-label-caps text-label-caps">{t(item.labelKey)}</span>
         </a>
       ),
     )
