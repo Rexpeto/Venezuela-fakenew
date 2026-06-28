@@ -147,3 +147,21 @@
 .verification-card:active {
   transform: scale(0.98);
 }
+
+/* Chat — Asistente Virtual */
+.chat-container {
+  height: calc(100vh - 64px);
+}
+.sidebar-transition {
+  transition: transform 0.3s ease-in-out;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}

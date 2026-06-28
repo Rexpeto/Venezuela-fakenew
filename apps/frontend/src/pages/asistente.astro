@@ -1,0 +1,290 @@
+---
+import Layout from '../layouts/Layout.astro'
+import ChatBubble from '../components/ChatBubble.astro'
+import { QUICK_QUESTIONS, type ChatSource } from '../lib/chat'
+
+export const prerender = true
+
+const seedSources: ChatSource[] = [
+  { title: 'Funvisis Oficial', url: 'funvisis.gob.ve/reporte_sismico_actualizado', icon: 'language' },
+  { title: 'Min. Interior y Justicia', url: 'twitter.com/MIJPVenezuela', icon: 'rss_feed' },
+]
+---
+
+<Layout
+  title="VerificaVzla - Chat de Verificación"
+  description="Asistente virtual para verificar noticias, alertas sismológicas y reportes de crisis sobre el sismo de junio 2026."
+>
+  <!-- Barra superior -->
+  <header
+    class="bg-surface-container-lowest w-full top-0 sticky z-50 border-b border-surface-variant"
+  >
+    <div class="flex items-center justify-between px-md py-sm max-w-[1120px] mx-auto h-16">
+      <div class="flex items-center gap-md">
+        <button
+          type="button"
+          data-toggle-sidebar
+          aria-label="Abrir consultas frecuentes"
+          aria-controls="sidebar"
+          aria-expanded="false"
+          class="text-primary hover:bg-surface-container p-2 rounded-full transition-colors"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+        </button>
+        <a href="/" class="font-headline-md text-headline-md text-primary">VerificaVzla</a>
+      </div>
+      <span class="material-symbols-outlined text-primary" aria-hidden="true">emergency_home</span>
+    </div>
+  </header>
+
+  <main class="flex chat-container overflow-hidden relative">
+    <!-- Panel lateral / drawer móvil -->
+    <aside
+      id="sidebar"
+      class="sidebar-transition absolute md:relative z-40 h-full w-72 bg-surface shadow-sm flex flex-col py-lg transform -translate-x-full md:translate-x-0 border-r border-surface-variant"
+    >
+      <div class="px-md mb-lg">
+        <h2 class="font-label-caps text-label-caps text-on-surface-variant tracking-wider">
+          CONSULTAS FRECUENTES
+        </h2>
+      </div>
+      <nav class="flex-1 space-y-2 px-2" aria-label="Consultas frecuentes">
+        {
+          QUICK_QUESTIONS.map((q) => (
+            <button
+              type="button"
+              data-question={q.label}
+              class="w-full flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg text-left"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">{q.icon}</span>
+              <span class="font-body-md text-body-md">{q.label}</span>
+            </button>
+          ))
+        }
+      </nav>
+      <div class="mt-auto px-2 border-t border-surface-variant pt-lg">
+        <button
+          type="button"
+          class="w-full flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg text-left"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+          <span class="font-body-md text-body-md">Configuración</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Área de chat -->
+    <section class="flex-1 flex flex-col relative min-w-0 bg-surface-container-low">
+      <!-- Banner de aviso -->
+      <div
+        class="w-full bg-[#FFFBEB] p-md border-b border-[#FEF3C7] sticky top-0 z-30 flex items-start gap-sm"
+      >
+        <span class="material-symbols-outlined text-[#B45309] shrink-0" aria-hidden="true">info</span>
+        <p class="font-body-sm text-body-sm text-[#92400E] leading-tight">
+          Monitoreo del sismo de junio 2026. Respuestas basadas estrictamente en
+          datos e investigación verificada.
+        </p>
+      </div>
+
+      <!-- Historial -->
+      <div id="chat-history" class="flex-1 overflow-y-auto p-md space-y-lg custom-scrollbar">
+        <div class="flex justify-center">
+          <span
+            class="bg-surface-variant px-3 py-1 rounded-full font-label-caps text-[10px] text-on-surface-variant"
+          >
+            HOY - 14 DE JUNIO, 2026
+          </span>
+        </div>
+
+        <ChatBubble role="user" time="10:42 AM">
+          ¿Hay algún reporte oficial sobre la falla de Boconó?
+        </ChatBubble>
+
+        <ChatBubble role="assistant" time="10:43 AM" sources={seedSources}>
+          Hasta el momento, <strong>Funvisis</strong> no ha reportado actividad
+          inusual en la falla de Boconó relacionada con el evento de hoy. El
+          epicentro preliminar se localiza mar adentro. Te recomiendo seguir
+          únicamente canales oficiales.
+        </ChatBubble>
+
+        <!-- Indicador de "procesando" (oculto hasta enviar) -->
+        <div id="typing" class="hidden items-center gap-sm px-md pb-md">
+          <div class="flex gap-1">
+            <span class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce"></span>
+            <span class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+            <span class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+          </div>
+          <p class="font-body-sm text-body-sm italic text-on-surface-variant">
+            La IA está procesando...
+          </p>
+        </div>
+      </div>
+
+      <!-- Barra de entrada -->
+      <div class="bg-surface-container-lowest border-t border-surface-variant p-md">
+        <div class="max-w-4xl mx-auto">
+          <form
+            id="chat-form"
+            class="flex items-center gap-sm bg-white border border-outline focus-within:border-secondary transition-colors rounded-xl px-md py-sm"
+          >
+            <button type="button" aria-label="Adjuntar archivo" class="text-on-surface-variant hover:text-primary p-1">
+              <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
+            </button>
+            <label for="chat-input" class="sr-only">Escribe tu consulta</label>
+            <input
+              id="chat-input"
+              name="message"
+              type="text"
+              autocomplete="off"
+              class="flex-1 bg-transparent border-none focus:ring-0 font-body-md text-on-surface"
+              placeholder="Escribe tu consulta aquí..."
+            />
+            <button
+              type="submit"
+              aria-label="Enviar"
+              class="bg-primary text-white w-10 h-10 rounded-lg flex items-center justify-center hover:bg-secondary-container transition-transform active:scale-90"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">send</span>
+            </button>
+          </form>
+          <p
+            class="text-center text-[10px] text-on-surface-variant mt-2 font-label-caps uppercase tracking-tighter"
+          >
+            Utiliza el chat para verificar noticias, alertas sismológicas o reportes de crisis.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Navegación inferior móvil -->
+  <nav
+    class="md:hidden fixed bottom-0 w-full z-50 bg-surface-container-lowest border-t border-surface-variant flex justify-around items-center h-16"
+    aria-label="Navegación inferior"
+  >
+    <a
+      href="/asistente"
+      aria-current="page"
+      class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl p-2 w-16"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">chat</span>
+      <span class="font-label-caps text-[10px]">Chat</span>
+    </a>
+    <a href="#" class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16">
+      <span class="material-symbols-outlined" aria-hidden="true">database</span>
+      <span class="font-label-caps text-[10px]">Archivo</span>
+    </a>
+    <button
+      type="button"
+      data-toggle-sidebar
+      class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">explore</span>
+      <span class="font-label-caps text-[10px]">Temas</span>
+    </button>
+  </nav>
+</Layout>
+
+<script>
+  const sidebar = document.getElementById('sidebar')
+  const form = document.getElementById('chat-form') as HTMLFormElement | null
+  const input = document.getElementById('chat-input') as HTMLInputElement | null
+  const history = document.getElementById('chat-history')
+  const typing = document.getElementById('typing')
+
+  // --- Panel lateral (drawer en móvil) ---
+  function toggleSidebar() {
+    if (!sidebar) return
+    const willOpen = sidebar.classList.contains('-translate-x-full')
+    sidebar.classList.toggle('-translate-x-full', !willOpen)
+    sidebar.classList.toggle('translate-x-0', willOpen)
+    document
+      .querySelectorAll('[data-toggle-sidebar][aria-expanded]')
+      .forEach((b) => b.setAttribute('aria-expanded', String(willOpen)))
+  }
+  document
+    .querySelectorAll('[data-toggle-sidebar]')
+    .forEach((btn) => btn.addEventListener('click', toggleSidebar))
+
+  // --- Helpers de render ---
+  function nowTime() {
+    return new Date().toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' })
+  }
+
+  function escapeHtml(text: string) {
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
+
+  function appendUser(text: string) {
+    if (!history) return
+    const wrap = document.createElement('div')
+    wrap.className = 'flex justify-end ml-xl'
+    wrap.innerHTML = `
+      <div class="bg-primary-container text-white px-md py-sm max-w-[85%] rounded-l-xl rounded-tr-xl shadow-sm">
+        <p class="font-body-md text-body-md">${escapeHtml(text)}</p>
+        <span class="block text-right text-[10px] opacity-70 mt-1">${nowTime()}</span>
+      </div>`
+    history.insertBefore(wrap, typing)
+  }
+
+  function appendAssistant(text: string) {
+    if (!history) return
+    const wrap = document.createElement('div')
+    wrap.className = 'flex justify-start mr-xl'
+    wrap.innerHTML = `
+      <div class="flex flex-col max-w-[90%] sm:max-w-[80%]">
+        <div class="bg-white border border-outline-variant p-md rounded-r-xl rounded-tl-xl shadow-sm text-on-surface">
+          <p class="font-body-md text-body-md">${escapeHtml(text)}</p>
+        </div>
+        <span class="block text-[10px] text-on-surface-variant mt-1 ml-1">IA VerificaVzla • ${nowTime()}</span>
+      </div>`
+    history.insertBefore(wrap, typing)
+  }
+
+  function scrollToBottom() {
+    if (history) history.scrollTop = history.scrollHeight
+  }
+
+  function showTyping(show: boolean) {
+    if (!typing) return
+    typing.classList.toggle('hidden', !show)
+    typing.classList.toggle('flex', show)
+  }
+
+  async function sendMessage(text: string) {
+    const message = text.trim()
+    if (!message) return
+    appendUser(message)
+    if (input) input.value = ''
+    showTyping(true)
+    scrollToBottom()
+
+    // TODO: conectar con el backend ->
+    //   import { orpc } from '../lib/orpc'
+    //   const { reply } = await orpc.chat({ message, sessionId })
+    // Por ahora se simula la respuesta para validar el flujo de la UI.
+    await new Promise((r) => setTimeout(r, 900))
+    showTyping(false)
+    appendAssistant(
+      'Asistente aún no conectado al backend. Conecta orpc.chat para respuestas verificadas.',
+    )
+    scrollToBottom()
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault()
+    if (input) sendMessage(input.value)
+  })
+
+  // Atajos de consultas frecuentes
+  document.querySelectorAll<HTMLButtonElement>('[data-question]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const q = btn.dataset.question ?? ''
+      if (input) input.value = q
+      sendMessage(q)
+      if (window.innerWidth < 768) toggleSidebar()
+    }),
+  )
+</script>
