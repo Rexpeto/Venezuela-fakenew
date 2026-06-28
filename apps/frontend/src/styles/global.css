@@ -63,6 +63,7 @@
 
   --color-background: #f7f9fb;
   --color-on-background: #191c1e;
+  --color-bg-subtle: #f8fafc;
 
   /* ---- Tipografías ---- */
   --font-display-lg: 'Chivo', sans-serif;
@@ -122,6 +123,7 @@
   --spacing-lg: 24px;
   --spacing-xl: 40px;
   --spacing-gutter: 24px;
+  --spacing-container: 1120px;
 }
 
 /* Iconos Material Symbols */
@@ -171,4 +173,13 @@
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #e2e8f0;
   border-radius: 10px;
+}
+
+/* Marquesina de aliados (landing) — oculta la barra de scroll */
+.scrolling-wrapper {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrolling-wrapper::-webkit-scrollbar {
+  display: none;
 }

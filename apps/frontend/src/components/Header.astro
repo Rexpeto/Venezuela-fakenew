@@ -1,5 +1,12 @@
 ---
 import Icon from './Icon.astro'
+
+interface Props {
+  /** En la vista de chat el hamburguesa abre el sidebar de consultas, no el menú de navegación. */
+  hasSidebar?: boolean
+}
+
+const { hasSidebar = false } = Astro.props
 ---
 
 <nav
@@ -9,7 +16,7 @@ import Icon from './Icon.astro'
         <a href="/" class="flex items-center gap-sm">
             <Icon name="shield-check" size={28} class="text-primary" />
             <span
-                class="font-headline text-headline-sm font-bold tracking-tight text-primary"
+                class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary"
                 >VerificaVzla</span
             >
         </a>
@@ -24,7 +31,7 @@ import Icon from './Icon.astro'
             Verificar
         </a>
         <a
-            href="/chatbot"
+            href="/asistente"
             class="font-medium text-on-surface-variant transition-colors duration-200 hover:text-secondary"
         >
             Chatbot
@@ -42,21 +49,34 @@ import Icon from './Icon.astro'
             href="https://github.com/Rexpeto/Venezuela-fakenew"
             target="_blank"
             rel="noopener noreferrer"
-            class="rounded border border-outline px-md py-xs font-label text-label-caps transition-all hover:bg-surface-container"
+            class="rounded border border-outline px-md py-xs font-label-caps text-label-caps transition-all hover:bg-surface-container"
         >
             GitHub
         </a>
-        <button
-            id="menu-toggle"
-            class="flex cursor-pointer p-2 text-on-surface md:hidden"
-            aria-label="Abrir menú"
-        >
-            <Icon name="menu" size={24} />
-        </button>
+        {hasSidebar ? (
+            <button
+                id="sidebar-toggle"
+                class="flex cursor-pointer p-2 text-on-surface md:hidden"
+                aria-label="Abrir consultas frecuentes"
+                aria-controls="sidebar"
+                aria-expanded="false"
+            >
+                <Icon name="menu" size={24} />
+            </button>
+        ) : (
+            <button
+                id="menu-toggle"
+                class="flex cursor-pointer p-2 text-on-surface md:hidden"
+                aria-label="Abrir menú"
+            >
+                <Icon name="menu" size={24} />
+            </button>
+        )}
     </div>
 </nav>
 
-<!-- Mobile menu panel -->
+<!-- Mobile menu panel (oculto en el chat, donde el hamburguesa abre el sidebar) -->
+{!hasSidebar && (
 <div
     id="mobile-menu"
     class="fixed inset-0 z-40 flex flex-col bg-surface pt-16 transition-all duration-300 ease-out md:hidden invisible opacity-0 -translate-y-2 pointer-events-none"
@@ -72,7 +92,7 @@ import Icon from './Icon.astro'
             Verificar
         </a>
         <a
-            href="/chatbot"
+            href="/asistente"
             class="mobile-link rounded-md px-md py-lg text-headline-md font-bold text-on-surface transition-colors hover:bg-surface-container"
         >
             Chatbot
@@ -85,6 +105,7 @@ import Icon from './Icon.astro'
         </a>
     </nav>
 </div>
+)}
 
 <script>
     const toggle = document.getElementById('menu-toggle')
