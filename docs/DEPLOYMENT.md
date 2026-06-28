@@ -25,11 +25,18 @@ Non-secret config — either as secrets or in `wrangler.toml [vars]`:
 | `LLM_MODEL` | recommended | e.g. `claude-haiku-4-5-20251001` or `gpt-4o-mini` |
 | `LLM_BASE_URL` | optional | only for HuggingFace/Groq OpenAI-compat endpoints |
 | `CORS_ORIGIN` | **yes for prod** | exact frontend origin(s), comma-separated; defaults to `*` (fail-open) |
+| `CORS_ORIGIN_PATTERN` | optional | anchored regex for dynamic allows, e.g. local dev: `^http://(localhost\|127\.0\.0\.1)(:\d+)?$` |
 
-> ⚠️ `CORS_ORIGIN` defaults to `*`. Set it to the exact frontend origin(s)
-> **before** going live, or any site can call the API. Multiple origins are
-> comma-separated, e.g. `https://verificavenezuela.com,https://staging.example.com`.
-> Do not include a trailing slash — browser `Origin` headers never have one.
+> ⚠️ CORS defaults to `*` when **both** `CORS_ORIGIN` and `CORS_ORIGIN_PATTERN`
+> are unset. Set the exact origin(s) **before** going live, or any site can call
+> the API. Multiple origins are comma-separated, e.g.
+> `https://verificavenezuela.com,https://staging.example.com`. Do not include a
+> trailing slash — browser `Origin` headers never have one.
+>
+> `CORS_ORIGIN_PATTERN` lets you allow a family of origins without code changes
+> (local dev on any port, per-PR preview URLs, etc.). **Keep it anchored**
+> (`^…$`) — an unanchored `localhost` would also match `localhost.evil.com`.
+> An invalid regex is ignored (falls back to the exact `CORS_ORIGIN` list).
 
 ### 1.2 Push the DB schema (once, before first deploy)
 
