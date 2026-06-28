@@ -1,0 +1,25 @@
+---
+import '../styles/globals.css'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>VerificaVzla - Combatiendo la desinformación</title>
+    <meta name="description" content="Portal de verificación de noticias sobre Venezuela. Analiza afirmaciones virales y consulta datos verificados sobre el sismo de junio 2026." />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@700;800&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Sans:wght@600&display=swap" rel="stylesheet" />
+  </head>
+  <body class="font-body text-body-md">
+    <Header />
+    <slot />
+    <Footer />
+  </body>
+</html>
