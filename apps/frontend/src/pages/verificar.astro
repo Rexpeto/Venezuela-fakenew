@@ -1,0 +1,226 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Header from '../components/Header.astro'
+import BottomNav from '../components/BottomNav.astro'
+
+// Andamiaje estático: la verificación real se conectará al backend.
+export const prerender = true
+---
+
+<Layout
+  title="Verificar una noticia - VerificaVzla"
+  description="Herramienta de verificación: analiza afirmaciones virales, tweets o cadenas de WhatsApp y obtén un veredicto basado en fuentes confiables."
+>
+  <Header />
+
+  <main class="flex-grow flex flex-col items-center px-md py-xl pb-24 md:pb-xl">
+    <div class="w-full max-w-[720px] flex flex-col gap-xl">
+      <!-- Encabezado -->
+      <div class="max-w-3xl">
+        <div
+          class="inline-block bg-primary-container text-on-primary-container px-3 py-1 rounded-sm mb-md font-label-caps text-label-caps"
+        >
+          LABORATORIO DE VERIFICACIÓN
+        </div>
+        <h1
+          class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-md leading-tight"
+        >
+          Verifica una afirmación
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">
+          Pega el texto, tweet o cadena de WhatsApp que quieras revisar. Nuestro
+          equipo lo contrasta con fuentes oficiales y devuelve un veredicto.
+        </p>
+      </div>
+
+      <!-- Formulario de entrada -->
+      <section
+        class="bg-surface-container-lowest border border-outline-variant p-lg rounded-lg"
+      >
+        <form id="verify-form" class="flex flex-col gap-md">
+          <div class="flex flex-col gap-xs">
+            <label
+              for="claim"
+              class="font-label-caps text-label-caps text-on-surface-variant"
+              >Afirmación / Claim a verificar</label
+            >
+            <textarea
+              id="claim"
+              name="claim"
+              rows="4"
+              required
+              class="w-full bg-surface border border-outline focus:border-secondary-container focus:ring-0 rounded p-sm font-body-md text-on-surface transition-all resize-none"
+              placeholder="Pega el texto, tweet o cadena de WhatsApp aquí..."
+            ></textarea>
+          </div>
+
+          <!-- Acordeón: contexto opcional -->
+          <div class="group border-b border-outline-variant pb-base">
+            <button
+              type="button"
+              id="context-toggle"
+              aria-expanded="false"
+              aria-controls="context-content"
+              class="w-full flex justify-between items-center py-base text-left transition-all"
+            >
+              <span
+                class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-xs"
+              >
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true"
+                  >add_circle</span
+                >
+                Añadir contexto o fuente de origen (opcional)
+              </span>
+              <span
+                class="material-symbols-outlined text-on-surface-variant transition-transform"
+                aria-hidden="true">expand_more</span
+              >
+            </button>
+            <div class="hidden mt-sm pb-sm" id="context-content">
+              <label for="source" class="sr-only">URL o nombre de la fuente</label>
+              <input
+                id="source"
+                name="source"
+                type="text"
+                class="w-full bg-surface-container-low border border-outline-variant rounded p-sm font-body-sm"
+                placeholder="URL o nombre de la fuente..."
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              class="bg-primary hover:bg-primary-container text-on-primary font-label-caps text-label-caps px-lg py-md rounded transition-colors active:scale-95 duration-150 flex items-center gap-sm"
+            >
+              VERIFICAR CLAIM
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true"
+                >search</span
+              >
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Resultado de ejemplo (oculto hasta verificar) -->
+      <section
+        id="verify-result"
+        class="hidden flex-col border border-outline-variant bg-surface-container-lowest rounded-lg overflow-hidden"
+      >
+        <!-- Banner de veredicto -->
+        <div
+          class="border-t-[6px] border-error p-lg bg-error-container/10 flex justify-between items-center"
+        >
+          <div class="flex items-center gap-md">
+            <span
+              class="material-symbols-outlined text-error"
+              style="font-size: 32px; font-variation-settings: 'FILL' 1;"
+              aria-hidden="true">warning</span
+            >
+            <h2
+              class="font-headline-md text-headline-md text-error tracking-widest uppercase"
+            >
+              FALSO
+            </h2>
+          </div>
+          <div
+            class="bg-surface-container-high px-sm py-xs rounded flex items-center gap-xs"
+          >
+            <span class="font-label-caps text-[10px] text-on-surface-variant"
+              >CONFIANZA:</span
+            >
+            <span class="font-label-caps text-label-caps text-primary">ALTA</span>
+          </div>
+        </div>
+
+        <!-- Explicación -->
+        <div class="p-lg border-t border-outline-variant">
+          <div class="font-body-lg text-body-lg text-on-surface leading-[1.6] space-y-md">
+            <p>
+              <strong>Ejemplo demostrativo.</strong> Este es el formato del
+              resultado que devolverá la herramienta una vez conectada al backend.
+              La información mostrada no corresponde a una verificación real.
+            </p>
+            <ul
+              class="list-disc pl-lg space-y-sm text-on-surface-variant font-body-md"
+            >
+              <li>El documento digital carece de firma electrónica válida y sello oficial.</li>
+              <li>La tipografía no corresponde a los manuales de identidad institucional.</li>
+              <li>Las cuentas oficiales no han emitido alertas similares en 72 horas.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Metadatos: patrón y fuentes -->
+        <div
+          class="p-lg bg-surface-container-low flex flex-col gap-lg border-t border-outline-variant"
+        >
+          <div class="flex flex-col gap-sm">
+            <h3
+              class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider"
+            >
+              Patrón detectado
+            </h3>
+            <a
+              href="/patrones"
+              class="bg-surface-container-lowest border border-outline-variant p-md flex items-center gap-md rounded hover:border-secondary transition-colors"
+            >
+              <div class="bg-error/10 p-sm rounded">
+                <span class="material-symbols-outlined text-error" aria-hidden="true"
+                  >hub</span
+                >
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-caps text-label-caps text-primary"
+                  >SUPUESTA RÉPLICA MASIVA</span
+                >
+                <span class="font-body-sm text-body-sm text-on-surface-variant"
+                  >Mensaje idéntico detectado en más de 45 grupos públicos.</span
+                >
+              </div>
+            </a>
+          </div>
+
+          <div class="flex flex-col gap-sm">
+            <h3
+              class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider"
+            >
+              Fuentes y evidencias
+            </h3>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Las fuentes verificadas aparecerán aquí cuando la consulta se
+              procese en el backend.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <BottomNav active="Verificar" />
+</Layout>
+
+<script>
+  // Acordeón de contexto opcional
+  const ctxToggle = document.getElementById('context-toggle')
+  const ctxContent = document.getElementById('context-content')
+  ctxToggle?.addEventListener('click', () => {
+    const open = ctxContent?.classList.toggle('hidden') === false
+    ctxToggle.setAttribute('aria-expanded', String(open))
+  })
+
+  // Envío del formulario.
+  // TODO: conectar con el backend ->
+  //   import { orpc } from '../lib/orpc'
+  //   const result = await orpc.verify({ claim, source })
+  // Por ahora se revela un resultado de ejemplo para validar el flujo de la UI.
+  const form = document.getElementById('verify-form') as HTMLFormElement | null
+  const result = document.getElementById('verify-result')
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault()
+    if (!result) return
+    result.classList.remove('hidden')
+    result.classList.add('flex')
+    result.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+</script>

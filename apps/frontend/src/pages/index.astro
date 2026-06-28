@@ -1,14 +1,179 @@
 ---
-// Portal AntiFake Venezuela — placeholder
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Icon from "../components/Icon.astro";
+import RecentPatternPreviewCard from "../components/RecentPatternPreviewCard.astro";
+import Button from "../components/Button.astro";
+import { api } from "../lib/api";
+import {
+    MOCK_RECENT_PATTERN_PREVIEWS,
+    type RecentPatternPreview,
+} from "../lib/recent-pattern-previews";
+
+const recentPatterns: RecentPatternPreview[] =
+    "getRecentPatternPreviews" in api &&
+    typeof (api as any).getRecentPatternPreviews === "function"
+        ? await (api as any).getRecentPatternPreviews()
+        : MOCK_RECENT_PATTERN_PREVIEWS;
 ---
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Portal AntiFake Venezuela</title>
-  </head>
-  <body>
-    <h1>Portal AntiFake Venezuela</h1>
-    <p>Verificador de noticias sobre el sismo de junio 2026.</p>
-  </body>
-</html>
+
+<Layout
+    title="VerificaVzla - Combatiendo la desinformación"
+    description="Portal de verificación de noticias sobre Venezuela. Analiza afirmaciones virales y consulta datos verificados sobre el sismo de junio 2026."
+>
+    <Header />
+
+    <main>
+        <!-- ─── Hero ────────────────────────────────────────── -->
+        <section
+            class="relative flex w-full flex-col items-center px-gutter py-xl text-center"
+        >
+            <div class="w-full max-w-[800px]">
+                <div
+                    class="mb-md inline-block animate-pulse rounded-full bg-secondary-fixed px-md py-xs font-label-caps text-label-caps text-on-secondary-fixed-variant"
+                >
+                     Actualización: 15 de junio, 2026
+
+                </div>
+
+                <h1
+                    class="mb-md font-display-lg-mobile text-display-lg-mobile font-extrabold tracking-tight text-primary md:text-display-lg md:leading-[56px]"
+                >
+                    Combatiendo la desinformación en momentos de crisis
+                </h1>
+
+                <p
+                    class="mx-auto mb-xl max-w-2xl font-body-lg text-body-lg text-on-surface-variant"
+                >
+                    Analiza afirmaciones virales y consulta datos verificados
+                    sobre la situación actual en Venezuela.
+                </p>
+
+                <div
+                    class="flex flex-col items-stretch justify-center gap-md md:flex-row md:items-center"
+                >
+                    <Button href="/verificar" variant="solid">
+                        <Icon name="search-check" size={20} />
+                        Verificar una noticia
+                    </Button>
+                    <Button href="/asistente" variant="outline">
+                        <Icon name="bot" size={20} />
+                        Preguntar al Asistente
+                    </Button>
+                </div>
+            </div>
+
+            <div
+                class="pointer-events-none absolute -z-10 left-0 top-0 h-full w-full overflow-hidden opacity-5"
+            >
+                <div
+                    class="absolute -right-20 top-1/4 h-96 w-96 rounded-full bg-secondary blur-3xl"
+                >
+                </div>
+                <div
+                    class="absolute -left-20 bottom-0 h-80 w-80 rounded-full bg-primary blur-3xl"
+                >
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Trust Banner ───────────────────────────────── -->
+        <section
+            class="w-full border-y border-outline-variant bg-bg-subtle py-lg"
+        >
+            <div class="mx-auto max-w-container px-gutter">
+                <p
+                    class="mb-md text-center font-label-caps text-label-caps uppercase tracking-widest text-outline"
+                >
+                    Fuentes de Confianza &amp; Aliados
+                </p>
+                <div
+                    class="scrolling-wrapper flex items-center justify-between gap-xl overflow-x-auto whitespace-nowrap opacity-60 md:justify-center"
+                >
+                    <span
+                        class="font-headline-sm text-headline-sm text-on-surface-variant grayscale"
+                        >Observatorio Venezolano de Fake News</span
+                    >
+                    <span
+                        class="font-headline-sm text-headline-sm text-on-surface-variant grayscale"
+                        >Factchequeado</span
+                    >
+                    <span
+                        class="font-headline-sm text-headline-sm text-on-surface-variant grayscale"
+                        >USGS</span
+                    >
+                    <span
+                        class="font-headline-sm text-headline-sm text-on-surface-variant grayscale"
+                        >Cotejo.info</span
+                    >
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Quick Patterns Preview ──────────────────────── -->
+        <section class="mx-auto w-full max-w-container px-gutter py-xl">
+            <div class="mb-lg flex items-end justify-between">
+                <h2 class="font-headline-md text-headline-md text-primary">
+                    Patrones de Desinformación Recientes
+                </h2>
+                <a
+                    href="/patrones"
+                    class="hidden items-center gap-xs font-bold text-secondary hover:underline md:flex"
+                >
+                    Ver todos
+                    <Icon name="arrow-right" size={18} />
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 gap-lg md:grid-cols-3">
+                {
+                    recentPatterns.map((item) => (
+                        <RecentPatternPreviewCard item={item} />
+                    ))
+                }
+            </div>
+
+            <div class="mt-lg md:hidden">
+                <a
+                    href="/patrones"
+                    class="flex w-full items-center justify-center gap-sm rounded-md bg-surface-container py-md font-bold text-primary"
+                >
+                    Ver todos los patrones
+                    <Icon name="arrow-right" size={20} />
+                </a>
+            </div>
+        </section>
+
+        <!-- ─── Newsletter ──────────────────────────────────── -->
+        <section class="mt-xl w-full bg-tertiary-container px-gutter py-xl">
+            <div
+                class="mx-auto flex max-w-container flex-col items-center gap-xl md:flex-row"
+            >
+                <div class="w-full md:w-1/2">
+                    <h2 class="mb-sm font-headline-md text-headline-md text-white">
+                        Recibe alertas críticas en tiempo real
+                    </h2>
+                    <p class="text-body-md text-on-tertiary-container">
+                        Suscríbete a nuestro canal de verificación para recibir
+                        solo información confirmada durante emergencias.
+                    </p>
+                </div>
+                <div class="flex w-full gap-sm md:w-1/2">
+                    <input
+                        type="email"
+                        placeholder="correo@ejemplo.com"
+                        class="grow rounded-md bg-white/10 px-md py-sm text-white placeholder-on-tertiary-container focus:border-secondary focus:ring-secondary"
+                    />
+                    <button
+                        class="rounded-md bg-secondary px-lg py-md font-bold text-white transition-all hover:bg-secondary/90"
+                    >
+                        Unirme
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <Footer />
+</Layout>

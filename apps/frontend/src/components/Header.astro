@@ -1,0 +1,176 @@
+---
+import Icon from './Icon.astro'
+
+interface Props {
+  /** En la vista de chat el hamburguesa abre el sidebar de consultas, no el menú de navegación. */
+  hasSidebar?: boolean
+}
+
+const { hasSidebar = false } = Astro.props
+---
+
+<nav
+    class="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-outline-variant bg-surface/95 px-gutter backdrop-blur-sm"
+>
+    <div class="flex items-center gap-sm">
+        <a href="/" class="flex items-center gap-sm">
+            <Icon name="shield-check" size={28} class="text-primary" />
+            <span
+                class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary"
+                >VerificaVzla</span
+            >
+        </a>
+    </div>
+
+    <!-- Desktop nav -->
+    <div class="hidden items-center gap-lg md:flex">
+        <a
+            href="/verificar"
+            class="font-medium text-on-surface-variant transition-colors duration-200 hover:text-secondary"
+        >
+            Verificar
+        </a>
+        <a
+            href="/asistente"
+            class="font-medium text-on-surface-variant transition-colors duration-200 hover:text-secondary"
+        >
+            Asistente
+        </a>
+        <a
+            href="/patrones"
+            class="font-medium text-on-surface-variant transition-colors duration-200 hover:text-secondary"
+        >
+            Patrones
+        </a>
+    </div>
+
+    <div class="flex items-center gap-sm">
+        <a
+            href="https://github.com/Rexpeto/Venezuela-fakenew"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rounded border border-outline px-md py-xs font-label-caps text-label-caps transition-all hover:bg-surface-container"
+        >
+            GitHub
+        </a>
+        {hasSidebar ? (
+            <button
+                id="sidebar-toggle"
+                class="flex cursor-pointer p-2 text-on-surface md:hidden"
+                aria-label="Abrir consultas frecuentes"
+                aria-controls="sidebar"
+                aria-expanded="false"
+            >
+                <Icon name="menu" size={24} />
+            </button>
+        ) : (
+            <button
+                id="menu-toggle"
+                class="flex cursor-pointer p-2 text-on-surface md:hidden"
+                aria-label="Abrir menú"
+            >
+                <Icon name="menu" size={24} />
+            </button>
+        )}
+    </div>
+</nav>
+
+<!-- Mobile menu panel (oculto en el chat, donde el hamburguesa abre el sidebar) -->
+{!hasSidebar && (
+<div
+    id="mobile-menu"
+    class="fixed inset-0 z-40 flex flex-col bg-surface pt-16 transition-all duration-300 ease-out md:hidden invisible opacity-0 -translate-y-2 pointer-events-none"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menú de navegación"
+>
+    <nav class="flex flex-col gap-2 px-gutter py-lg">
+        <a
+            href="/verificar"
+            class="mobile-link rounded-md px-md py-lg text-headline-md font-bold text-on-surface transition-colors hover:bg-surface-container"
+        >
+            Verificar
+        </a>
+        <a
+            href="/asistente"
+            class="mobile-link rounded-md px-md py-lg text-headline-md font-bold text-on-surface transition-colors hover:bg-surface-container"
+        >
+            Asistente
+        </a>
+        <a
+            href="/patrones"
+            class="mobile-link rounded-md px-md py-lg text-headline-md font-bold text-on-surface transition-colors hover:bg-surface-container"
+        >
+            Patrones
+        </a>
+    </nav>
+</div>
+)}
+
+<script>
+    const toggle = document.getElementById('menu-toggle')
+    const menu = document.getElementById('mobile-menu')
+
+    if (toggle && menu) {
+        let isOpen = false
+
+        toggle.addEventListener('click', () => {
+            isOpen = !isOpen
+
+            // Animate: toggle visibility, opacity, and translate
+            menu.classList.toggle('invisible', !isOpen)
+            menu.classList.toggle('pointer-events-none', !isOpen)
+            menu.classList.toggle('opacity-0', !isOpen)
+            menu.classList.toggle('-translate-y-2', !isOpen)
+            menu.classList.toggle('opacity-100', isOpen)
+            menu.classList.toggle('translate-y-0', isOpen)
+            menu.classList.toggle('pointer-events-auto', isOpen)
+
+            toggle.setAttribute(
+                'aria-label',
+                isOpen ? 'Cerrar menú' : 'Abrir menú',
+            )
+            document.body.classList.toggle('overflow-hidden', isOpen)
+        })
+
+        // Close on link click
+        menu.querySelectorAll('.mobile-link').forEach((link) => {
+            link.addEventListener('click', () => {
+                isOpen = false
+                menu.classList.add(
+                    'invisible',
+                    'pointer-events-none',
+                    'opacity-0',
+                    '-translate-y-2',
+                )
+                menu.classList.remove(
+                    'opacity-100',
+                    'translate-y-0',
+                    'pointer-events-auto',
+                )
+                toggle.setAttribute('aria-label', 'Abrir menú')
+                document.body.classList.remove('overflow-hidden')
+            })
+        })
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                isOpen = false
+                menu.classList.add(
+                    'invisible',
+                    'pointer-events-none',
+                    'opacity-0',
+                    '-translate-y-2',
+                )
+                menu.classList.remove(
+                    'opacity-100',
+                    'translate-y-0',
+                    'pointer-events-auto',
+                )
+                toggle.setAttribute('aria-label', 'Abrir menú')
+                document.body.classList.remove('overflow-hidden')
+            }
+        })
+    }
+</script>

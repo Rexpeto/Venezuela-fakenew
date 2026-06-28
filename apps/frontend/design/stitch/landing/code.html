@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VerificaVzla - Combatiendo la desinformación</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@700;800&amp;family=Source+Sans+3:wght@400;600&amp;family=IBM+Plex+Sans:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-primary-fixed": "#00164e",
+                        "on-surface": "#191c1e",
+                        "outline": "#757682",
+                        "primary": "#00236f",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#b6c4ff",
+                        "on-primary-fixed-variant": "#264191",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "on-surface-variant": "#444651",
+                        "tertiary": "#1b2b3f",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-variant": "#e0e3e5",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-container": "#9dadc6",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#2170e4",
+                        "tertiary-container": "#314156",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#001a42",
+                        "background": "#f7f9fb",
+                        "primary-container": "#1e3a8a",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-secondary-container": "#fefcff",
+                        "on-background": "#191c1e",
+                        "surface-tint": "#4059aa",
+                        "secondary": "#0058be",
+                        "outline-variant": "#c5c5d3",
+                        "inverse-surface": "#2d3133",
+                        "tertiary-fixed": "#d3e4fe",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container-high": "#e6e8ea",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#d8e2ff",
+                        "primary-fixed": "#dce1ff",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#90a8ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1120px",
+                        "gutter": "24px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "xl": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Chivo"],
+                        "body-sm": ["\"Source Sans 3\""],
+                        "headline-sm": ["Chivo"],
+                        "label-caps": ["IBM Plex Sans"],
+                        "display-lg": ["Chivo"],
+                        "display-lg-mobile": ["Chivo"],
+                        "body-md": ["\"Source Sans 3\""],
+                        "body-lg": ["\"Source Sans 3\""]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #F8FAFC;
+            color: #191C1E;
+            -webkit-font-smoothing: antialiased;
+        }
+        .verification-badge {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+        }
+        .scrolling-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<nav class="sticky top-0 z-50 flex justify-between items-center w-full px-gutter h-16 bg-surface/95 backdrop-blur-sm border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="fact_check">fact_check</span>
+<span class="text-headline-sm font-headline-md font-bold text-primary tracking-tight">VerificaVzla</span>
+</div>
+<!-- Desktop Links (Hidden on Mobile) -->
+<div class="hidden md:flex items-center gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-secondary transition-colors duration-200" href="#">Verificar</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary transition-colors duration-200" href="#">Chatbot</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary transition-colors duration-200" href="#">Patrones</a>
+</div>
+<div class="flex items-center gap-sm">
+<button class="px-md py-xs border border-outline text-label-caps font-label-caps rounded hover:bg-surface-container transition-all">
+                GitHub
+            </button>
+<button class="md:hidden flex p-2 text-on-surface">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative w-full py-xl px-gutter flex flex-col items-center text-center">
+<div class="max-w-[800px] w-full">
+<div class="inline-block px-md py-xs bg-secondary-fixed text-on-secondary-fixed-variant text-label-caps font-label-caps rounded-full mb-md animate-pulse">
+                    Sismo Junio 2026 Context
+                </div>
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-md tracking-tight leading-tight">
+                    Combatiendo la desinformación en momentos de crisis
+                </h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant mb-xl max-w-2xl mx-auto">
+                    Analiza afirmaciones virales y consulta datos verificados sobre la situación actual en Venezuela.
+                </p>
+<div class="flex flex-col md:flex-row gap-md justify-center items-stretch md:items-center">
+<a class="flex items-center justify-center gap-sm bg-secondary px-lg py-md text-white font-bold rounded-lg hover:shadow-lg transition-all active:scale-95" href="/verificar">
+<span class="material-symbols-outlined" data-icon="search_check">search_check</span>
+                        Verificar una noticia
+                    </a>
+<a class="flex items-center justify-center gap-sm border-2 border-primary-container text-primary-container px-lg py-md font-bold rounded-lg hover:bg-surface-container transition-all" href="/chatbot">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+                        Preguntar al Chatbot
+                    </a>
+</div>
+</div>
+<!-- Background subtle pattern/decoration -->
+<div class="absolute -z-10 top-0 left-0 w-full h-full opacity-5 pointer-events-none overflow-hidden">
+<div class="absolute top-1/4 -right-20 w-96 h-96 rounded-full bg-secondary blur-3xl"></div>
+<div class="absolute bottom-0 -left-20 w-80 h-80 rounded-full bg-primary blur-3xl"></div>
+</div>
+</section>
+<!-- Trust Banner -->
+<section class="w-full bg-[#F8FAFC] py-lg border-y border-outline-variant overflow-hidden">
+<div class="max-w-container-max mx-auto px-gutter">
+<p class="text-center text-label-caps font-label-caps text-outline mb-md uppercase tracking-widest">Fuentes de Confianza &amp; Aliados</p>
+<div class="flex overflow-x-auto scrolling-wrapper gap-xl items-center justify-between md:justify-center whitespace-nowrap opacity-60">
+<span class="text-headline-sm font-headline-sm text-on-surface-variant grayscale">Observatorio Venezolano de Fake News</span>
+<span class="text-headline-sm font-headline-sm text-on-surface-variant grayscale">Factchequeado</span>
+<span class="text-headline-sm font-headline-sm text-on-surface-variant grayscale">USGS</span>
+<span class="text-headline-sm font-headline-sm text-on-surface-variant grayscale">Cotejo.info</span>
+</div>
+</div>
+</section>
+<!-- Quick Patterns Preview -->
+<section class="w-full py-xl px-gutter max-w-container-max mx-auto">
+<div class="flex justify-between items-end mb-lg">
+<h2 class="text-headline-md font-headline-md text-primary">Patrones de Desinformación Recientes</h2>
+<a class="hidden md:flex text-secondary font-bold items-center gap-xs hover:underline" href="/patrones">
+                    Ver todos <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Card 1 -->
+<div class="bg-white border border-outline-variant rounded p-md flex flex-col gap-sm hover:shadow-sm transition-shadow">
+<div class="flex items-center gap-xs text-error font-bold text-label-caps">
+<span class="material-symbols-outlined text-[16px]" data-icon="emergency_home">emergency_home</span>
+                        ALERTA FALSA
+                    </div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Supuesta réplica masiva en Caracas</h3>
+<p class="text-body-sm text-on-surface-variant">Audio circulando en WhatsApp afirma que un sismo de 8.0 ocurrirá en las próximas 2 horas. Los sismos no se pueden predecir.</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-surface-variant">
+<span class="text-label-caps text-outline">Hace 2 horas</span>
+<button class="text-primary font-bold text-label-caps">LEER MÁS</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white border border-outline-variant rounded p-md flex flex-col gap-sm hover:shadow-sm transition-shadow">
+<div class="flex items-center gap-xs text-secondary font-bold text-label-caps">
+<span class="material-symbols-outlined text-[16px]" data-icon="policy">policy</span>
+                        CONTEXTO NECESARIO
+                    </div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Video de edificio colapsado en Valencia</h3>
+<p class="text-body-sm text-on-surface-variant">El video es real pero corresponde al terremoto de Turquía en 2023. No hay reportes de daños estructurales en Carabobo.</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-surface-variant">
+<span class="text-label-caps text-outline">Hace 5 horas</span>
+<button class="text-primary font-bold text-label-caps">LEER MÁS</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-white border border-outline-variant rounded p-md flex flex-col gap-sm hover:shadow-sm transition-shadow">
+<div class="flex items-center gap-xs text-error font-bold text-label-caps">
+<span class="material-symbols-outlined text-[16px]" data-icon="campaign">campaign</span>
+                        CADENA FALSA
+                    </div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Cierre total de autopistas nacionales</h3>
+<p class="text-body-sm text-on-surface-variant">Información manipulada. El tránsito está restringido solo en puntos de control específicos por evaluación de puentes.</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-surface-variant">
+<span class="text-label-caps text-outline">Hace 8 horas</span>
+<button class="text-primary font-bold text-label-caps">LEER MÁS</button>
+</div>
+</div>
+</div>
+<div class="md:hidden mt-lg">
+<a class="flex w-full justify-center items-center gap-sm bg-surface-container py-md text-primary font-bold rounded" href="/patrones">
+                    Ver todos los patrones
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- Newsletter / Contact Section -->
+<section class="w-full py-xl px-gutter bg-tertiary-container mt-xl">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row items-center gap-xl">
+<div class="w-full md:w-1/2">
+<h2 class="text-headline-md font-headline-md text-white mb-sm">Recibe alertas críticas en tiempo real</h2>
+<p class="text-body-md text-on-tertiary-container">Suscríbete a nuestro canal de verificación para recibir solo información confirmada durante emergencias.</p>
+</div>
+<div class="w-full md:w-1/2 flex gap-sm">
+<input class="flex-grow bg-white/10 border-white/20 text-white placeholder-on-tertiary-container focus:ring-secondary focus:border-secondary rounded px-md" placeholder="correo@ejemplo.com" type="email"/>
+<button class="bg-secondary px-lg py-md text-white font-bold rounded hover:bg-secondary/90 transition-all">Unirme</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-tertiary py-xl px-gutter flex flex-col md:flex-row justify-between items-center gap-md max-w-container-max mx-auto border-t border-white/5">
+<div class="flex flex-col gap-sm items-center md:items-start">
+<span class="text-headline-sm font-headline-sm font-bold text-on-tertiary">VerificaVzla</span>
+<p class="text-body-sm font-body-sm text-tertiary-fixed-dim/80 text-center md:text-left">© 2024 VerificaVzla. Al servicio de la verdad.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="text-label-caps font-label-caps text-tertiary-fixed-dim/80 hover:text-on-tertiary transition-colors hover:underline" href="#">Verificar</a>
+<a class="text-label-caps font-label-caps text-tertiary-fixed-dim/80 hover:text-on-tertiary transition-colors hover:underline" href="#">Chatbot</a>
+<a class="text-label-caps font-label-caps text-tertiary-fixed-dim/80 hover:text-on-tertiary transition-colors hover:underline" href="#">Patrones</a>
+<a class="text-label-caps font-label-caps text-tertiary-fixed-dim/80 hover:text-on-tertiary transition-colors hover:underline" href="#">Metodología</a>
+<a class="text-label-caps font-label-caps text-tertiary-fixed-dim/80 hover:text-on-tertiary transition-colors hover:underline" href="#">Contacto</a>
+</div>
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-on-tertiary cursor-pointer" data-icon="share">share</span>
+<span class="material-symbols-outlined text-on-tertiary cursor-pointer" data-icon="rss_feed">rss_feed</span>
+</div>
+</footer>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.opacity = '0.8';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.opacity = '1';
+            });
+        });
+    </script>
+</body></html>

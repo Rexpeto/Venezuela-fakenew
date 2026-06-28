@@ -1,0 +1,37 @@
+---
+export type ButtonVariant = 'solid' | 'outline'
+
+const {
+  href,
+  variant = 'solid',
+  class: className = '',
+  type = 'button',
+} = Astro.props as {
+  href?: string
+  variant?: ButtonVariant
+  class?: string
+  type?: 'button' | 'submit' | 'reset'
+}
+
+const base =
+  'inline-flex items-center justify-center gap-sm rounded-lg px-lg py-md font-bold transition-all'
+
+const variants: Record<ButtonVariant, string> = {
+  solid: 'bg-secondary text-white hover:shadow-lg active:scale-95',
+  outline:
+    'border-2 border-primary-container text-primary-container hover:bg-surface-container',
+}
+
+const classes = `${base} ${variants[variant]} ${className}`.trim()
+---
+
+{href ? (
+  <a href={href} class={classes}>
+    <slot />
+  </a>
+) : (
+  <button type={type} class={classes}>
+    <slot />
+  </button>
+)}
+

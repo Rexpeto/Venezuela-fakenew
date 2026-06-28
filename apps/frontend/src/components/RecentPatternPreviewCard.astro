@@ -1,0 +1,46 @@
+---
+import Card from "./Card.astro";
+import PatternBadge from "./PatternBadge.astro";
+import type { RecentPatternPreview } from "../lib/recent-pattern-previews";
+
+const { item } = Astro.props as { item: RecentPatternPreview };
+
+function timeAgoLabel(iso: string): string {
+    const then = new Date(iso).getTime();
+    const now = Date.now();
+    const diffMinutes = Math.max(0, Math.round((now - then) / 60000));
+
+    if (diffMinutes < 60) return `Hace ${diffMinutes} minutos`;
+
+    const diffHours = Math.round(diffMinutes / 60);
+    if (diffHours < 24) return `Hace ${diffHours} horas`;
+
+    const diffDays = Math.round(diffHours / 24);
+    return `Hace ${diffDays} días`;
+}
+---
+
+<Card>
+    <PatternBadge status={item.status} />
+
+    <h3 class="font-headline-sm text-headline-sm text-on-surface">
+        {item.title}
+    </h3>
+
+    <p class="text-body-sm text-on-surface-variant">
+        {item.summary}
+    </p>
+
+    <div
+        class="mt-auto flex items-center justify-between border-t border-surface-variant pt-md"
+    >
+        <span class="font-label-caps text-label-caps text-outline"
+            >{timeAgoLabel(item.createdAt)}</span
+        >
+        <a
+            href={item.href}
+            class="font-label-caps text-label-caps font-bold text-primary"
+            >LEER MÁS</a
+        >
+    </div>
+</Card>
