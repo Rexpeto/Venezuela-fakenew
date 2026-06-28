@@ -2,7 +2,7 @@
   "name": "frontend",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
+    "dev": "ASTRO_DEV_BACKGROUND=1 astro dev",
     "build": "astro build",
     "preview": "astro preview"
   },
