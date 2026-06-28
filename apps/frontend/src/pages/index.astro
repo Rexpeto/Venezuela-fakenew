@@ -24,7 +24,7 @@ const recentPatterns: RecentPatternPreview[] =
 >
     <Header />
 
-    <main class="flex-grow">
+    <main>
         <!-- ─── Hero ────────────────────────────────────────── -->
         <section
             class="relative flex w-full flex-col items-center px-gutter py-xl text-center"
@@ -146,7 +146,7 @@ const recentPatterns: RecentPatternPreview[] =
         </section>
     </main>
 
-    <!-- ─── Newsletter (fuera de main: el flex-grow no deja hueco antes del footer) ── -->
+    <!-- ─── Newsletter (banda inferior junto al footer) ──── -->
     <section class="mt-xl w-full bg-tertiary-container px-gutter py-xl">
             <div
                 class="mx-auto flex max-w-container flex-col items-center gap-xl md:flex-row"
@@ -176,4 +176,16 @@ const recentPatterns: RecentPatternPreview[] =
         </section>
 
     <Footer />
+
+    <!--
+      En pantallas altas el contenido no llena el viewport. En vez de estirar
+      con flex (que deja un hueco claro arriba del footer), pintamos el lienzo
+      con el color del footer: lo que sobra debajo se ve continuo, sin franja.
+      Solo en la home, que es la única página que termina en footer oscuro.
+    -->
+    <style is:global>
+        html {
+            background-color: var(--color-tertiary);
+        }
+    </style>
 </Layout>
