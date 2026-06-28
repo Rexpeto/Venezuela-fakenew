@@ -2,10 +2,6 @@
 
 <Resumen de los cambios>
 
-## Tarea
-
-- [Código de tarea de jira]()
-
 ## Tipo de Cambio
 
 - [ ] Bug fix
