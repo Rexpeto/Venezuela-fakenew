@@ -1,0 +1,22 @@
+---
+export type CardVariant = "default" | "verdadero" | "falso" | "dudoso";
+
+const { variant = "default", class: className = "" } = Astro.props as {
+    variant?: CardVariant;
+    class?: string;
+};
+
+const variantStyles: Record<CardVariant, string> = {
+    default: "bg-white border-outline-variant",
+    verdadero:
+        "border-l-4 border-l-emerald-500 bg-white border-outline-variant",
+    falso: "border-l-4 border-l-error bg-white border-outline-variant",
+    dudoso: "border-l-4 border-l-amber-500 bg-white border-outline-variant",
+};
+---
+
+<div
+    class="flex flex-col gap-sm rounded-md border p-md transition-shadow hover:shadow-sm {variantStyles[variant]} {className}"
+>
+    <slot />
+</div>
