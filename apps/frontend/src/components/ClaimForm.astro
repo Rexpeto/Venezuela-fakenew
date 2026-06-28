@@ -205,7 +205,6 @@
 
         // Avisar al result que se reinicie
         dispatch("verify:reset", null);
-        dispatch("verify:loading", { loading: true });
         setLoading(true);
 
         try {
@@ -218,7 +217,6 @@
             console.error("verifyClaim failed", err);
             dispatch("verify:error", { message: friendlyError(err) });
         } finally {
-            dispatch("verify:loading", { loading: false });
             setLoading(false);
         }
     });

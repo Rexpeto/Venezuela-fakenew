@@ -1,11 +1,29 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { RPCHandler } from '@orpc/server/fetch'
+import { onError, ORPCError, ValidationError } from '@orpc/server'
 import { router } from './router'
 
 import type { Bindings } from './types'
 
-const handler = new RPCHandler(router)
+const handler = new RPCHandler(router, {
+  clientInterceptors: [
+    onError((error) => {
+      if (
+        error instanceof ORPCError
+        && error.code === 'BAD_REQUEST'
+        && error.cause instanceof ValidationError
+      ) {
+        throw new ORPCError('BAD_REQUEST', {
+          status: 400,
+          message: error.message,
+          data: { issues: error.cause.issues },
+          cause: error.cause,
+        })
+      }
+    }),
+  ],
+})
 const app = new Hono<{ Bindings: Bindings }>()
 
 // Compile CORS_ORIGIN_PATTERN once and cache it across requests in the same
