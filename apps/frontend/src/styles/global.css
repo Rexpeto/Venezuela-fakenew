@@ -64,6 +64,8 @@
 
   /* Riesgo medio (ámbar) — no estaba tokenizado en el export */
   --color-warning: #f59e0b;
+  /* Texto oscuro sobre el ámbar: blanco daba 2.14:1 (falla AA). */
+  --color-on-warning: #271900;
 
   --color-background: #f7f9fb;
   --color-on-background: #191c1e;
@@ -160,6 +162,11 @@
 
   --color-secondary: #adc6ff;
   --color-on-secondary: #00315f;
+
+  /* Error se aclara igual que primary/secondary: como TEXTO (text-error) debe
+     leerse sobre fondo oscuro; el badge "alta" usa bg-error + text-on-error. */
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
 
   --color-background: #121417;
   --color-on-background: #e2e2e6;
