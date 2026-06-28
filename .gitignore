@@ -3,13 +3,16 @@ dist/
 .next/
 .astro/
 .wrangler/
+.worktrees/
 
+# env / secrets (los .env.example SÍ se versionan)
 .env
-<<<<<<< HEAD
 .env.local
 .env.*.local
 .dev.vars
+*.local
 
+# bases de datos locales
 *.db
 *.db-journal
 *.sqlite
@@ -18,9 +21,6 @@ dist/
 *.tsbuildinfo
 *.log
 
+.opencode
 .DS_Store
 Thumbs.db
-=======
-*.local
-.astro
-.opencode

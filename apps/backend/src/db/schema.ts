@@ -4,6 +4,7 @@ export const claims = sqliteTable('claims', {
   id: text('id').primaryKey(),
   claimText: text('claim_text').notNull(),
   context: text('context'),
+  userIp: text('user_ip'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 })
 

@@ -1,13 +1,12 @@
 import { createORPCClient } from '@orpc/client'
 import { RPCLink } from '@orpc/client/fetch'
+import type { RouterClient } from '@orpc/server'
+import type { router } from 'backend/router'
 
 const link = new RPCLink({
   url: `${import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8787'}/rpc`,
 })
 
-// Once the router type is stable, type this with RouterClient<typeof router>
-// import type { RouterClient } from '@orpc/server'
-// import type { router } from 'backend/src/router'
-// export const orpc: RouterClient<typeof router> = createORPCClient(link)
-
-export const orpc = createORPCClient(link)
+// Typed against the real backend router — any drift between a procedure's
+// signature and its frontend call site is now a compile-time error.
+export const orpc: RouterClient<typeof router> = createORPCClient(link)

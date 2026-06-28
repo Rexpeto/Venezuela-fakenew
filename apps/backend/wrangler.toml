@@ -1,7 +1,11 @@
 name = "backend"
 main = "src/index.ts"
 compatibility_date = "2026-06-27"
+# Required by the AI SDK (ai / @ai-sdk/*) which pulls in node: builtins.
+compatibility_flags = ["nodejs_compat"]
 
-[vars]
-TURSO_DATABASE_URL = ""
-# TURSO_AUTH_TOKEN → set via: wrangler secret put TURSO_AUTH_TOKEN
+# All env vars are set via `wrangler secret put <NAME>` (keeps env-specific
+# URLs/origins out of git). Do NOT add an empty TURSO_DATABASE_URL here — a
+# [vars] entry is written as plaintext on every deploy and overrides the secret.
+#   TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, LLM_API_KEY, TAVILY_API_KEY,
+#   LLM_MODEL, CORS_ORIGIN (exact frontend origin), LLM_BASE_URL (optional)
