@@ -1,364 +1,46 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import Header from '../components/Header.astro'
-import BottomNav from '../components/BottomNav.astro'
-import Card from '../components/Card.astro'
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import BottomNav from "../components/BottomNav.astro";
+import ClaimForm from "../components/ClaimForm.astro";
+import ClaimResult from "../components/ClaimResult.astro";
 
-// Andamiaje estático: la verificación real se conectará al backend.
-export const prerender = true
+export const prerender = true;
 ---
 
 <Layout
-  title="Verificar una noticia - VerificaVzla"
-  description="Herramienta de verificación: analiza afirmaciones virales, tweets o cadenas de WhatsApp y obtén un veredicto basado en fuentes confiables."
+    title="Verificar una noticia - VerificaVzla"
+    description="Herramienta de verificación: analiza afirmaciones virales, tweets o cadenas de WhatsApp y obtén un veredicto basado en fuentes confiables."
 >
-  <Header />
+    <Header />
 
-  <main class="flex-grow flex flex-col items-center px-md py-xl pb-24 md:pb-xl">
-    <div class="w-full max-w-[720px] flex flex-col gap-xl">
-      <!-- Encabezado -->
-      <div class="max-w-3xl">
-        <div
-          class="inline-block bg-primary-container text-on-primary-container px-3 py-1 rounded-sm mb-md font-label-caps text-label-caps"
-        >
-          LABORATORIO DE VERIFICACIÓN
-        </div>
-        <h1
-          class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-md leading-tight"
-        >
-          Verifica una afirmación
-        </h1>
-        <p class="font-body-lg text-body-lg text-on-surface-variant">
-          Pega el texto, tweet o cadena de WhatsApp que quieras revisar. Nuestro
-          equipo lo contrasta con fuentes oficiales y devuelve un veredicto.
-        </p>
-      </div>
-
-      <!-- Formulario de entrada -->
-      <Card as="section" class="p-lg">
-        <form id="verify-form" class="flex flex-col gap-md">
-          <div class="flex flex-col gap-xs">
-            <label
-              for="claim"
-              class="font-label-caps text-label-caps text-on-surface-variant"
-              >Afirmación / Claim a verificar</label
-            >
-            <textarea
-              id="claim"
-              name="claim"
-              rows="4"
-              required
-              class="w-full bg-surface border border-outline focus:border-secondary-container focus:ring-0 rounded p-sm font-body-md text-on-surface transition-all resize-none"
-              placeholder="Pega el texto, tweet o cadena de WhatsApp aquí..."
-            ></textarea>
-          </div>
-
-          <!-- Acordeón: contexto opcional -->
-          <div class="group border-b border-outline-variant pb-base">
-            <button
-              type="button"
-              id="context-toggle"
-              aria-expanded="false"
-              aria-controls="context-content"
-              class="w-full flex justify-between items-center py-base text-left transition-all"
-            >
-              <span
-                class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-xs"
-              >
-                <span class="material-symbols-outlined text-[18px]" aria-hidden="true"
-                  >add_circle</span
+    <main
+        class="flex-grow flex flex-col items-center px-md py-xl pb-24 md:pb-xl"
+    >
+        <div class="w-full max-w-[720px] flex flex-col gap-xl">
+            <!-- Encabezado -->
+            <div class="max-w-3xl">
+                <div
+                    class="inline-block bg-primary-container text-on-primary-container px-3 py-1 rounded-sm mb-md font-label-caps text-label-caps"
                 >
-                Añadir contexto o fuente de origen (opcional)
-              </span>
-              <span
-                class="material-symbols-outlined text-on-surface-variant transition-transform"
-                aria-hidden="true">expand_more</span
-              >
-            </button>
-            <div class="hidden mt-sm pb-sm" id="context-content">
-              <label for="source" class="sr-only">URL o nombre de la fuente</label>
-              <input
-                id="source"
-                name="source"
-                type="text"
-                class="w-full bg-surface-container-low border border-outline-variant rounded p-sm font-body-sm"
-                placeholder="URL o nombre de la fuente..."
-              />
+                    LABORATORIO DE VERIFICACIÓN
+                </div>
+                <h1
+                    class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-md leading-tight"
+                >
+                    Verifica una afirmación
+                </h1>
+                <p class="font-body-lg text-body-lg text-on-surface-variant">
+                    Pega el texto, tweet o cadena de WhatsApp que quieras
+                    revisar. Nuestro equipo lo contrasta con fuentes oficiales y
+                    devuelve un veredicto.
+                </p>
             </div>
-          </div>
 
-          <div class="flex justify-end">
-            <button
-              type="submit"
-              class="bg-primary hover:bg-primary-container text-on-primary font-label-caps text-label-caps px-lg py-md rounded transition-colors active:scale-95 duration-150 flex items-center gap-sm"
-            >
-              VERIFICAR CLAIM
-              <span class="material-symbols-outlined text-[18px]" aria-hidden="true"
-                >search</span
-              >
-            </button>
-          </div>
-        </form>
-      </Card>
-
-      <!-- Estado de error (oculto por defecto) -->
-      <section
-        id="verify-error"
-        class="hidden border border-error bg-error-container/10 rounded-lg p-lg"
-        role="alert"
-      >
-        <p id="verify-error-msg" class="font-body-md text-body-md text-error"></p>
-      </section>
-
-      <!-- Resultado (oculto hasta verificar) -->
-      <Card as="section" id="verify-result" class="hidden flex-col overflow-hidden">
-        <!-- Banner de veredicto -->
-        <div
-          id="result-banner"
-          class="border-t-[6px] p-lg flex justify-between items-center"
-        >
-          <div class="flex items-center gap-md">
-            <span
-              id="result-icon"
-              class="material-symbols-outlined"
-              style="font-size: 32px; font-variation-settings: 'FILL' 1;"
-              aria-hidden="true"></span
-            >
-            <h2
-              id="result-verdict"
-              class="font-headline-md text-headline-md tracking-widest uppercase"
-            ></h2>
-          </div>
-          <div
-            class="bg-surface-container-high px-sm py-xs rounded flex items-center gap-xs"
-          >
-            <span class="font-label-caps text-[10px] text-on-surface-variant"
-              >CONFIANZA:</span
-            >
-            <span
-              id="result-confidence"
-              class="font-label-caps text-label-caps text-primary"
-            ></span>
-          </div>
+            <ClaimForm />
+            <ClaimResult />
         </div>
+    </main>
 
-        <!-- Explicación -->
-        <div class="p-lg border-t border-outline-variant">
-          <p
-            id="result-explanation"
-            class="font-body-lg text-body-lg text-on-surface leading-[1.6] whitespace-pre-line"
-          ></p>
-        </div>
-
-        <!-- Metadatos: patrones y fuentes -->
-        <div
-          class="p-lg bg-surface-container-low flex flex-col gap-lg border-t border-outline-variant"
-        >
-          <div id="result-patterns-wrap" class="hidden flex-col gap-sm">
-            <h3
-              class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider"
-            >
-              Patrones detectados
-            </h3>
-            <div id="result-patterns" class="flex flex-col gap-sm"></div>
-          </div>
-
-          <div class="flex flex-col gap-sm">
-            <h3
-              class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider"
-            >
-              Fuentes y evidencias
-            </h3>
-            <ul id="result-sources" class="flex flex-col gap-xs"></ul>
-            <p
-              id="result-sources-empty"
-              class="hidden font-body-sm text-body-sm text-on-surface-variant"
-            >
-              No se encontraron fuentes para esta consulta.
-            </p>
-          </div>
-        </div>
-      </Card>
-    </div>
-  </main>
-
-  <BottomNav active="Verificar" />
+    <BottomNav active="Verificar" />
 </Layout>
-
-<script>
-  import { api } from '../lib/api'
-
-  // Acordeón de contexto opcional
-  const ctxToggle = document.getElementById('context-toggle')
-  const ctxContent = document.getElementById('context-content')
-  ctxToggle?.addEventListener('click', () => {
-    const open = ctxContent?.classList.toggle('hidden') === false
-    ctxToggle.setAttribute('aria-expanded', String(open))
-  })
-
-  // Estilos por veredicto. Clases literales para que Tailwind las genere.
-  const VERDICT_CONFIG = {
-    verdadero: {
-      banner: 'border-secondary bg-secondary-container/10',
-      text: 'text-secondary',
-      icon: 'check_circle',
-      label: 'VERDADERO',
-    },
-    falso: {
-      banner: 'border-error bg-error-container/10',
-      text: 'text-error',
-      icon: 'cancel',
-      label: 'FALSO',
-    },
-    dudoso: {
-      banner: 'border-tertiary bg-tertiary-container/10',
-      text: 'text-tertiary',
-      icon: 'help',
-      label: 'DUDOSO',
-    },
-  } as const
-
-  type Verdict = keyof typeof VERDICT_CONFIG
-
-  function confidenceLabel(c: number): string {
-    const pct = Math.round(c * 100)
-    const tier = c >= 0.7 ? 'ALTA' : c >= 0.4 ? 'MEDIA' : 'BAJA'
-    return `${tier} · ${pct}%`
-  }
-
-  const $ = (id: string) => document.getElementById(id)
-
-  const form = document.getElementById('verify-form') as HTMLFormElement | null
-  const result = $('verify-result')
-  const errorBox = $('verify-error')
-  const errorMsg = $('verify-error-msg')
-  const submitBtn = form?.querySelector(
-    'button[type="submit"]',
-  ) as HTMLButtonElement | null
-  const submitHtml = submitBtn?.innerHTML ?? ''
-
-  function setLoading(loading: boolean) {
-    if (!submitBtn) return
-    submitBtn.disabled = loading
-    submitBtn.innerHTML = loading
-      ? 'VERIFICANDO<span class="material-symbols-outlined text-[18px] animate-spin" aria-hidden="true">progress_activity</span>'
-      : submitHtml
-  }
-
-  function renderResult(res: {
-    verdict: string
-    confidence: number
-    explanation: string
-    patterns: string[]
-    sources: string[]
-  }) {
-    const cfg = VERDICT_CONFIG[res.verdict as Verdict] ?? VERDICT_CONFIG.dudoso
-
-    const banner = $('result-banner')
-    if (banner) banner.className = `border-t-[6px] p-lg flex justify-between items-center ${cfg.banner}`
-
-    const icon = $('result-icon')
-    if (icon) {
-      icon.className = `material-symbols-outlined ${cfg.text}`
-      icon.textContent = cfg.icon
-    }
-
-    const verdict = $('result-verdict')
-    if (verdict) {
-      verdict.className = `font-headline-md text-headline-md tracking-widest uppercase ${cfg.text}`
-      verdict.textContent = cfg.label
-    }
-
-    const conf = $('result-confidence')
-    if (conf) conf.textContent = confidenceLabel(res.confidence)
-
-    const explanation = $('result-explanation')
-    if (explanation) explanation.textContent = res.explanation
-
-    // Patrones detectados
-    const patternsWrap = $('result-patterns-wrap')
-    const patterns = $('result-patterns')
-    if (patterns && patternsWrap) {
-      patterns.innerHTML = ''
-      if (res.patterns.length > 0) {
-        patternsWrap.classList.remove('hidden')
-        patternsWrap.classList.add('flex')
-        for (const p of res.patterns) {
-          const row = document.createElement('div')
-          // Mismo borde que el componente Card (no puede usarse en runtime).
-          row.className =
-            'bg-surface-container-lowest border border-[#e2e8f0] dark:border-outline-variant p-md flex items-center gap-md rounded'
-          row.innerHTML = `<span class="material-symbols-outlined ${cfg.text}" aria-hidden="true">hub</span><span class="font-label-caps text-label-caps text-on-surface"></span>`
-          row.querySelector('span:last-child')!.textContent = p
-          patterns.appendChild(row)
-        }
-      } else {
-        patternsWrap.classList.add('hidden')
-        patternsWrap.classList.remove('flex')
-      }
-    }
-
-    // Fuentes
-    const sources = $('result-sources') as HTMLUListElement | null
-    const sourcesEmpty = $('result-sources-empty')
-    if (sources && sourcesEmpty) {
-      sources.innerHTML = ''
-      if (res.sources.length > 0) {
-        sourcesEmpty.classList.add('hidden')
-        for (const url of res.sources) {
-          let host = url
-          try {
-            host = new URL(url).hostname.replace(/^www\./, '')
-          } catch {}
-          const li = document.createElement('li')
-          const a = document.createElement('a')
-          a.href = url
-          a.target = '_blank'
-          a.rel = 'noopener noreferrer'
-          a.className =
-            'font-body-sm text-body-sm text-secondary hover:underline break-all flex items-center gap-xs'
-          a.innerHTML = `<span class="material-symbols-outlined text-[16px]" aria-hidden="true">open_in_new</span>`
-          a.append(host)
-          li.appendChild(a)
-          sources.appendChild(li)
-        }
-      } else {
-        sourcesEmpty.classList.remove('hidden')
-      }
-    }
-
-    result?.classList.remove('hidden')
-    result?.classList.add('flex')
-    result?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    if (!form) return
-    const data = new FormData(form)
-    const claim = String(data.get('claim') ?? '').trim()
-    const source = String(data.get('source') ?? '').trim()
-    if (!claim) return
-
-    errorBox?.classList.add('hidden')
-    result?.classList.add('hidden')
-    setLoading(true)
-
-    try {
-      const res = await api.verifyClaim({
-        claim,
-        context: source || undefined,
-      })
-      renderResult(res)
-    } catch (err) {
-      console.error('verifyClaim failed', err)
-      if (errorMsg)
-        errorMsg.textContent =
-          'No se pudo completar la verificación. Intenta de nuevo en unos segundos.'
-      errorBox?.classList.remove('hidden')
-      errorBox?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    } finally {
-      setLoading(false)
-    }
-  })
-</script>

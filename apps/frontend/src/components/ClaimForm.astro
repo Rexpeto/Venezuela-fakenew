@@ -1,0 +1,225 @@
+---
+// Formulario de verificación. Maneja la entrada del claim,
+// la llamada a la API y despacha eventos para el resultado.
+---
+
+<section
+    class="bg-surface-container-lowest border border-outline-variant p-lg rounded-lg"
+>
+    <form id="verify-form" class="flex flex-col gap-md">
+        <div class="flex flex-col gap-xs">
+            <label
+                for="claim"
+                class="font-label-caps text-label-caps text-on-surface-variant"
+            >
+                Afirmación / Claim a verificar
+            </label>
+            <textarea
+                id="claim"
+                name="claim"
+                rows="4"
+                required
+                class="w-full bg-surface border border-outline focus:border-secondary-container focus:ring-0 rounded p-sm font-body-md text-on-surface transition-all resize-none"
+                placeholder="Pega el texto, tweet o cadena de WhatsApp aquí..."
+            ></textarea>
+        </div>
+
+        <!-- Acordeón: contexto opcional -->
+        <div class="group border-b border-outline-variant pb-base">
+            <button
+                type="button"
+                id="context-toggle"
+                aria-expanded="false"
+                aria-controls="context-content"
+                class="w-full flex justify-between items-center py-base text-left transition-all"
+            >
+                <span
+                    class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-xs"
+                >
+                    <span
+                        class="material-symbols-outlined text-[18px]"
+                        aria-hidden="true">add_circle</span
+                    >
+                    Añadir contexto o fuente de origen (opcional)
+                </span>
+                <span
+                    class="material-symbols-outlined text-on-surface-variant transition-transform"
+                    aria-hidden="true">expand_more</span
+                >
+            </button>
+            <div class="hidden mt-sm pb-sm" id="context-content">
+                <label for="source" class="sr-only"
+                    >URL o nombre de la fuente</label
+                >
+                <input
+                    id="source"
+                    name="source"
+                    type="text"
+                    class="w-full bg-surface-container-low border border-outline-variant rounded p-sm font-body-sm"
+                    placeholder="URL o nombre de la fuente..."
+                />
+            </div>
+        </div>
+
+        <div class="flex justify-end">
+            <button
+                type="submit"
+                class="bg-primary hover:bg-primary-container text-on-primary font-label-caps text-label-caps px-lg py-md rounded transition-colors active:scale-95 duration-150 flex items-center gap-sm"
+            >
+                VERIFICAR CLAIM
+                <span
+                    class="material-symbols-outlined text-[18px]"
+                    aria-hidden="true">search</span
+                >
+            </button>
+        </div>
+    </form>
+</section>
+
+<script>
+    import { api } from "../lib/api";
+
+    // ─── Acordeón de contexto ────────────────────────────
+    const ctxToggle = document.getElementById("context-toggle");
+    const ctxContent = document.getElementById("context-content");
+    ctxToggle?.addEventListener("click", () => {
+        const open = ctxContent?.classList.toggle("hidden") === false;
+        ctxToggle.setAttribute("aria-expanded", String(open));
+    });
+
+    // ─── Helpers ─────────────────────────────────────────
+    const $ = (id: string) => document.getElementById(id);
+
+    /**
+     * Traduce errores del backend a mensajes amigables en español.
+     * Cubre:
+     *  - Zod validation (BAD_REQUEST / 400)
+     *  - Chat session not found (NOT_FOUND / 404)
+     *  - LLM / DB failures (INTERNAL_SERVER_ERROR / 500)
+     *  - Network errors (TypeError)
+     */
+    function friendlyError(err: unknown): string {
+        const orpc = err as
+            | {
+                  code?: string;
+                  status?: number;
+                  message?: string;
+                  data?: {
+                      issues?: Array<{
+                          code: string;
+                          path: string[];
+                          maximum?: number;
+                          message: string;
+                      }>;
+                  };
+              }
+            | undefined;
+
+        // ── 1. Zod validation issues (BAD_REQUEST) ──────────
+        const issues = orpc?.data?.issues;
+        if (issues && issues.length > 0) {
+            for (const issue of issues) {
+                const field = issue.path?.join(".");
+                const msg = issue.message;
+
+                // claim
+                if (field === "claim") {
+                    if (issue.code === "too_big") {
+                        return `La afirmación es demasiado larga. Máximo ${issue.maximum ?? 2000} caracteres.`;
+                    }
+                    if (issue.code === "too_small") {
+                        return "La afirmación está vacía. Escribí un texto para verificar.";
+                    }
+                    if (issue.code === "invalid_type") {
+                        return "La afirmación debe ser un texto válido.";
+                    }
+                    if (issue.code === "required") {
+                        return "La afirmación es obligatoria.";
+                    }
+                }
+
+                // context
+                if (field === "context") {
+                    if (issue.code === "too_big") {
+                        return `El contexto es demasiado largo. Máximo ${issue.maximum ?? 500} caracteres.`;
+                    }
+                    if (issue.code === "invalid_type") {
+                        return "El contexto debe ser un texto válido.";
+                    }
+                }
+
+                // Fallback: mostrar el issue específico
+                return `Error de validación: ${msg}`;
+            }
+        }
+
+        // ── 2. Códigos de error ORPC explícitos ────────────
+        if (orpc?.code === "NOT_FOUND") {
+            return orpc.message ?? "No se encontró lo solicitado.";
+        }
+
+        if (orpc?.code === "INTERNAL_SERVER_ERROR" || orpc?.status === 500) {
+            return "Error interno del servidor. Intentá de nuevo en unos segundos.";
+        }
+
+        // ── 3. Error de red ─────────────────────────────────
+        if (err instanceof TypeError) {
+            return "No se pudo conectar con el servidor. Verificá tu conexión.";
+        }
+
+        // ── 4. Genérico ─────────────────────────────────────
+        if (err instanceof Error) {
+            return err.message;
+        }
+
+        return "No se pudo completar la verificación. Intentá de nuevo en unos segundos.";
+    }
+
+    // ─── Submit ──────────────────────────────────────────
+    const form = $("verify-form") as HTMLFormElement | null;
+    const submitBtn = form?.querySelector(
+        'button[type="submit"]',
+    ) as HTMLButtonElement | null;
+    const submitHtml = submitBtn?.innerHTML ?? "";
+
+    function setLoading(loading: boolean) {
+        if (!submitBtn) return;
+        submitBtn.disabled = loading;
+        submitBtn.innerHTML = loading
+            ? `VERIFICANDO<span class="material-symbols-outlined text-[18px] animate-spin" aria-hidden="true">progress_activity</span>`
+            : submitHtml;
+    }
+
+    function dispatch(eventName: string, detail: unknown) {
+        document.dispatchEvent(new CustomEvent(eventName, { detail }));
+    }
+
+    form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!form) return;
+
+        const data = new FormData(form);
+        const claim = String(data.get("claim") ?? "").trim();
+        const source = String(data.get("source") ?? "").trim();
+        if (!claim) return;
+
+        // Avisar al result que se reinicie
+        dispatch("verify:reset", null);
+        dispatch("verify:loading", { loading: true });
+        setLoading(true);
+
+        try {
+            const res = await api.verifyClaim({
+                claim,
+                context: source || undefined,
+            });
+            dispatch("verify:result", res);
+        } catch (err) {
+            console.error("verifyClaim failed", err);
+            dispatch("verify:error", { message: friendlyError(err) });
+        } finally {
+            dispatch("verify:loading", { loading: false });
+            setLoading(false);
+        }
+    });
+</script>
