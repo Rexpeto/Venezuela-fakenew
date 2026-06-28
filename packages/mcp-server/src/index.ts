@@ -3,13 +3,8 @@ import "dotenv/config";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { 
-  PATTERNS, 
-  KEY_FACTS, 
-  tavilySearch, 
-  detectPatterns,
-  verifyClaim 
-} from "@repo/core";
+import { tavilySearch, verifyClaim } from "@repo/core";
+import { PATTERNS, KEY_FACTS } from "@repo/core";
 
 // ============================================================
 // Servidor MCP
@@ -18,7 +13,8 @@ import {
 const server = new McpServer({
   name: "venezuela-fakenews-mcp",
   version: "0.1.0",
-  description: "MCP para combatir desinformación sobre Venezuela. Basado en investigación real (junio 2026)."
+  description:
+    "MCP para combatir desinformación sobre Venezuela. Basado en investigación real (junio 2026).",
 });
 
 // Tool 1: Obtener patrones de FakeNews
@@ -27,17 +23,20 @@ server.tool(
   "Devuelve los patrones principales de desinformación en Venezuela identificados en la investigación (basado en el cuaderno Obsidian).",
   {},
   async () => {
-    const text = PATTERNS.map((p, i) => 
-      `${i+1}. **${p.name}**\n   ${p.description}\n   Ejemplos: ${p.examples ? p.examples.join("; ") : "Ver cuaderno"}\n   Detección: ${p.detection}`
+    const text = PATTERNS.map(
+      (p, i) =>
+        `${i + 1}. **${p.name}**\n   ${p.description}\n   Ejemplos: ${p.examples ? p.examples.join("; ") : "Ver cuaderno"}\n   Detección: ${p.detection}`,
     ).join("\n\n");
 
     return {
-      content: [{
-        type: "text",
-        text: `# Patrones Comunes de Desinformación en Venezuela\n\n${text}\n\n**Fuente:** Cuaderno de investigación Venezuela-Combate-FakeNews-Cuaderno.md (junio 2026)`
-      }]
+      content: [
+        {
+          type: "text",
+          text: `# Patrones Comunes de Desinformación en Venezuela\n\n${text}\n\n**Fuente:** Cuaderno de investigación Venezuela-Combate-FakeNews-Cuaderno.md (junio 2026)`,
+        },
+      ],
     };
-  }
+  },
 );
 
 // Tool 2: Verificar un claim
@@ -45,16 +44,24 @@ server.tool(
   "verify_claim",
   "Verifica una afirmación sobre Venezuela usando búsqueda Tavily + patrones conocidos del cuaderno.",
   {
-    claim: z.string().describe("La afirmación o claim a verificar (ej: 'Delcy Rodríguez anunció aumento de salario a $800')"),
-    context: z.string().optional().describe("Contexto adicional (terremoto, política, economía...)")
+    claim: z
+      .string()
+      .describe(
+        "La afirmación o claim a verificar (ej: 'Delcy Rodríguez anunció aumento de salario a $800')",
+      ),
+    context: z
+      .string()
+      .optional()
+      .describe("Contexto adicional (terremoto, política, economía...)"),
   },
   async ({ claim, context }) => {
-    const result = await verifyClaim(claim, context);
+    const apiKey = process.env.TAVILY_API_KEY || "";
+    const result = await verifyClaim(claim, context, apiKey);
 
     return {
-      content: [{ type: "text", text: result.fullReport }]
+      content: [{ type: "text", text: result.fullReport }],
     };
-  }
+  },
 );
 
 // Tool 3: Buscar fuentes oficiales
@@ -62,32 +69,48 @@ server.tool(
   "search_official_sources",
   "Busca información en fuentes oficiales y confiables sobre un tema de Venezuela.",
   {
-    topic: z.string().describe("Tema a buscar (ej: terremotos junio 2026, situación económica, migración)"),
-    max_results: z.number().optional().default(6)
+    topic: z
+      .string()
+      .describe(
+        "Tema a buscar (ej: terremotos junio 2026, situación económica, migración)",
+      ),
+    max_results: z.number().optional().default(6),
   },
   async ({ topic, max_results }) => {
-    const search = await tavilySearch(`${topic} Venezuela (USGS OR IOM OR OCHA OR Reuters OR "Ecoanalítica" OR "Observatorio Venezolano")`, max_results);
+    const apiKey = process.env.TAVILY_API_KEY || "";
+    const search = await tavilySearch(
+      `${topic} Venezuela (USGS OR IOM OR OCHA OR Reuters OR "Ecoanalítica" OR "Observatorio Venezolano")`,
+      apiKey,
+      max_results,
+    );
 
     if (search.error) {
       return {
-        content: [{
-          type: "text",
-          text: `Error al buscar: ${search.error}\n\nConfigura TAVILY_API_KEY para búsquedas reales.`
-        }]
+        content: [
+          {
+            type: "text",
+            text: `Error al buscar: ${search.error}\n\nConfigura TAVILY_API_KEY para búsquedas reales.`,
+          },
+        ],
       };
     }
 
-    const resultsText = search.results.map((r: any, i: number) =>
-      `${i+1}. **${r.title}**\n   ${r.url}\n   ${r.content?.substring(0, 220)}...`
-    ).join("\n\n");
+    const resultsText = search.results
+      .map(
+        (r: any, i: number) =>
+          `${i + 1}. **${r.title}**\n   ${r.url}\n   ${r.content?.substring(0, 220)}...`,
+      )
+      .join("\n\n");
 
     return {
-      content: [{
-        type: "text",
-        text: `# Fuentes Oficiales y Confiables - ${topic}\n\n${resultsText}\n\n**Consejo:** Prioriza siempre USGS para sismos, IOM/OCHA para migración y ayuda humanitaria.`
-      }]
+      content: [
+        {
+          type: "text",
+          text: `# Fuentes Oficiales y Confiables - ${topic}\n\n${resultsText}\n\n**Consejo:** Prioriza siempre USGS para sismos, IOM/OCHA para migración y ayuda humanitaria.`,
+        },
+      ],
     };
-  }
+  },
 );
 
 // Tool 4: Generar reporte rápido
@@ -95,10 +118,12 @@ server.tool(
   "generate_factcheck_report",
   "Genera un reporte estructurado de verificación para un tema o claim sobre Venezuela.",
   {
-    topic: z.string().describe("Tema o claim principal")
+    topic: z.string().describe("Tema o claim principal"),
   },
   async ({ topic }) => {
-    const patternsText = PATTERNS.slice(0, 3).map(p => `- ${p.name}`).join("\n");
+    const patternsText = PATTERNS.slice(0, 3)
+      .map((p) => `- ${p.name}`)
+      .join("\n");
 
     const report = `# Reporte de Fact-Check: ${topic}
 
@@ -111,7 +136,9 @@ server.tool(
 ${patternsText}
 
 ## Datos clave conocidos (del cuaderno)
-${Object.entries(KEY_FACTS).map(([k, v]) => `- **${k}**: ${v}`).join("\n")}
+${Object.entries(KEY_FACTS)
+  .map(([k, v]) => `- **${k}**: ${v}`)
+  .join("\n")}
 
 ## Recomendaciones de verificación
 1. Buscar en USGS / Protección Civil para eventos sísmicos.
@@ -125,9 +152,9 @@ ${Object.entries(KEY_FACTS).map(([k, v]) => `- **${k}**: ${v}`).join("\n")}
 `;
 
     return {
-      content: [{ type: "text", text: report }]
+      content: [{ type: "text", text: report }],
     };
-  }
+  },
 );
 
 // ============================================================
@@ -137,8 +164,12 @@ ${Object.entries(KEY_FACTS).map(([k, v]) => `- **${k}**: ${v}`).join("\n")}
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("[venezuela-fakenews-mcp] Servidor MCP iniciado correctamente (stdio)");
-  console.error("Herramientas disponibles: get_fakenews_patterns, verify_claim, search_official_sources, generate_factcheck_report");
+  console.error(
+    "[venezuela-fakenews-mcp] Servidor MCP iniciado correctamente (stdio)",
+  );
+  console.error(
+    "Herramientas disponibles: get_fakenews_patterns, verify_claim, search_official_sources, generate_factcheck_report",
+  );
 }
 
 main().catch((error) => {

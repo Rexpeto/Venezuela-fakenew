@@ -3,17 +3,14 @@
   "version": "0.1.0",
   "description": "Lógica compartida para fact-checking de FakeNews Venezuela (patrones, facts, tavily helper)",
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w"
-  },
-  "dependencies": {
-    "dotenv": "^17.4.2"
   },
   "devDependencies": {
     "@types/node": "^26.0.1",
