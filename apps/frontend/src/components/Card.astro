@@ -6,17 +6,23 @@ const { variant = "default", class: className = "" } = Astro.props as {
     class?: string;
 };
 
+// Mismo borde que la clase .verification-card del catálogo (#e2e8f0 en claro,
+// outline-variant en oscuro) para que las cards sean consistentes.
 const variantStyles: Record<CardVariant, string> = {
-    default: "bg-surface-container-lowest border-outline-variant",
+    default: "bg-surface-container-lowest border-[#e2e8f0] dark:border-outline-variant",
     verdadero:
-        "border-l-4 border-l-emerald-500 bg-surface-container-lowest border-outline-variant",
-    falso: "border-l-4 border-l-error bg-surface-container-lowest border-outline-variant",
-    dudoso: "border-l-4 border-l-amber-500 bg-surface-container-lowest border-outline-variant",
+        "border-l-4 border-l-emerald-500 bg-surface-container-lowest border-[#e2e8f0] dark:border-outline-variant",
+    falso: "border-l-4 border-l-error bg-surface-container-lowest border-[#e2e8f0] dark:border-outline-variant",
+    dudoso: "border-l-4 border-l-amber-500 bg-surface-container-lowest border-[#e2e8f0] dark:border-outline-variant",
 };
 ---
 
 <div
-    class="flex flex-col gap-sm rounded-md border p-md transition-shadow hover:shadow-sm {variantStyles[variant]} {className}"
+    class:list={[
+        "flex flex-col gap-sm rounded-md border p-md transition-shadow hover:shadow-sm",
+        variantStyles[variant],
+        className,
+    ]}
 >
     <slot />
 </div>
