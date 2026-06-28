@@ -2,7 +2,7 @@
 // Helper para Tavily (API key se pasa como parámetro)
 // ============================================================
 
-export async function tavilySearch(query: string, apiKey: *** maxResults = 8) {
+export async function tavilySearch(query: string, apiKey: string, maxResults = 8) {
   if (!apiKey) {
     return {
       error:
