@@ -9,7 +9,13 @@ const handler = new RPCHandler(router)
 const app = new Hono<{ Bindings: Bindings }>()
 
 app.use('*', (c, next) => {
-  const origin = c.env.CORS_ORIGIN ?? '*'
+  // CORS_ORIGIN may hold one or more comma-separated origins. Trailing slashes
+  // are stripped because browser `Origin` headers never include them. Unset
+  // defaults to '*' (fail-open) — set the exact origin(s) before going live.
+  const configured = c.env.CORS_ORIGIN
+  const origin = configured
+    ? configured.split(',').map((o) => o.trim().replace(/\/+$/, '')).filter(Boolean)
+    : '*'
   return cors({
     origin,
     allowMethods: ['GET', 'POST', 'OPTIONS'],
