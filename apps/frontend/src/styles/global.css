@@ -25,7 +25,7 @@
   --color-on-surface-variant: #444651;
   --color-inverse-surface: #2d3133;
   --color-inverse-on-surface: #eff1f3;
-  --color-outline: #757682;
+  --color-outline: #6b6c76; /* #757682 daba 4.26:1 como texto (text-outline) → AA fail */
   --color-outline-variant: #c5c5d3;
   --color-surface-tint: #4059aa;
 
