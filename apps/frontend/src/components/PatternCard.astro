@@ -1,5 +1,6 @@
 ---
 import type { DisinfoPattern } from '../lib/patterns'
+import Card from './Card.astro'
 import RiskBadge from './RiskBadge.astro'
 
 interface Props {
@@ -13,7 +14,7 @@ const { pattern } = Astro.props
 const indicatorColor = pattern.risk === 'alta' ? 'text-error' : 'text-secondary'
 ---
 
-<article class="verification-card p-lg flex flex-col gap-md relative overflow-hidden">
+<Card as="article" interactive class="p-lg flex flex-col gap-md relative overflow-hidden">
   <div class="flex justify-between items-start gap-sm">
     <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">
       Patrón {pattern.category}
@@ -60,4 +61,4 @@ const indicatorColor = pattern.risk === 'alta' ? 'text-error' : 'text-secondary'
       &ldquo;{pattern.caseStudy}&rdquo;
     </p>
   </div>
-</article>
+</Card>

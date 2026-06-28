@@ -1,28 +1,29 @@
 ---
-export type CardVariant = "default" | "verdadero" | "falso" | "dudoso";
-
-const { variant = "default", class: className = "" } = Astro.props as {
-    variant?: CardVariant;
+// Wrapper único para todas las tarjetas de la app: misma superficie
+// (fondo + borde + radio) en claro y oscuro. El layout/padding se pasa por
+// `class`; `as` permite el tag semántico (article/section/div) e `interactive`
+// agrega el hover/active del catálogo. Atributos extra (id, role…) se reenvían.
+const {
+    as: Tag = "div",
+    interactive = false,
+    class: className = "",
+    ...rest
+} = Astro.props as {
+    as?: string;
+    interactive?: boolean;
     class?: string;
-};
-
-// Mismo borde que la clase .verification-card del catálogo (#e2e8f0 en claro,
-// outline-variant en oscuro) para que las cards sean consistentes.
-const variantStyles: Record<CardVariant, string> = {
-    default: "bg-surface-container-lowest border-[#e2e8f0] dark:border-outline-variant",
-    verdadero:
-        "border-l-4 border-l-emerald-500 bg-surface-container-lowest border-[#e2e8f0] dark:border-outline-variant",
-    falso: "border-l-4 border-l-error bg-surface-container-lowest border-[#e2e8f0] dark:border-outline-variant",
-    dudoso: "border-l-4 border-l-amber-500 bg-surface-container-lowest border-[#e2e8f0] dark:border-outline-variant",
+    [key: string]: unknown;
 };
 ---
 
-<div
+<Tag
     class:list={[
-        "flex flex-col gap-sm rounded-md border p-md transition-shadow hover:shadow-sm",
-        variantStyles[variant],
+        "rounded-lg border border-[#e2e8f0] bg-surface-container-lowest dark:border-outline-variant",
+        interactive &&
+            "transition-[transform,box-shadow] duration-200 hover:shadow-md active:scale-95",
         className,
     ]}
+    {...rest}
 >
     <slot />
-</div>
+</Tag>
