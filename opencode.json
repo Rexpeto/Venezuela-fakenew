@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "venezuela-fakenews": {
+      "type": "local",
+      "enabled": true,
+      "command": ["bun", "packages/mcp-server/dist/index.js"]
+    }
+  }
+}

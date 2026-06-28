@@ -5,6 +5,7 @@ dist/
 .wrangler/
 
 .env
+<<<<<<< HEAD
 .env.local
 .env.*.local
 .dev.vars
@@ -19,3 +20,7 @@ dist/
 
 .DS_Store
 Thumbs.db
+=======
+*.local
+.astro
+.opencode
