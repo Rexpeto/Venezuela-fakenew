@@ -144,9 +144,10 @@ const recentPatterns: RecentPatternPreview[] =
                 </a>
             </div>
         </section>
+    </main>
 
-        <!-- ─── Newsletter ──────────────────────────────────── -->
-        <section class="mt-xl w-full bg-tertiary-container px-gutter py-xl">
+    <!-- ─── Newsletter (fuera de main: el flex-grow no deja hueco antes del footer) ── -->
+    <section class="mt-xl w-full bg-tertiary-container px-gutter py-xl">
             <div
                 class="mx-auto flex max-w-container flex-col items-center gap-xl md:flex-row"
             >
@@ -173,7 +174,6 @@ const recentPatterns: RecentPatternPreview[] =
                 </div>
             </div>
         </section>
-    </main>
 
     <Footer />
 </Layout>
