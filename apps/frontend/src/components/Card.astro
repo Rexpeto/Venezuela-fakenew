@@ -7,11 +7,11 @@ const { variant = "default", class: className = "" } = Astro.props as {
 };
 
 const variantStyles: Record<CardVariant, string> = {
-    default: "bg-white border-outline-variant",
+    default: "bg-surface-container-lowest border-outline-variant",
     verdadero:
-        "border-l-4 border-l-emerald-500 bg-white border-outline-variant",
-    falso: "border-l-4 border-l-error bg-white border-outline-variant",
-    dudoso: "border-l-4 border-l-amber-500 bg-white border-outline-variant",
+        "border-l-4 border-l-emerald-500 bg-surface-container-lowest border-outline-variant",
+    falso: "border-l-4 border-l-error bg-surface-container-lowest border-outline-variant",
+    dudoso: "border-l-4 border-l-amber-500 bg-surface-container-lowest border-outline-variant",
 };
 ---
 

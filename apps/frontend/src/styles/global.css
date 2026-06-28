@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* Dark mode por clase en <html> (no por prefers-color-scheme).
+   Habilita las variantes dark:* para los pocos casos que las usan. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
  * VerificaVzla — Design System
  * Tokens portados desde design/stitch/DESIGN.md (export de Stitch).
@@ -124,6 +128,50 @@
   --spacing-xl: 40px;
   --spacing-gutter: 24px;
   --spacing-container: 1120px;
+}
+
+/*
+ * Tema oscuro — re-mapea los mismos tokens semánticos.
+ * Regla sin @layer: gana sobre las variables del tema (que viven en la capa
+ * `theme`), así que basta con redefinir aquí los colores. Los componentes que
+ * usan bg-surface / text-on-surface / etc. se adaptan solos.
+ * primary y secondary se aclaran porque se usan sobre todo como texto-acento;
+ * los botones con fondo de color usan text-on-primary/on-secondary (no white).
+ */
+.dark {
+  color-scheme: dark;
+
+  --color-surface: #121417;
+  --color-surface-dim: #0d0f12;
+  --color-surface-bright: #383b3e;
+  --color-surface-container-lowest: #1d2024; /* cards: más claro que el fondo → elevación */
+  --color-surface-container-low: #191c1f;
+  --color-surface-container: #1d2024;
+  --color-surface-container-high: #272a2e;
+  --color-surface-container-highest: #313438;
+  --color-surface-variant: #43474e;
+  --color-on-surface: #e2e2e6;
+  --color-on-surface-variant: #c3c6cf;
+  --color-outline: #8d9199;
+  --color-outline-variant: #43474e;
+
+  --color-primary: #b6c4ff;
+  --color-on-primary: #002b75;
+
+  --color-secondary: #adc6ff;
+  --color-on-secondary: #00315f;
+
+  --color-background: #121417;
+  --color-on-background: #e2e2e6;
+  --color-bg-subtle: #1a1d20;
+}
+
+/* La card hardcodea un borde claro; en oscuro usa el token de contorno. */
+.dark .verification-card {
+  border-color: var(--color-outline-variant);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-surface-container-highest);
 }
 
 /* Iconos Material Symbols */
