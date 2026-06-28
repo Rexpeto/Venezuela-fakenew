@@ -25,6 +25,8 @@ const es = {
   'nav.openQueries': 'Abrir consultas frecuentes',
   'nav.menuDialog': 'Menú de navegación',
   'nav.bottomNav': 'Navegación inferior',
+  'nav.toggleTheme': 'Cambiar tema',
+  'nav.viewSource': 'Ver código en GitHub',
   'lang.switch': 'Cambiar idioma',
 
   // Home
@@ -132,6 +134,8 @@ const en: Partial<Record<UIKey, string>> = {
   'nav.openQueries': 'Open frequent queries',
   'nav.menuDialog': 'Navigation menu',
   'nav.bottomNav': 'Bottom navigation',
+  'nav.toggleTheme': 'Toggle theme',
+  'nav.viewSource': 'View source on GitHub',
   'lang.switch': 'Change language',
 
   'home.meta.title': 'VerificaVzla - Fighting disinformation',
@@ -229,6 +233,8 @@ const pt: Partial<Record<UIKey, string>> = {
   'nav.openQueries': 'Abrir consultas frequentes',
   'nav.menuDialog': 'Menu de navegação',
   'nav.bottomNav': 'Navegação inferior',
+  'nav.toggleTheme': 'Alternar tema',
+  'nav.viewSource': 'Ver código no GitHub',
   'lang.switch': 'Mudar idioma',
 
   'home.meta.title': 'VerificaVzla - Combatendo a desinformação',

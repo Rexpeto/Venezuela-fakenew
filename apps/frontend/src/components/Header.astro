@@ -54,7 +54,7 @@ const { t, href } = i18n(Astro)
         <button
             id="theme-toggle"
             type="button"
-            aria-label="Cambiar tema"
+            aria-label={t('nav.toggleTheme')}
             class="flex cursor-pointer items-center justify-center rounded p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
         >
             <Icon name="moon" size={20} class="dark:hidden" />
@@ -64,7 +64,7 @@ const { t, href } = i18n(Astro)
             href="https://github.com/Rexpeto/Venezuela-fakenew"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Ver código en GitHub"
+            aria-label={t('nav.viewSource')}
             title="GitHub"
             class="flex items-center justify-center rounded p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
         >
