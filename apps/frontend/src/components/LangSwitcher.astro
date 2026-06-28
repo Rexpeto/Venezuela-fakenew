@@ -1,5 +1,6 @@
 ---
 import { LOCALES, LOCALE_NAMES, localizeUrl, i18n } from '../i18n'
+import Icon from './Icon.astro'
 
 const { lang, path, t } = i18n(Astro)
 ---
@@ -11,11 +12,12 @@ const { lang, path, t } = i18n(Astro)
     title={t('lang.switch')}
     aria-haspopup="listbox"
   >
-    <span class="material-symbols-outlined pointer-events-none text-[20px]" aria-hidden="true">translate</span>
-    <span
-      class="material-symbols-outlined pointer-events-none text-[14px] transition-transform group-open:rotate-180"
-      aria-hidden="true">expand_more</span
-    >
+    <Icon name="languages" size={20} class="pointer-events-none" />
+    <Icon
+      name="chevron-down"
+      size={16}
+      class="pointer-events-none transition-transform group-open:rotate-180"
+    />
   </summary>
 
   <ul
