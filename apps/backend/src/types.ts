@@ -5,4 +5,5 @@ export type Bindings = {
   LLM_BASE_URL?: string
   LLM_MODEL?: string
   TAVILY_API_KEY: string
+  CORS_ORIGIN?: string
 }
