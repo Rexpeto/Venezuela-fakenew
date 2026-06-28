@@ -147,3 +147,28 @@
 .verification-card:active {
   transform: scale(0.98);
 }
+
+/* Chat — Asistente Virtual */
+/* Móvil: descuenta header (64px) + bottom-nav fijo (64px) para que el input
+   no quede tapado. En md+ el bottom-nav se oculta, así que solo el header. */
+.chat-container {
+  height: calc(100dvh - 128px);
+}
+@media (min-width: 768px) {
+  .chat-container {
+    height: calc(100dvh - 64px);
+  }
+}
+.sidebar-transition {
+  transition: transform 0.3s ease-in-out;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
