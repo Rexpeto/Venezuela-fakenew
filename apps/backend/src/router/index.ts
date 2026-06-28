@@ -1,5 +1,6 @@
 import { os } from '@orpc/server'
 import { z } from 'zod'
+import { PATTERNS, KEY_FACTS } from '@repo/core'
 
 const pub = os
 
@@ -14,9 +15,9 @@ export const router = {
       sources: [] as string[],
     })),
 
-  getAllPatterns: pub.handler(async () => []),
+  getAllPatterns: pub.handler(async () => PATTERNS),
 
-  getKeyFacts: pub.handler(async () => []),
+  getKeyFacts: pub.handler(async () => KEY_FACTS),
 
   searchSources: pub
     .input(z.object({ topic: z.string(), limit: z.number().optional() }))
