@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "ASTRO_DEV_BACKGROUND=1 astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "deploy": "astro build && wrangler deploy -c dist/server/wrangler.json"
   },
   "dependencies": {
     "@astrojs/cloudflare": "14.0.1",
@@ -12,13 +13,17 @@
     "@repo/core": "workspace:*",
     "@tailwindcss/vite": "^4.3.1",
     "astro": "7.0.3",
+    "dompurify": "^3.4.11",
+    "marked": "^18.0.5",
     "tailwindcss": "^4.3.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@orpc/server": "1.14.6",
+    "@types/dompurify": "^3.2.0",
     "backend": "workspace:*",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "4.105.0"
   },
   "volta": {
     "node": "22.23.1"
