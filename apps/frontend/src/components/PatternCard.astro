@@ -1,5 +1,6 @@
 ---
 import type { Pattern } from '@repo/core'
+import Card from './Card.astro'
 import RiskBadge from './RiskBadge.astro'
 
 interface Props {
@@ -13,7 +14,7 @@ const { pattern } = Astro.props
 const indicatorColor = pattern.severity === 'alta' ? 'text-error' : 'text-secondary'
 ---
 
-<article class="verification-card p-lg flex flex-col gap-md relative overflow-hidden">
+<Card as="article" interactive class="p-lg flex flex-col gap-md relative overflow-hidden">
   <div class="flex justify-between items-start gap-sm">
     {
       pattern.category && (
@@ -70,4 +71,4 @@ const indicatorColor = pattern.severity === 'alta' ? 'text-error' : 'text-second
       </div>
     )
   }
-</article>
+</Card>

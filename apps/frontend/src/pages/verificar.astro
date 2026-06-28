@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import BottomNav from '../components/BottomNav.astro'
+import Card from '../components/Card.astro'
 
 // Andamiaje estático: la verificación real se conectará al backend.
 export const prerender = true
@@ -34,9 +35,7 @@ export const prerender = true
       </div>
 
       <!-- Formulario de entrada -->
-      <section
-        class="bg-surface-container-lowest border border-outline-variant p-lg rounded-lg"
-      >
+      <Card as="section" class="p-lg">
         <form id="verify-form" class="flex flex-col gap-md">
           <div class="flex flex-col gap-xs">
             <label
@@ -100,7 +99,7 @@ export const prerender = true
             </button>
           </div>
         </form>
-      </section>
+      </Card>
 
       <!-- Estado de error (oculto por defecto) -->
       <section
@@ -112,10 +111,7 @@ export const prerender = true
       </section>
 
       <!-- Resultado (oculto hasta verificar) -->
-      <section
-        id="verify-result"
-        class="hidden flex-col border border-outline-variant bg-surface-container-lowest rounded-lg overflow-hidden"
-      >
+      <Card as="section" id="verify-result" class="hidden flex-col overflow-hidden">
         <!-- Banner de veredicto -->
         <div
           id="result-banner"
@@ -182,7 +178,7 @@ export const prerender = true
             </p>
           </div>
         </div>
-      </section>
+      </Card>
     </div>
   </main>
 
@@ -289,8 +285,9 @@ export const prerender = true
         patternsWrap.classList.add('flex')
         for (const p of res.patterns) {
           const row = document.createElement('div')
+          // Mismo borde que el componente Card (no puede usarse en runtime).
           row.className =
-            'bg-surface-container-lowest border border-outline-variant p-md flex items-center gap-md rounded'
+            'bg-surface-container-lowest border border-[#e2e8f0] dark:border-outline-variant p-md flex items-center gap-md rounded'
           row.innerHTML = `<span class="material-symbols-outlined ${cfg.text}" aria-hidden="true">hub</span><span class="font-label-caps text-label-caps text-on-surface"></span>`
           row.querySelector('span:last-child')!.textContent = p
           patterns.appendChild(row)

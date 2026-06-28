@@ -7,19 +7,20 @@ interface Props {
 
 const { level } = Astro.props
 
-const styles: Record<Severity, { bg: string; label: string }> = {
-  alta: { bg: 'bg-error', label: 'Alta' },
-  media: { bg: 'bg-warning', label: 'Media' },
-  baja: { bg: 'bg-secondary', label: 'Baja' },
+const styles: Record<Severity, { bg: string; text: string; label: string }> = {
+  alta: { bg: 'bg-error', text: 'text-on-error', label: 'Alta' },
+  media: { bg: 'bg-warning', text: 'text-on-warning', label: 'Media' },
+  baja: { bg: 'bg-secondary', text: 'text-on-secondary', label: 'Baja' },
 }
 
-const { bg, label } = styles[level]
+const { bg, text, label } = styles[level]
 ---
 
 <span
   class:list={[
     bg,
-    'text-white px-3 py-1 text-[11px] font-bold uppercase rounded-sm whitespace-nowrap',
+    text,
+    'px-3 py-1 text-[11px] font-bold uppercase rounded-sm whitespace-nowrap',
   ]}
 >
   Riesgo: {label}

@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* Dark mode por clase en <html> (no por prefers-color-scheme).
+   Habilita las variantes dark:* para los pocos casos que las usan. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
  * VerificaVzla — Design System
  * Tokens portados desde design/stitch/DESIGN.md (export de Stitch).
@@ -21,7 +25,7 @@
   --color-on-surface-variant: #444651;
   --color-inverse-surface: #2d3133;
   --color-inverse-on-surface: #eff1f3;
-  --color-outline: #757682;
+  --color-outline: #6b6c76; /* #757682 daba 4.26:1 como texto (text-outline) → AA fail */
   --color-outline-variant: #c5c5d3;
   --color-surface-tint: #4059aa;
 
@@ -60,6 +64,8 @@
 
   /* Riesgo medio (ámbar) — no estaba tokenizado en el export */
   --color-warning: #f59e0b;
+  /* Texto oscuro sobre el ámbar: blanco daba 2.14:1 (falla AA). */
+  --color-on-warning: #271900;
 
   --color-background: #f7f9fb;
   --color-on-background: #191c1e;
@@ -126,6 +132,51 @@
   --spacing-container: 1120px;
 }
 
+/*
+ * Tema oscuro — re-mapea los mismos tokens semánticos.
+ * Regla sin @layer: gana sobre las variables del tema (que viven en la capa
+ * `theme`), así que basta con redefinir aquí los colores. Los componentes que
+ * usan bg-surface / text-on-surface / etc. se adaptan solos.
+ * primary y secondary se aclaran porque se usan sobre todo como texto-acento;
+ * los botones con fondo de color usan text-on-primary/on-secondary (no white).
+ */
+.dark {
+  color-scheme: dark;
+
+  --color-surface: #121417;
+  --color-surface-dim: #0d0f12;
+  --color-surface-bright: #383b3e;
+  --color-surface-container-lowest: #1d2024; /* cards: más claro que el fondo → elevación */
+  --color-surface-container-low: #191c1f;
+  --color-surface-container: #1d2024;
+  --color-surface-container-high: #272a2e;
+  --color-surface-container-highest: #313438;
+  --color-surface-variant: #43474e;
+  --color-on-surface: #e2e2e6;
+  --color-on-surface-variant: #c3c6cf;
+  --color-outline: #8d9199;
+  --color-outline-variant: #43474e;
+
+  --color-primary: #b6c4ff;
+  --color-on-primary: #002b75;
+
+  --color-secondary: #adc6ff;
+  --color-on-secondary: #00315f;
+
+  /* Error se aclara igual que primary/secondary: como TEXTO (text-error) debe
+     leerse sobre fondo oscuro; el badge "alta" usa bg-error + text-on-error. */
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+
+  --color-background: #121417;
+  --color-on-background: #e2e2e6;
+  --color-bg-subtle: #1a1d20;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-surface-container-highest);
+}
+
 /* Iconos Material Symbols */
 .material-symbols-outlined {
   font-variation-settings:
@@ -133,21 +184,6 @@
     'wght' 400,
     'GRAD' 0,
     'opsz' 24;
-}
-
-/* Tarjeta de verificación — base del catálogo de patrones */
-.verification-card {
-  background-color: var(--color-surface-container-lowest);
-  border: 1px solid #e2e8f0;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-.verification-card:hover {
-  box-shadow: 0 4px 12px rgb(30 58 138 / 0.05);
-}
-.verification-card:active {
-  transform: scale(0.98);
 }
 
 /* Chat — Asistente Virtual */

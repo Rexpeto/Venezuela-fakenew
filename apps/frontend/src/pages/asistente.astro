@@ -115,7 +115,7 @@ const seedSources: ChatSource[] = [
         <div class="max-w-4xl mx-auto">
           <form
             id="chat-form"
-            class="flex items-center gap-sm bg-white border border-outline focus-within:border-secondary transition-colors rounded-xl px-md py-sm"
+            class="flex items-center gap-sm bg-surface-container-lowest border border-outline focus-within:border-secondary transition-colors rounded-xl px-md py-sm"
           >
             <button type="button" aria-label="Adjuntar archivo" class="text-on-surface-variant hover:text-primary p-1">
               <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
@@ -132,7 +132,7 @@ const seedSources: ChatSource[] = [
             <button
               type="submit"
               aria-label="Enviar"
-              class="bg-primary text-white w-10 h-10 rounded-lg flex items-center justify-center hover:bg-secondary-container transition-transform active:scale-90"
+              class="bg-primary text-on-primary w-10 h-10 rounded-lg flex items-center justify-center hover:bg-secondary-container transition-transform active:scale-90"
             >
               <span class="material-symbols-outlined" aria-hidden="true">send</span>
             </button>
@@ -252,7 +252,7 @@ const seedSources: ChatSource[] = [
     wrap.className = 'flex justify-start mr-xl'
     wrap.innerHTML = `
       <div class="flex flex-col max-w-[90%] sm:max-w-[80%]">
-        <div class="bg-white border border-outline-variant p-md rounded-r-xl rounded-tl-xl shadow-sm text-on-surface font-body-md text-body-md chat-markdown">
+        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-r-xl rounded-tl-xl shadow-sm text-on-surface font-body-md text-body-md chat-markdown">
           ${renderMarkdown(text)}
         </div>
         <span class="block text-[10px] text-on-surface-variant mt-1 ml-1">IA VerificaVzla • ${nowTime()}</span>
