@@ -107,11 +107,11 @@ Leave `PUBLIC_MOCK_API` unset (or not `false`) to run the UI fully on mock data.
 
 El deploy lo maneja **Cloudflare Workers Builds**: Cloudflare se conecta al repo
 vía su GitHub App y buildea/despliega desde su lado. **No hay tokens ni secrets de
-Cloudflare en GitHub.** Modelo de ramas:
+Cloudflare en GitHub.**
 
-- **`main`** → deploy a producción (`wrangler deploy`).
-- **Cualquier otra rama (incl. `staging`) y cada PR** → **versión de preview** con
-  URL propia (`wrangler versions upload`), sin promover a producción.
+- Solo **`main`** despliega (a producción). Los builds de ramas no productivas
+  quedan **deshabilitados** — no hay preview remoto.
+- Para previsualizar cambios, cada quien lo corre **local** (ver §5).
 
 ### 4.1 Conectar cada worker (dashboard, una vez)
 
@@ -122,16 +122,16 @@ Son dos workers, así que se conecta el repo a cada uno. En Cloudflare →
 **Backend** (`backend`)
 - Root directory: `apps/backend`
 - Build command: `cd ../.. && bun install && bun run --filter '@repo/core' build`
-- Deploy command: `bunx wrangler deploy` · preview (no-main): `bunx wrangler versions upload`
-- Production branch: `main`
+- Deploy command: `bunx wrangler deploy`
+- Production branch: `main` · **Non-production branch builds: deshabilitado**
 - Build watch paths (include): `apps/backend/*`, `packages/core/*`
 
 **Frontend** (`frontend-verifica-venezuela`)
 - Root directory: `apps/frontend`
 - Build command: `cd ../.. && bun install && bun run --filter '@repo/core' build && cd apps/frontend && bun run build`
 - Build environment variables: `PUBLIC_MOCK_API=false`, `PUBLIC_API_URL=https://backend.verificavenezuela.workers.dev`
-- Deploy command: `bunx wrangler deploy` · preview (no-main): `bunx wrangler versions upload`
-- Production branch: `main`
+- Deploy command: `bunx wrangler deploy`
+- Production branch: `main` · **Non-production branch builds: deshabilitado**
 - Build watch paths (include): `apps/frontend/*`, `packages/core/*`
 
 > `bun install` corre desde la raíz del repo (workspace) y construye `@repo/core`
@@ -145,13 +145,25 @@ No van en GitHub. Se setean en el worker (Settings → Variables and Secrets) o 
 `LLM_API_KEY`, `TAVILY_API_KEY`, `LLM_MODEL`, `CORS_ORIGIN`. Y `db:push` contra la
 Turso de prod (§1.2). El frontend no tiene secrets propios.
 
-### 4.3 Preview URLs
+---
 
-Push a `staging` o a la rama de un PR → Workers Builds crea una versión de preview
-y publica su URL (en el check del commit/PR en GitHub). El frontend de preview usa
-el `PUBLIC_API_URL` del build (backend de prod): los dos workers se buildean por
-separado, así que el preview del frontend no apunta al preview del backend.
+## 5. Preview local
 
-> ⚠️ Las versiones de preview comparten los bindings/secrets del worker de prod →
-> **tocan la DB de prod.** Si querés aislar datos de preview, conectá un worker de
-> staging aparte (production branch = `staging`, con su propia Turso y `CORS_ORIGIN`).
+No hay preview remoto. Para ver cambios antes de mergear, cada quien corre el
+proyecto localmente:
+
+```bash
+bun install
+bun run --filter '@repo/core' build     # una vez (o tras cambiar core)
+
+# Backend (Worker) → http://localhost:8787
+#   copia apps/backend/.dev.vars.example → .dev.vars y completa TURSO_*, LLM_API_KEY, TAVILY_API_KEY
+bun run dev:backend
+
+# Frontend (Astro) → http://localhost:4321
+#   copia apps/frontend/.env.example → .env (ya trae PUBLIC_API_URL=http://localhost:8787)
+bun run dev:frontend
+```
+
+Sin `TURSO_*` el backend no levanta; sin las keys de LLM/Tavily, verificar y chat no
+responden, pero el resto de la UI funciona con el backend local.
