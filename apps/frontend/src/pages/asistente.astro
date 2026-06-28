@@ -4,6 +4,7 @@ import Header from '../components/Header.astro'
 import BottomNav from '../components/BottomNav.astro'
 import ChatBubble from '../components/ChatBubble.astro'
 import { QUICK_QUESTIONS, type ChatSource } from '../lib/chat'
+import { useMock } from '../lib/api'
 
 export const prerender = true
 
@@ -71,24 +72,30 @@ const seedSources: ChatSource[] = [
 
       <!-- Historial -->
       <div id="chat-history" class="flex-1 overflow-y-auto p-md space-y-lg custom-scrollbar">
-        <div class="flex justify-center">
-          <span
-            class="bg-surface-variant px-3 py-1 rounded-full font-label-caps text-[10px] text-on-surface-variant"
-          >
-            HOY - 14 DE JUNIO, 2026
-          </span>
-        </div>
+        {
+          /* Mensajes semilla del diseño: solo en modo mock. Con la API real el
+             historial arranca vacío. */
+          useMock && (
+            <>
+              <div class="flex justify-center">
+                <span class="bg-surface-variant px-3 py-1 rounded-full font-label-caps text-[10px] text-on-surface-variant">
+                  HOY - 14 DE JUNIO, 2026
+                </span>
+              </div>
 
-        <ChatBubble role="user" time="10:42 AM">
-          ¿Hay algún reporte oficial sobre la falla de Boconó?
-        </ChatBubble>
+              <ChatBubble role="user" time="10:42 AM">
+                ¿Hay algún reporte oficial sobre la falla de Boconó?
+              </ChatBubble>
 
-        <ChatBubble role="assistant" time="10:43 AM" sources={seedSources}>
-          Hasta el momento, <strong>Funvisis</strong> no ha reportado actividad
-          inusual en la falla de Boconó relacionada con el evento de hoy. El
-          epicentro preliminar se localiza mar adentro. Te recomiendo seguir
-          únicamente canales oficiales.
-        </ChatBubble>
+              <ChatBubble role="assistant" time="10:43 AM" sources={seedSources}>
+                Hasta el momento, <strong>Funvisis</strong> no ha reportado
+                actividad inusual en la falla de Boconó relacionada con el evento
+                de hoy. El epicentro preliminar se localiza mar adentro. Te
+                recomiendo seguir únicamente canales oficiales.
+              </ChatBubble>
+            </>
+          )
+        }
 
         <!-- Indicador de "procesando" (oculto hasta enviar) -->
         <div id="typing" class="hidden items-center gap-sm px-md pb-md">
@@ -144,8 +151,48 @@ const seedSources: ChatSource[] = [
   <BottomNav active="Asistente" />
 </Layout>
 
+<style is:global>
+  /* Estilos para las respuestas en Markdown del asistente. Tailwind elimina los
+     estilos por defecto, así que se reponen aquí (encabezados, listas, tablas). */
+  .chat-markdown > :first-child { margin-top: 0; }
+  .chat-markdown > :last-child { margin-bottom: 0; }
+  .chat-markdown h1 { font-size: 1.25rem; font-weight: 700; margin: 0.75rem 0 0.5rem; }
+  .chat-markdown h2 { font-size: 1.1rem; font-weight: 700; margin: 0.75rem 0 0.5rem; }
+  .chat-markdown h3 { font-size: 1rem; font-weight: 600; margin: 0.5rem 0 0.25rem; }
+  .chat-markdown p { margin: 0.5rem 0; line-height: 1.5; }
+  .chat-markdown strong { font-weight: 700; }
+  .chat-markdown em { font-style: italic; }
+  .chat-markdown ul { list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0; }
+  .chat-markdown ol { list-style: decimal; padding-left: 1.25rem; margin: 0.5rem 0; }
+  .chat-markdown li { margin: 0.2rem 0; line-height: 1.4; }
+  .chat-markdown a { color: var(--color-primary, #1d4ed8); text-decoration: underline; }
+  .chat-markdown hr { border: 0; border-top: 1px solid #e5e7eb; margin: 0.75rem 0; }
+  .chat-markdown blockquote {
+    border-left: 3px solid #d1d5db; padding-left: 0.75rem;
+    color: #4b5563; font-style: italic; margin: 0.5rem 0;
+  }
+  .chat-markdown code {
+    background: #f3f4f6; padding: 0.1rem 0.3rem; border-radius: 0.25rem;
+    font-size: 0.85em; font-family: ui-monospace, monospace;
+  }
+  .chat-markdown pre {
+    background: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem;
+    overflow-x: auto; margin: 0.5rem 0;
+  }
+  .chat-markdown pre code { background: none; padding: 0; }
+  .chat-markdown table {
+    border-collapse: collapse; width: 100%; margin: 0.5rem 0; font-size: 0.9em;
+    display: block; overflow-x: auto;
+  }
+  .chat-markdown th, .chat-markdown td {
+    border: 1px solid #e5e7eb; padding: 0.4rem 0.6rem; text-align: left;
+  }
+  .chat-markdown th { background: #f9fafb; font-weight: 600; }
+</style>
+
 <script>
   import { api } from '../lib/api'
+  import { renderMarkdown } from '../lib/markdown'
 
   const sidebar = document.getElementById('sidebar')
   const form = document.getElementById('chat-form') as HTMLFormElement | null
@@ -205,8 +252,8 @@ const seedSources: ChatSource[] = [
     wrap.className = 'flex justify-start mr-xl'
     wrap.innerHTML = `
       <div class="flex flex-col max-w-[90%] sm:max-w-[80%]">
-        <div class="bg-white border border-outline-variant p-md rounded-r-xl rounded-tl-xl shadow-sm text-on-surface">
-          <p class="font-body-md text-body-md">${escapeHtml(text)}</p>
+        <div class="bg-white border border-outline-variant p-md rounded-r-xl rounded-tl-xl shadow-sm text-on-surface font-body-md text-body-md chat-markdown">
+          ${renderMarkdown(text)}
         </div>
         <span class="block text-[10px] text-on-surface-variant mt-1 ml-1">IA VerificaVzla • ${nowTime()}</span>
       </div>`
