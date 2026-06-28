@@ -30,7 +30,7 @@
 
 14. [ ] Frontend ↔ Backend Wiring — Switch frontend from mock data to real oRPC calls by setting `PUBLIC_MOCK_API=false` and pointing `BACKEND_URL` at the deployed backend. Validate all pages end-to-end. `S`
 
-15. [ ] Deployment — Backend and Frontend — Deploy `apps/backend` to Cloudflare Workers via `wrangler deploy`, configure `LLM_API_KEY`, `TAVILY_API_KEY`, and `TURSO_*` as Cloudflare secrets, and deploy `apps/frontend` to the chosen static hosting platform; verify all oRPC procedures are reachable from the live frontend. `M`
+15. [ ] Deployment — Backend and Frontend — Deploy `apps/backend` to Cloudflare Workers via `wrangler deploy`. Required secrets (set via `wrangler secret put`): `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `LLM_API_KEY`, `LLM_MODEL`, `TAVILY_API_KEY`, and **`CORS_ORIGIN`** (must be the exact frontend domain — backend defaults to `*` which is fail-open and must be locked before going live). Run `db:push` against the production Turso DB once before first deploy. Deploy `apps/frontend` to the chosen static hosting platform and verify all oRPC procedures are reachable. `M`
 
 ---
 
