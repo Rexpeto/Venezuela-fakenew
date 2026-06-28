@@ -26,7 +26,7 @@
 
 12. [x] Patterns Catalog Page — `/patrones` (`apps/frontend`) — Build the `/patrones` page that fetches `getAllPatterns()` and renders a browsable grid of `PatternCard` components, each showing the pattern name, description, and example messages. `S`
 
-13. [ ] Verification History — Recent results list on `/verificar` showing the last N verifications from DB. `S`
+13. [x] Verification History — `getRecentVerifications` procedure returns last N verifications joined with claim text, ordered by most recent. `searchSources` now upserts Tavily results into the `sources` table. `verifyClaim` merges LLM-detected patterns with `detectPatterns()` from `@repo/core`. User IP captured via CF-Connecting-IP header. `S`
 
 14. [ ] Frontend ↔ Backend Wiring — Switch frontend from mock data to real oRPC calls by setting `PUBLIC_MOCK_API=false` and pointing `BACKEND_URL` at the deployed backend. Validate all pages end-to-end. `S`
 
