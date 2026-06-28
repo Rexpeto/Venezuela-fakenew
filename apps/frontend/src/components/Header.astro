@@ -48,9 +48,7 @@ const { t, href } = i18n(Astro)
     </div>
 
     <div class="flex items-center gap-sm">
-        <div class="hidden md:flex">
-            <LangSwitcher />
-        </div>
+        <LangSwitcher />
         <button
             id="theme-toggle"
             type="button"
@@ -66,7 +64,7 @@ const { t, href } = i18n(Astro)
             rel="noopener noreferrer"
             aria-label={t('nav.viewSource')}
             title="GitHub"
-            class="flex items-center justify-center rounded p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
+            class="hidden md:flex items-center justify-center rounded p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
         >
             <Icon name="github" size={20} />
         </a>
@@ -122,9 +120,15 @@ const { t, href } = i18n(Astro)
         >
             {t('nav.patrones')}
         </a>
-        <div class="px-md py-lg">
-            <LangSwitcher />
-        </div>
+        <a
+            href="https://github.com/Rexpeto/Venezuela-fakenew"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mobile-link flex items-center gap-sm rounded-md px-md py-lg text-headline-md font-bold text-on-surface transition-colors hover:bg-surface-container"
+        >
+            <Icon name="github" size={24} />
+            GitHub
+        </a>
     </nav>
 </div>
 )}
