@@ -6,5 +6,8 @@ LLM_API_KEY=sk-ant-...
 LLM_MODEL=claude-haiku-4-5-20251001
 # LLM_BASE_URL=https://api.groq.com/openai/v1
 TAVILY_API_KEY=tvly-...
-# Exact frontend origin in prod; defaults to * (fail-open) if unset.
-CORS_ORIGIN=http://localhost:4321
+# CORS. CORS_ORIGIN = comma-separated exact origins. CORS_ORIGIN_PATTERN =
+# optional anchored regex for dynamic allows (e.g. any localhost port). If
+# BOTH are unset it defaults to * (fail-open). Set exact origins in prod.
+CORS_ORIGIN=https://verificavenezuela.com
+CORS_ORIGIN_PATTERN=^http://(localhost|127\.0\.0\.1)(:\d+)?$

@@ -8,25 +8,45 @@ import type { Bindings } from './types'
 const handler = new RPCHandler(router)
 const app = new Hono<{ Bindings: Bindings }>()
 
-// Any localhost / 127.0.0.1 origin on any port — for local dev against the
-// deployed API. Safe to always allow: browsers set Origin from the page's real
-// origin, so a remote attacker page can never present itself as localhost.
-const LOCALHOST_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/
+// Compile CORS_ORIGIN_PATTERN once and cache it across requests in the same
+// isolate. An invalid pattern is ignored (treated as "no pattern") instead of
+// throwing, so a bad env value can't take the whole API down.
+let patternCache: { src: string; re: RegExp | null } | null = null
+function originPattern(src: string | undefined): RegExp | null {
+  const key = src ?? ''
+  if (!patternCache || patternCache.src !== key) {
+    let re: RegExp | null = null
+    if (key) {
+      try {
+        re = new RegExp(key)
+      } catch {
+        re = null
+      }
+    }
+    patternCache = { src: key, re }
+  }
+  return patternCache.re
+}
 
 app.use('*', (c, next) => {
-  // CORS_ORIGIN holds one or more comma-separated origins. Trailing slashes are
-  // stripped because browser `Origin` headers never include them. Unset →
-  // '*' (fail-open). When set, we reflect any listed origin plus any localhost.
+  // CORS_ORIGIN: comma-separated exact origins (trailing slashes stripped —
+  // browser Origin headers never include one). CORS_ORIGIN_PATTERN: optional
+  // anchored regex for dynamic allows (e.g. ^http://localhost(:\d+)?$).
+  // Neither set → '*' (fail-open).
   const configured = c.env.CORS_ORIGIN
   const allowlist = configured
     ? configured.split(',').map((o) => o.trim().replace(/\/+$/, '')).filter(Boolean)
     : null
+  const pattern = originPattern(c.env.CORS_ORIGIN_PATTERN)
 
   return cors({
-    origin: allowlist
-      ? (origin) =>
-          allowlist.includes(origin) || LOCALHOST_ORIGIN.test(origin) ? origin : null
-      : '*',
+    origin:
+      allowlist || pattern
+        ? (origin) =>
+            allowlist?.includes(origin) || (origin ? pattern?.test(origin) : false)
+              ? origin
+              : null
+        : '*',
     allowMethods: ['GET', 'POST', 'OPTIONS'],
     allowHeaders: ['Content-Type'],
   })(c, next)
