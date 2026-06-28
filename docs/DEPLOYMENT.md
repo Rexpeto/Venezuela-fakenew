@@ -21,13 +21,15 @@ Non-secret config — either as secrets or in `wrangler.toml [vars]`:
 
 | Var | Required | Notes |
 |-----|----------|-------|
-| `TURSO_DATABASE_URL` | yes | `libsql://…` (currently empty in `[vars]` — fill it) |
+| `TURSO_DATABASE_URL` | yes | `libsql://…` — set via `wrangler secret put` (do **not** put an empty entry in `[vars]`; a `[vars]` value overrides a same-named secret on every deploy) |
 | `LLM_MODEL` | recommended | e.g. `claude-haiku-4-5-20251001` or `gpt-4o-mini` |
 | `LLM_BASE_URL` | optional | only for HuggingFace/Groq OpenAI-compat endpoints |
-| `CORS_ORIGIN` | **yes for prod** | exact frontend origin; defaults to `*` (fail-open) |
+| `CORS_ORIGIN` | **yes for prod** | exact frontend origin(s), comma-separated; defaults to `*` (fail-open) |
 
-> ⚠️ `CORS_ORIGIN` defaults to `*`. Set it to the exact frontend domain
-> **before** going live, or any site can call the API.
+> ⚠️ `CORS_ORIGIN` defaults to `*`. Set it to the exact frontend origin(s)
+> **before** going live, or any site can call the API. Multiple origins are
+> comma-separated, e.g. `https://verificavenezuela.com,https://staging.example.com`.
+> Do not include a trailing slash — browser `Origin` headers never have one.
 
 ### 1.2 Push the DB schema (once, before first deploy)
 
@@ -50,9 +52,12 @@ the AI SDK. The DB uses `@libsql/client/http` (no native deps).
 
 ```bash
 curl https://<worker>.workers.dev/health            # {"status":"ok"}
+# oRPC RPCHandler uses a wire envelope: wrap input in {"json": …} and the
+# response comes back the same way ({"json": {...}}). A bare {"claim": …}
+# body fails validation with BAD_REQUEST.
 curl -X POST https://<worker>.workers.dev/rpc/verifyClaim \
   -H 'Content-Type: application/json' \
-  -d '{"claim":"Delcy anunció un aumento salarial a $800"}'
+  -d '{"json":{"claim":"Delcy anunció un aumento salarial a $800"}}'
 ```
 
 ---
