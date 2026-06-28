@@ -4,6 +4,11 @@ compatibility_date = "2026-06-27"
 # Required by the AI SDK (ai / @ai-sdk/*) which pulls in node: builtins.
 compatibility_flags = ["nodejs_compat"]
 
+# Production API endpoint (custom domain on the verificavenezuela.com zone).
+routes = [
+  { pattern = "api.verificavenezuela.com", custom_domain = true },
+]
+
 # All env vars are set via `wrangler secret put <NAME>` (keeps env-specific
 # URLs/origins out of git). Do NOT add an empty TURSO_DATABASE_URL here — a
 # [vars] entry is written as plaintext on every deploy and overrides the secret.

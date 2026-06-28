@@ -16,6 +16,12 @@ export const PATTERNS: Pattern[] = [
     ],
     detection: "Buscar fecha original del video/imagen y fuente geográfica.",
     severity: "alta",
+    category: "Multimedia",
+    indicators: [
+      { icon: "image_search", text: "Búsqueda inversa de imagen y verificación de la fecha original." },
+      { icon: "public", text: "Confirmar la ubicación geográfica real del material." },
+    ],
+    caseStudy: "Video tsunami La Guaira (realmente Japón 2011).",
   },
   {
     id: "p-2",
@@ -28,6 +34,13 @@ export const PATTERNS: Pattern[] = [
     detection:
       "Usar herramientas de detección de IA y verificar con fuentes oficiales (USGS, Protección Civil).",
     severity: "alta",
+    category: "IA Generativa",
+    indicators: [
+      { icon: "smart_toy", text: "Detección de IA (SynthID u otras herramientas)." },
+      { icon: "fact_check", text: "Verificar con fuentes oficiales (USGS, Protección Civil)." },
+    ],
+    caseStudy:
+      "Edificio colapsado en Acarigua generado con IA durante los terremotos de junio 2026.",
   },
   {
     id: "p-3",
@@ -37,6 +50,12 @@ export const PATTERNS: Pattern[] = [
     examples: ["Grupos de El Diario, Venevisión suplantados"],
     detection: "Verificar administrador y origen del mensaje.",
     severity: "media",
+    category: "De Autoridad",
+    indicators: [
+      { icon: "admin_panel_settings", text: "Verificar el administrador y el origen del mensaje." },
+      { icon: "link", text: "Contrastar con los canales oficiales verificados del medio." },
+    ],
+    caseStudy: "Grupos de El Diario y Venevisión suplantados.",
   },
   {
     id: "p-4",
@@ -50,6 +69,12 @@ export const PATTERNS: Pattern[] = [
     detection:
       "Confirmar siempre en cuentas oficiales y sitios .gob.ve o USGS.",
     severity: "alta",
+    category: "De Autoridad",
+    indicators: [
+      { icon: "verified", text: "Confirmar en cuentas oficiales y sitios .gob.ve." },
+      { icon: "public", text: "Cruzar con USGS u organismos internacionales." },
+    ],
+    caseStudy: "Alerta de tsunami en La Guaira, desmentida por EE.UU.",
   },
   {
     id: "p-5",
@@ -62,6 +87,13 @@ export const PATTERNS: Pattern[] = [
     detection:
       "Revisar historial del canal y si usa narradores pagados (FG Medios SA).",
     severity: "media",
+    category: "Estructural",
+    indicators: [
+      { icon: "history", text: "Revisar el historial y la antigüedad del canal." },
+      { icon: "paid", text: "Identificar narradores pagados (p. ej. FG Medios SA)." },
+    ],
+    caseStudy:
+      "Canales que promueven una imagen positiva de Delcy Rodríguez usando fragmentos reales.",
   },
   {
     id: "p-6",
@@ -73,5 +105,12 @@ export const PATTERNS: Pattern[] = [
     ],
     detection: "Cruzar con Ecoanalítica, BCV y fuentes independientes.",
     severity: "media",
+    category: "Político",
+    indicators: [
+      { icon: "payments", text: "Cruzar las cifras con Ecoanalítica y el BCV." },
+      { icon: "fact_check", text: "Contrastar con fuentes independientes." },
+    ],
+    caseStudy:
+      "Aumento salarial ficticio de $800-$1000/mes atribuido a Delcy Rodríguez.",
   },
 ];

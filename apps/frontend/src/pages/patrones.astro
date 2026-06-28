@@ -3,11 +3,21 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import BottomNav from '../components/BottomNav.astro'
 import PatternCard from '../components/PatternCard.astro'
-import { PATTERNS } from '../lib/patterns'
+import { api } from '../lib/api'
+import { PATTERNS, type Pattern } from '@repo/core'
 import { i18n } from '../i18n'
 
 // El idioma se deriva del prefijo de la URL (i18n fallbackType: 'rewrite').
 const { t } = i18n(Astro)
+
+// Catálogo desde el backend (getAllPatterns). Si el backend falla, caemos a los
+// PATTERNS de @repo/core (la misma fuente de verdad) para que la página no rompa.
+let patterns: Pattern[]
+try {
+  patterns = await api.getAllPatterns()
+} catch {
+  patterns = PATTERNS
+}
 ---
 
 <Layout title={t('patrones.meta.title')} description={t('patrones.meta.description')}>
@@ -33,7 +43,7 @@ const { t } = i18n(Astro)
 
     <!-- Grilla de patrones -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-      {PATTERNS.map((pattern) => <PatternCard pattern={pattern} />)}
+      {patterns.map((pattern) => <PatternCard pattern={pattern} />)}
     </div>
 
     <!-- Banda decorativa -->
@@ -41,7 +51,7 @@ const { t } = i18n(Astro)
       <div
         class="bg-primary-container p-md border-l-4 border-primary h-32 flex items-end"
       >
-        <p class="text-on-primary-container font-label-caps text-[10px] leading-none opacity-60">
+        <p class="text-on-primary-container font-label-caps text-[10px] leading-none">
           ANALYSIS_LAYER_01: COORDINATED_REPLICATION
         </p>
       </div>

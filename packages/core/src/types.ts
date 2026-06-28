@@ -6,6 +6,12 @@ export type Severity = "alta" | "media" | "baja";
 
 export type Verdict = "verdadero" | "falso" | "dudoso";
 
+/** Indicador técnico de un patrón (icono Material Symbols + descripción). */
+export type PatternIndicator = {
+  icon: string;
+  text: string;
+};
+
 /** Patrón de desinformación del cuaderno de investigación. */
 export type Pattern = {
   id: string;
@@ -14,6 +20,12 @@ export type Pattern = {
   examples: string[];
   detection: string;
   severity: Severity;
+  /** Familia del patrón: Multimedia, De Autoridad, Estructural, Político… */
+  category?: string;
+  /** Señales técnicas de detección, para la tarjeta del catálogo. */
+  indicators?: PatternIndicator[];
+  /** Ejemplo representativo mostrado como estudio de caso en la UI. */
+  caseStudy?: string;
 };
 
 /** Dato verificado / desmentido sobre el sismo, mostrado en la UI. */

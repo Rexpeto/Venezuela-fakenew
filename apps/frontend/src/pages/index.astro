@@ -78,7 +78,7 @@ const recentPatterns: RecentPatternPreview[] =
 
         <!-- ─── Trust Banner ───────────────────────────────── -->
         <section
-            class="w-full border-y border-outline-variant bg-bg-subtle py-lg"
+            class="w-full border-y border-[#e2e8f0] dark:border-outline-variant bg-bg-subtle py-lg"
         >
             <div class="mx-auto max-w-container px-gutter">
                 <p
@@ -142,9 +142,10 @@ const recentPatterns: RecentPatternPreview[] =
                 </a>
             </div>
         </section>
+    </main>
 
-        <!-- ─── Newsletter ──────────────────────────────────── -->
-        <section class="mt-xl w-full bg-tertiary-container px-gutter py-xl">
+    <!-- ─── Newsletter (banda inferior junto al footer) ──── -->
+    <section class="mt-xl w-full bg-tertiary-container px-gutter py-xl">
             <div
                 class="mx-auto flex max-w-container flex-col items-center gap-xl md:flex-row"
             >
@@ -163,14 +164,25 @@ const recentPatterns: RecentPatternPreview[] =
                         class="grow rounded-md bg-white/10 px-md py-sm text-white placeholder-on-tertiary-container focus:border-secondary focus:ring-secondary"
                     />
                     <button
-                        class="rounded-md bg-secondary px-lg py-md font-bold text-white transition-all hover:bg-secondary/90"
+                        class="rounded-md bg-secondary px-lg py-md font-bold text-on-secondary transition-all hover:bg-secondary/90"
                     >
                         {t("home.newsletter.submit")}
                     </button>
                 </div>
             </div>
         </section>
-    </main>
 
     <Footer />
+
+    <!--
+      En pantallas altas el contenido no llena el viewport. En vez de estirar
+      con flex (que deja un hueco claro arriba del footer), pintamos el lienzo
+      con el color del footer: lo que sobra debajo se ve continuo, sin franja.
+      Solo en la home, que es la única página que termina en footer oscuro.
+    -->
+    <style is:global>
+        html {
+            background-color: var(--color-tertiary);
+        }
+    </style>
 </Layout>

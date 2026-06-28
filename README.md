@@ -99,11 +99,45 @@ bun run inspect   # Probar con inspector MCP
 }
 ```
 
-### Environment Variables
+## Variables de entorno
+
+Cada paquete trae su archivo de ejemplo — cópialo y rellená los valores.
+
+| Paquete | Archivo ejemplo | Copiar a |
+|---------|-----------------|----------|
+| `apps/backend` | `.dev.vars.example` | `.dev.vars` (local) · `wrangler secret put` (prod) |
+| `apps/frontend` | `.env.example` | `.env` |
+| `packages/mcp-server` | `.env.example` | `.env` |
+
+### Backend (`apps/backend`)
+
+En local viven en `.dev.vars`; en producción se setean como secrets del Worker (`bunx wrangler secret put <NOMBRE>`). **Nunca** los pongas en `[vars]` de `wrangler.toml` — se escriben en texto plano y pisan el secret.
 
 | Variable | Requerida | Descripción |
 |----------|-----------|-------------|
-| `TAVILY_API_KEY` | No | API key de Tavily. Sin ella las tools funcionan con conocimiento base. |
+| `TURSO_DATABASE_URL` | Sí | URL de la base libSQL/Turso (`libsql://...`). |
+| `TURSO_AUTH_TOKEN` | Sí | Token de auth de Turso. |
+| `LLM_API_KEY` | Sí | Key del LLM. Una `sk-ant-…` enruta al proveedor nativo de Anthropic; cualquier otra usa el endpoint OpenAI-compatible. |
+| `LLM_MODEL` | No | Modelo a usar. Default: `claude-haiku-4-5-20251001` (Anthropic) o `gpt-4o-mini` (OpenAI-compat). |
+| `LLM_BASE_URL` | No | Base URL OpenAI-compatible (Groq, HuggingFace…). Omitir para Anthropic/OpenAI. |
+| `TAVILY_API_KEY` | Sí | Key de Tavily para búsqueda en tiempo real. |
+| `CORS_ORIGIN` | Sí (prod) | Orígenes exactos permitidos, separados por coma. **Si esto y `CORS_ORIGIN_PATTERN` quedan vacíos, CORS abre a `*` (fail-open) — fijalo antes de producción.** |
+| `CORS_ORIGIN_PATTERN` | No | Regex anclado para orígenes dinámicos (p. ej. cualquier puerto de localhost en dev). |
+
+### Frontend (`apps/frontend`)
+
+Astro: solo las variables con prefijo `PUBLIC_` llegan al cliente.
+
+| Variable | Requerida | Descripción |
+|----------|-----------|-------------|
+| `PUBLIC_API_URL` | Sí | URL base del backend; el cliente le añade `/rpc`. Default: `http://localhost:8787`. |
+| `PUBLIC_MOCK_API` | No | `false` usa el backend real; cualquier otro valor (o ausente) sirve datos mock. |
+
+### MCP server (`packages/mcp-server`)
+
+| Variable | Requerida | Descripción |
+|----------|-----------|-------------|
+| `TAVILY_API_KEY` | No | Sin ella, `verify_claim` y `search_official_sources` usan solo el conocimiento base (sin búsqueda web). |
 
 ## License
 

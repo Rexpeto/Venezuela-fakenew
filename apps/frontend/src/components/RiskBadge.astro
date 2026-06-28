@@ -1,25 +1,28 @@
 ---
-import type { RiskLevel } from '../lib/patterns'
+import type { Severity } from '@repo/core'
 import { i18n } from '../i18n'
 
 interface Props {
-  level: RiskLevel
+  level: Severity
 }
 
 const { level } = Astro.props
 const { t } = i18n(Astro)
 
-const bgByLevel: Record<RiskLevel, string> = {
-  alta: 'bg-error',
-  media: 'bg-warning',
-  baja: 'bg-secondary',
+const styles: Record<Severity, { bg: string; text: string }> = {
+  alta: { bg: 'bg-error', text: 'text-on-error' },
+  media: { bg: 'bg-warning', text: 'text-on-warning' },
+  baja: { bg: 'bg-secondary', text: 'text-on-secondary' },
 }
+
+const { bg, text } = styles[level]
 ---
 
 <span
   class:list={[
-    bgByLevel[level],
-    'text-white px-3 py-1 text-[11px] font-bold uppercase rounded-sm whitespace-nowrap',
+    bg,
+    text,
+    'px-3 py-1 text-[11px] font-bold uppercase rounded-sm whitespace-nowrap',
   ]}
 >
   {t('riskBadge.prefix')} {t(`riskBadge.${level}`)}
