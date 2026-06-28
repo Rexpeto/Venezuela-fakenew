@@ -1,9 +1,15 @@
 {
   "name": "portal-antifake-ve",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev:backend": "bun --filter backend dev",
     "dev:frontend": "bun --filter frontend dev"
+  },
+  "volta": {
+    "node": "22.23.1"
   }
 }
