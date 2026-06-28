@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import Header from '../components/Header.astro'
+import BottomNav from '../components/BottomNav.astro'
 import ChatBubble from '../components/ChatBubble.astro'
 import { QUICK_QUESTIONS, type ChatSource } from '../lib/chat'
 
@@ -15,27 +17,8 @@ const seedSources: ChatSource[] = [
   title="VerificaVzla - Chat de Verificación"
   description="Asistente virtual para verificar noticias, alertas sismológicas y reportes de crisis sobre el sismo de junio 2026."
 >
-  <!-- Barra superior -->
-  <header
-    class="bg-surface-container-lowest w-full top-0 sticky z-50 border-b border-surface-variant"
-  >
-    <div class="flex items-center justify-between px-md py-sm max-w-[1120px] mx-auto h-16">
-      <div class="flex items-center gap-md">
-        <button
-          type="button"
-          data-toggle-sidebar
-          aria-label="Abrir consultas frecuentes"
-          aria-controls="sidebar"
-          aria-expanded="false"
-          class="text-primary hover:bg-surface-container p-2 rounded-full transition-colors"
-        >
-          <span class="material-symbols-outlined" aria-hidden="true">menu</span>
-        </button>
-        <a href="/" class="font-headline-md text-headline-md text-primary">VerificaVzla</a>
-      </div>
-      <span class="material-symbols-outlined text-primary" aria-hidden="true">emergency_home</span>
-    </div>
-  </header>
+  <!-- Cabecera compartida (el hamburguesa abre el sidebar de consultas) -->
+  <Header hasSidebar={true} />
 
   <main class="flex chat-container overflow-hidden relative">
     <!-- Panel lateral / drawer móvil -->
@@ -157,32 +140,8 @@ const seedSources: ChatSource[] = [
     </section>
   </main>
 
-  <!-- Navegación inferior móvil -->
-  <nav
-    class="md:hidden fixed bottom-0 w-full z-50 bg-surface-container-lowest border-t border-surface-variant flex justify-around items-center h-16"
-    aria-label="Navegación inferior"
-  >
-    <a
-      href="/asistente"
-      aria-current="page"
-      class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl p-2 w-16"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">chat</span>
-      <span class="font-label-caps text-[10px]">Chat</span>
-    </a>
-    <a href="#" class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <span class="font-label-caps text-[10px]">Archivo</span>
-    </a>
-    <button
-      type="button"
-      data-toggle-sidebar
-      class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">explore</span>
-      <span class="font-label-caps text-[10px]">Temas</span>
-    </button>
-  </nav>
+  <!-- Navegación inferior móvil (componente compartido) -->
+  <BottomNav active="Asistente" />
 </Layout>
 
 <script>
@@ -199,12 +158,12 @@ const seedSources: ChatSource[] = [
     sidebar.classList.toggle('-translate-x-full', !willOpen)
     sidebar.classList.toggle('translate-x-0', willOpen)
     document
-      .querySelectorAll('[data-toggle-sidebar][aria-expanded]')
-      .forEach((b) => b.setAttribute('aria-expanded', String(willOpen)))
+      .getElementById('sidebar-toggle')
+      ?.setAttribute('aria-expanded', String(willOpen))
   }
   document
-    .querySelectorAll('[data-toggle-sidebar]')
-    .forEach((btn) => btn.addEventListener('click', toggleSidebar))
+    .getElementById('sidebar-toggle')
+    ?.addEventListener('click', toggleSidebar)
 
   // --- Helpers de render ---
   function nowTime() {

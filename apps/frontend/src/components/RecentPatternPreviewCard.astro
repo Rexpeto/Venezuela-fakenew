@@ -23,7 +23,7 @@ function timeAgoLabel(iso: string): string {
 <Card>
     <PatternBadge status={item.status} />
 
-    <h3 class="font-headline text-headline-sm text-on-surface">
+    <h3 class="font-headline-sm text-headline-sm text-on-surface">
         {item.title}
     </h3>
 
@@ -34,12 +34,12 @@ function timeAgoLabel(iso: string): string {
     <div
         class="mt-auto flex items-center justify-between border-t border-surface-variant pt-md"
     >
-        <span class="font-label text-label-caps text-outline"
+        <span class="font-label-caps text-label-caps text-outline"
             >{timeAgoLabel(item.createdAt)}</span
         >
         <a
             href={item.href}
-            class="font-label text-label-caps font-bold text-primary"
+            class="font-label-caps text-label-caps font-bold text-primary"
             >LEER MÁS</a
         >
     </div>

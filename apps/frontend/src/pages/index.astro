@@ -1,5 +1,7 @@
 ---
-import Base from "../layouts/Base.astro";
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 import Icon from "../components/Icon.astro";
 import RecentPatternPreviewCard from "../components/RecentPatternPreviewCard.astro";
 import Button from "../components/Button.astro";
@@ -16,7 +18,12 @@ const recentPatterns: RecentPatternPreview[] =
         : MOCK_RECENT_PATTERN_PREVIEWS;
 ---
 
-<Base>
+<Layout
+    title="VerificaVzla - Combatiendo la desinformación"
+    description="Portal de verificación de noticias sobre Venezuela. Analiza afirmaciones virales y consulta datos verificados sobre el sismo de junio 2026."
+>
+    <Header />
+
     <main>
         <!-- ─── Hero ────────────────────────────────────────── -->
         <section
@@ -24,19 +31,20 @@ const recentPatterns: RecentPatternPreview[] =
         >
             <div class="w-full max-w-[800px]">
                 <div
-                    class="mb-md inline-block animate-pulse rounded-full bg-secondary-fixed px-md py-xs font-label text-label-caps text-on-secondary-fixed-variant"
+                    class="mb-md inline-block animate-pulse rounded-full bg-secondary-fixed px-md py-xs font-label-caps text-label-caps text-on-secondary-fixed-variant"
                 >
-                    Sismo Junio 2026 Context
+                     Actualización: 15 de junio, 2026
+
                 </div>
 
                 <h1
-                    class="mb-md font-headline text-display-mobile font-extrabold tracking-tight text-primary md:text-display-lg md:leading-[56px]"
+                    class="mb-md font-display-lg-mobile text-display-lg-mobile font-extrabold tracking-tight text-primary md:text-display-lg md:leading-[56px]"
                 >
                     Combatiendo la desinformación en momentos de crisis
                 </h1>
 
                 <p
-                    class="mx-auto mb-xl max-w-2xl font-body text-body-lg text-on-surface-variant"
+                    class="mx-auto mb-xl max-w-2xl font-body-lg text-body-lg text-on-surface-variant"
                 >
                     Analiza afirmaciones virales y consulta datos verificados
                     sobre la situación actual en Venezuela.
@@ -49,9 +57,9 @@ const recentPatterns: RecentPatternPreview[] =
                         <Icon name="search-check" size={20} />
                         Verificar una noticia
                     </Button>
-                    <Button href="/chatbot" variant="outline">
+                    <Button href="/asistente" variant="outline">
                         <Icon name="bot" size={20} />
-                        Preguntar al Chatbot
+                        Preguntar al Asistente
                     </Button>
                 </div>
             </div>
@@ -76,7 +84,7 @@ const recentPatterns: RecentPatternPreview[] =
         >
             <div class="mx-auto max-w-container px-gutter">
                 <p
-                    class="mb-md text-center font-label text-label-caps uppercase tracking-widest text-outline"
+                    class="mb-md text-center font-label-caps text-label-caps uppercase tracking-widest text-outline"
                 >
                     Fuentes de Confianza &amp; Aliados
                 </p>
@@ -84,19 +92,19 @@ const recentPatterns: RecentPatternPreview[] =
                     class="scrolling-wrapper flex items-center justify-between gap-xl overflow-x-auto whitespace-nowrap opacity-60 md:justify-center"
                 >
                     <span
-                        class="font-headline text-headline-sm text-on-surface-variant grayscale"
+                        class="font-headline-sm text-headline-sm text-on-surface-variant grayscale"
                         >Observatorio Venezolano de Fake News</span
                     >
                     <span
-                        class="font-headline text-headline-sm text-on-surface-variant grayscale"
+                        class="font-headline-sm text-headline-sm text-on-surface-variant grayscale"
                         >Factchequeado</span
                     >
                     <span
-                        class="font-headline text-headline-sm text-on-surface-variant grayscale"
+                        class="font-headline-sm text-headline-sm text-on-surface-variant grayscale"
                         >USGS</span
                     >
                     <span
-                        class="font-headline text-headline-sm text-on-surface-variant grayscale"
+                        class="font-headline-sm text-headline-sm text-on-surface-variant grayscale"
                         >Cotejo.info</span
                     >
                 </div>
@@ -106,7 +114,7 @@ const recentPatterns: RecentPatternPreview[] =
         <!-- ─── Quick Patterns Preview ──────────────────────── -->
         <section class="mx-auto w-full max-w-container px-gutter py-xl">
             <div class="mb-lg flex items-end justify-between">
-                <h2 class="font-headline text-headline-md text-primary">
+                <h2 class="font-headline-md text-headline-md text-primary">
                     Patrones de Desinformación Recientes
                 </h2>
                 <a
@@ -143,7 +151,7 @@ const recentPatterns: RecentPatternPreview[] =
                 class="mx-auto flex max-w-container flex-col items-center gap-xl md:flex-row"
             >
                 <div class="w-full md:w-1/2">
-                    <h2 class="mb-sm font-headline text-headline-md text-white">
+                    <h2 class="mb-sm font-headline-md text-headline-md text-white">
                         Recibe alertas críticas en tiempo real
                     </h2>
                     <p class="text-body-md text-on-tertiary-container">
@@ -166,4 +174,6 @@ const recentPatterns: RecentPatternPreview[] =
             </div>
         </section>
     </main>
-</Base>
+
+    <Footer />
+</Layout>
