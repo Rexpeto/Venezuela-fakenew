@@ -2,14 +2,7 @@ import { Hono } from 'hono'
 import { RPCHandler } from '@orpc/server/fetch'
 import { router } from './router'
 
-type Bindings = {
-  TURSO_DATABASE_URL: string
-  TURSO_AUTH_TOKEN: string
-  LLM_API_KEY: string
-  LLM_BASE_URL?: string
-  LLM_MODEL?: string
-  TAVILY_API_KEY: string
-}
+import type { Bindings } from './types'
 
 const handler = new RPCHandler(router)
 const app = new Hono<{ Bindings: Bindings }>()
