@@ -3,10 +3,17 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import BottomNav from '../components/BottomNav.astro'
 import PatternCard from '../components/PatternCard.astro'
-import { PATTERNS } from '../lib/patterns'
+import { api } from '../lib/api'
+import { PATTERNS, type Pattern } from '@repo/core'
 
-// Contenido estático por ahora: se puede pre-renderizar.
-export const prerender = true
+// Catálogo desde el backend (getAllPatterns). Si el backend falla, caemos a los
+// PATTERNS de @repo/core (la misma fuente de verdad) para que la página no rompa.
+let patterns: Pattern[]
+try {
+  patterns = await api.getAllPatterns()
+} catch {
+  patterns = PATTERNS
+}
 ---
 
 <Layout
@@ -37,7 +44,7 @@ export const prerender = true
 
     <!-- Grilla de patrones -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-      {PATTERNS.map((pattern) => <PatternCard pattern={pattern} />)}
+      {patterns.map((pattern) => <PatternCard pattern={pattern} />)}
     </div>
 
     <!-- Banda decorativa -->

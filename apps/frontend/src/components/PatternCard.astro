@@ -1,63 +1,73 @@
 ---
-import type { DisinfoPattern } from '../lib/patterns'
+import type { Pattern } from '@repo/core'
 import RiskBadge from './RiskBadge.astro'
 
 interface Props {
-  pattern: DisinfoPattern
+  pattern: Pattern
 }
 
 const { pattern } = Astro.props
 
 // En el diseño, los indicadores de los patrones de riesgo alto se marcan en
 // rojo; el resto en azul secundario.
-const indicatorColor = pattern.risk === 'alta' ? 'text-error' : 'text-secondary'
+const indicatorColor = pattern.severity === 'alta' ? 'text-error' : 'text-secondary'
 ---
 
 <article class="verification-card p-lg flex flex-col gap-md relative overflow-hidden">
   <div class="flex justify-between items-start gap-sm">
-    <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">
-      Patrón {pattern.category}
-    </span>
-    <RiskBadge level={pattern.risk} />
+    {
+      pattern.category && (
+        <span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">
+          Patrón {pattern.category}
+        </span>
+      )
+    }
+    <RiskBadge level={pattern.severity} />
   </div>
 
   <div>
     <h3 class="font-headline-sm text-headline-sm text-primary mb-sm">
-      {pattern.title}
+      {pattern.name}
     </h3>
     <p class="font-body-md text-on-surface-variant">{pattern.description}</p>
   </div>
 
-  <div class="bg-surface-container-low p-md rounded-lg">
-    <h4 class="font-label-caps text-label-caps text-primary mb-xs">
-      INDICADORES TÉCNICOS
-    </h4>
-    <ul class="space-y-1">
-      {
-        pattern.indicators.map((indicator) => (
-          <li class="flex items-center gap-2 font-body-sm text-body-sm">
-            <span
-              class:list={['material-symbols-outlined text-[16px]', indicatorColor]}
-              aria-hidden="true"
-            >
-              {indicator.icon}
-            </span>
-            {indicator.text}
-          </li>
-        ))
-      }
-    </ul>
-  </div>
+  {
+    pattern.indicators && pattern.indicators.length > 0 && (
+      <div class="bg-surface-container-low p-md rounded-lg">
+        <h4 class="font-label-caps text-label-caps text-primary mb-xs">
+          INDICADORES TÉCNICOS
+        </h4>
+        <ul class="space-y-1">
+          {pattern.indicators.map((indicator) => (
+            <li class="flex items-center gap-2 font-body-sm text-body-sm">
+              <span
+                class:list={['material-symbols-outlined text-[16px]', indicatorColor]}
+                aria-hidden="true"
+              >
+                {indicator.icon}
+              </span>
+              {indicator.text}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
 
-  <div class="border-t border-outline-variant pt-md mt-auto">
-    <div class="flex items-center gap-2 mb-2">
-      <span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">
-        history_edu
-      </span>
-      <span class="font-label-caps text-label-caps text-primary">ESTUDIO DE CASO</span>
-    </div>
-    <p class="font-body-sm text-body-sm italic text-on-surface-variant">
-      &ldquo;{pattern.caseStudy}&rdquo;
-    </p>
-  </div>
+  {
+    pattern.caseStudy && (
+      <div class="border-t border-outline-variant pt-md mt-auto">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">
+            history_edu
+          </span>
+          <span class="font-label-caps text-label-caps text-primary">ESTUDIO DE CASO</span>
+        </div>
+        <p class="font-body-sm text-body-sm italic text-on-surface-variant">
+          &ldquo;{pattern.caseStudy}&rdquo;
+        </p>
+      </div>
+    )
+  }
 </article>

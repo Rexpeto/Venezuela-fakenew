@@ -1,11 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "frontend-verifica-venezuela",
-  // Entry point que genera el adapter @astrojs/cloudflare en build (SSR).
-  "main": "./dist/_worker.js/index.js",
+  "name": "frontend",
+  // Entrypoint del adapter @astrojs/cloudflare. NO apuntar a ./dist/_worker.js
+  // — ese archivo no existe al inicio del build y @cloudflare/vite-plugin lo
+  // valida en la fase de sync, rompiendo `astro build`.
+  "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-06-27",
   // El cliente oRPC y otras libs tiran de node: builtins en el runtime SSR.
   "compatibility_flags": ["nodejs_compat"],
+  // Production site: apex + www custom domains on the verificavenezuela.com zone.
+  "routes": [
+    { "pattern": "verificavenezuela.com", "custom_domain": true },
+    { "pattern": "www.verificavenezuela.com", "custom_domain": true }
+  ],
   // Estáticos servidos por el binding de assets; SSR cae al worker.
   "assets": {
     "binding": "ASSETS",
