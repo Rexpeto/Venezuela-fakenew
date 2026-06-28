@@ -145,11 +145,17 @@ const seedSources: ChatSource[] = [
 </Layout>
 
 <script>
+  import { api } from '../lib/api'
+
   const sidebar = document.getElementById('sidebar')
   const form = document.getElementById('chat-form') as HTMLFormElement | null
   const input = document.getElementById('chat-input') as HTMLInputElement | null
   const history = document.getElementById('chat-history')
   const typing = document.getElementById('typing')
+
+  // Sesión persistente: sobrevive recargas de página.
+  const SESSION_KEY = 'verificavzla.chat.sessionId'
+  let sessionId = localStorage.getItem(SESSION_KEY) ?? undefined
 
   // --- Panel lateral (drawer en móvil) ---
   function toggleSidebar() {
@@ -217,6 +223,27 @@ const seedSources: ChatSource[] = [
     typing.classList.toggle('flex', show)
   }
 
+  // Llama al backend, persistiendo el sessionId. Si la sesión guardada ya no
+  // existe en el servidor (NOT_FOUND), la descarta y reintenta una vez.
+  async function chatRequest(message: string) {
+    try {
+      const res = await api.chat({ message, sessionId })
+      sessionId = res.sessionId
+      localStorage.setItem(SESSION_KEY, res.sessionId)
+      return res
+    } catch (err) {
+      if (sessionId) {
+        sessionId = undefined
+        localStorage.removeItem(SESSION_KEY)
+        const res = await api.chat({ message })
+        sessionId = res.sessionId
+        localStorage.setItem(SESSION_KEY, res.sessionId)
+        return res
+      }
+      throw err
+    }
+  }
+
   async function sendMessage(text: string) {
     const message = text.trim()
     if (!message) return
@@ -225,15 +252,17 @@ const seedSources: ChatSource[] = [
     showTyping(true)
     scrollToBottom()
 
-    // TODO: conectar con el backend ->
-    //   import { orpc } from '../lib/orpc'
-    //   const { reply } = await orpc.chat({ message, sessionId })
-    // Por ahora se simula la respuesta para validar el flujo de la UI.
-    await new Promise((r) => setTimeout(r, 900))
-    showTyping(false)
-    appendAssistant(
-      'Asistente aún no conectado al backend. Conecta orpc.chat para respuestas verificadas.',
-    )
+    try {
+      const { reply } = await chatRequest(message)
+      showTyping(false)
+      appendAssistant(reply)
+    } catch (err) {
+      console.error('chat failed', err)
+      showTyping(false)
+      appendAssistant(
+        'No se pudo conectar con el asistente. Intenta de nuevo en unos segundos.',
+      )
+    }
     scrollToBottom()
   }
 

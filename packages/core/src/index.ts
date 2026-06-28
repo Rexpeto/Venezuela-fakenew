@@ -2,7 +2,7 @@
 // Helper para Tavily (API key se pasa como parámetro)
 // ============================================================
 
-export async function tavilySearch(query: string, apiKey: *** maxResults = 8) {
+export async function tavilySearch(query: string, apiKey: string, maxResults = 8) {
   if (!apiKey) {
     return {
       error:
@@ -71,7 +71,16 @@ export function detectPatterns(claim: string): string[] {
 }
 
 export { PATTERNS } from "./cuaderno.js";
-export { KEY_FACTS } from "./keyfacts.js";
+export { KEY_FACTS, KEY_FACT_CHECKS } from "./keyfacts.js";
+export { RECENT_PATTERN_PREVIEWS } from "./recent.js";
+export type {
+  Pattern,
+  KeyFact,
+  RecentPatternPreview,
+  Severity,
+  Verdict,
+  PreviewStatus,
+} from "./types.js";
 
 // Función reutilizable para verificar claim
 export async function verifyClaim(claim: string, context?: string, apiKey?: string) {
