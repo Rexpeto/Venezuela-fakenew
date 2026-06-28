@@ -72,12 +72,12 @@ curl -X POST https://<worker>.workers.dev/rpc/verifyClaim \
 ## 2. Frontend → Cloudflare Workers (Astro SSR)
 
 From `apps/frontend/`. The `@astrojs/cloudflare` adapter builds an SSR Worker;
-`apps/frontend/wrangler.jsonc` points `main` at `./dist/_worker.js/index.js` and
-serves static files via the `ASSETS` binding. `PUBLIC_*` is inlined at build time.
+`apps/frontend/wrangler.jsonc` points `main` at `@astrojs/cloudflare/entrypoints/server`
+and serves static files via the `ASSETS` binding. `PUBLIC_*` is inlined at build time.
 
 ```bash
 PUBLIC_MOCK_API=false \
-PUBLIC_API_URL=https://<backend-worker>.workers.dev \
+PUBLIC_API_URL=https://api.verificavenezuela.com \
 bun run build
 wrangler deploy   # manual; en CI lo hace Workers Builds (ver §4)
 ```
@@ -126,10 +126,10 @@ Son dos workers, así que se conecta el repo a cada uno. En Cloudflare →
 - Production branch: `main` · **Non-production branch builds: deshabilitado**
 - Build watch paths (include): `apps/backend/*`, `packages/core/*`
 
-**Frontend** (`frontend-verifica-venezuela`)
+**Frontend** (`frontend`)
 - Root directory: `apps/frontend`
 - Build command: `cd ../.. && bun install && bun run --filter '@repo/core' build && cd apps/frontend && bun run build`
-- Build environment variables: `PUBLIC_MOCK_API=false`, `PUBLIC_API_URL=https://backend.verificavenezuela.workers.dev`
+- Build environment variables: `PUBLIC_MOCK_API=false`, `PUBLIC_API_URL=https://api.verificavenezuela.com`
 - Deploy command: `bunx wrangler deploy`
 - Production branch: `main` · **Non-production branch builds: deshabilitado**
 - Build watch paths (include): `apps/frontend/*`, `packages/core/*`
@@ -142,8 +142,12 @@ Son dos workers, así que se conecta el repo a cada uno. En Cloudflare →
 
 No van en GitHub. Se setean en el worker (Settings → Variables and Secrets) o con
 `wrangler secret put` desde tu máquina: `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`,
-`LLM_API_KEY`, `TAVILY_API_KEY`, `LLM_MODEL`, `CORS_ORIGIN`. Y `db:push` contra la
-Turso de prod (§1.2). El frontend no tiene secrets propios.
+`LLM_API_KEY`, `TAVILY_API_KEY`, `LLM_MODEL`, `CORS_ORIGIN` (orígenes exactos del
+frontend, separados por coma) y `CORS_ORIGIN_PATTERN` (regex anclada opcional, p.ej.
+localhost para dev). Y `db:push` contra la Turso de prod (§1.2). El frontend no tiene
+secrets propios. Los dominios productivos (`api.verificavenezuela.com`,
+`verificavenezuela.com`, `www`) se definen como `routes` con `custom_domain` en los
+`wrangler` de cada worker.
 
 ---
 
