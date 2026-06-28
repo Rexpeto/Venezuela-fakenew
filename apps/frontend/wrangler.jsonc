@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "frontend-verifica-venezuela",
+  // Entry point que genera el adapter @astrojs/cloudflare en build (SSR).
+  "main": "./dist/_worker.js/index.js",
+  "compatibility_date": "2026-06-27",
+  // El cliente oRPC y otras libs tiran de node: builtins en el runtime SSR.
+  "compatibility_flags": ["nodejs_compat"],
+  // Estáticos servidos por el binding de assets; SSR cae al worker.
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": { "enabled": true }
+}
