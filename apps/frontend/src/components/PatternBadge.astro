@@ -1,5 +1,6 @@
 ---
 import Icon, { type IconName } from "./Icon.astro";
+import { i18n } from "../i18n";
 
 export type BadgeStatus =
     | "alerta-falsa"
@@ -11,28 +12,16 @@ const { status, class: className = "" } = Astro.props as {
     class?: string;
 };
 
-const config: Record<
-    BadgeStatus,
-    { label: string; icon: IconName; color: string }
-> = {
-    "alerta-falsa": {
-        label: "ALERTA FALSA",
-        icon: "triangle-alert",
-        color: "text-error",
-    },
-    "contexto-necesario": {
-        label: "CONTEXTO NECESARIO",
-        icon: "circle-x",
-        color: "text-secondary",
-    },
-    "cadena-falsa": {
-        label: "CADENA FALSA",
-        icon: "message-circle-x",
-        color: "text-error",
-    },
+const { t } = i18n(Astro);
+
+const config: Record<BadgeStatus, { icon: IconName; color: string }> = {
+    "alerta-falsa": { icon: "triangle-alert", color: "text-error" },
+    "contexto-necesario": { icon: "circle-x", color: "text-secondary" },
+    "cadena-falsa": { icon: "message-circle-x", color: "text-error" },
 };
 
-const { label, icon, color } = config[status];
+const { icon, color } = config[status];
+const label = t(`patternBadge.${status}`);
 ---
 
 <div

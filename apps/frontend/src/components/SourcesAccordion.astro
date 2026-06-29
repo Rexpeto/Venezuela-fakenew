@@ -1,11 +1,13 @@
 ---
 import type { ChatSource } from '../lib/chat'
+import { i18n } from '../i18n'
 
 interface Props {
   sources: ChatSource[]
 }
 
 const { sources } = Astro.props
+const { t } = i18n(Astro)
 ---
 
 <div class="mt-md border-t border-surface-variant pt-sm">
@@ -16,7 +18,7 @@ const { sources } = Astro.props
       <div class="flex items-center gap-xs">
         <span class="material-symbols-outlined text-[18px]" aria-hidden="true">verified</span>
         <span class="font-label-caps text-label-caps uppercase">
-          Ver fuentes consultadas ({sources.length})
+          {t('sources.view')} ({sources.length})
         </span>
       </div>
       <span

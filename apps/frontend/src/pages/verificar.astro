@@ -2,16 +2,31 @@
 import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import BottomNav from '../components/BottomNav.astro'
+import { i18n } from '../i18n'
 import Card from '../components/Card.astro'
 
-// Andamiaje estático: la verificación real se conectará al backend.
-export const prerender = true
+// El idioma se deriva del prefijo de la URL (i18n fallbackType: 'rewrite').
+const { t } = i18n(Astro)
+
+// Cadenas que necesita el script cliente (no puede llamar a t()).
+const jsStrings = {
+  verifying: t('verificar.js.verifying'),
+  verdict: {
+    verdadero: t('verificar.js.verdict.verdadero'),
+    falso: t('verificar.js.verdict.falso'),
+    dudoso: t('verificar.js.verdict.dudoso'),
+  },
+  conf: {
+    alta: t('verificar.js.conf.alta'),
+    media: t('verificar.js.conf.media'),
+    baja: t('verificar.js.conf.baja'),
+  },
+  error: t('verificar.js.error'),
+}
 ---
 
-<Layout
-  title="Verificar una noticia - VerificaVzla"
-  description="Herramienta de verificación: analiza afirmaciones virales, tweets o cadenas de WhatsApp y obtén un veredicto basado en fuentes confiables."
->
+<Layout title={t('verificar.meta.title')} description={t('verificar.meta.description')}>
+  <script is:inline type="application/json" id="i18n-data" set:html={JSON.stringify(jsStrings)} />
   <Header />
 
   <main class="flex-grow flex flex-col items-center px-md py-xl pb-24 md:pb-xl">
@@ -21,16 +36,15 @@ export const prerender = true
         <div
           class="inline-block bg-primary-container text-on-primary-container px-3 py-1 rounded-sm mb-md font-label-caps text-label-caps"
         >
-          LABORATORIO DE VERIFICACIÓN
+          {t('verificar.badge')}
         </div>
         <h1
           class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-md leading-tight"
         >
-          Verifica una afirmación
+          {t('verificar.title')}
         </h1>
         <p class="font-body-lg text-body-lg text-on-surface-variant">
-          Pega el texto, tweet o cadena de WhatsApp que quieras revisar. Nuestro
-          equipo lo contrasta con fuentes oficiales y devuelve un veredicto.
+          {t('verificar.subtitle')}
         </p>
       </div>
 
@@ -41,7 +55,7 @@ export const prerender = true
             <label
               for="claim"
               class="font-label-caps text-label-caps text-on-surface-variant"
-              >Afirmación / Claim a verificar</label
+              >{t('verificar.form.label')}</label
             >
             <textarea
               id="claim"
@@ -49,7 +63,7 @@ export const prerender = true
               rows="4"
               required
               class="w-full bg-surface border border-outline focus:border-secondary-container focus:ring-0 rounded p-sm font-body-md text-on-surface transition-all resize-none"
-              placeholder="Pega el texto, tweet o cadena de WhatsApp aquí..."
+              placeholder={t('verificar.form.placeholder')}
             ></textarea>
           </div>
 
@@ -68,7 +82,7 @@ export const prerender = true
                 <span class="material-symbols-outlined text-[18px]" aria-hidden="true"
                   >add_circle</span
                 >
-                Añadir contexto o fuente de origen (opcional)
+                {t('verificar.form.addContext')}
               </span>
               <span
                 class="material-symbols-outlined text-on-surface-variant transition-transform"
@@ -76,13 +90,13 @@ export const prerender = true
               >
             </button>
             <div class="hidden mt-sm pb-sm" id="context-content">
-              <label for="source" class="sr-only">URL o nombre de la fuente</label>
+              <label for="source" class="sr-only">{t('verificar.form.sourceLabel')}</label>
               <input
                 id="source"
                 name="source"
                 type="text"
                 class="w-full bg-surface-container-low border border-outline-variant rounded p-sm font-body-sm"
-                placeholder="URL o nombre de la fuente..."
+                placeholder={t('verificar.form.sourcePlaceholder')}
               />
             </div>
           </div>
@@ -92,7 +106,7 @@ export const prerender = true
               type="submit"
               class="bg-primary hover:bg-primary-container text-on-primary font-label-caps text-label-caps px-lg py-md rounded transition-colors active:scale-95 duration-150 flex items-center gap-sm"
             >
-              VERIFICAR CLAIM
+              {t('verificar.form.submit')}
               <span class="material-symbols-outlined text-[18px]" aria-hidden="true"
                 >search</span
               >
@@ -133,7 +147,7 @@ export const prerender = true
             class="bg-surface-container-high px-sm py-xs rounded flex items-center gap-xs"
           >
             <span class="font-label-caps text-[10px] text-on-surface-variant"
-              >CONFIANZA:</span
+              >{t('verificar.result.confidence')}</span
             >
             <span
               id="result-confidence"
@@ -158,7 +172,7 @@ export const prerender = true
             <h3
               class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider"
             >
-              Patrones detectados
+              {t('verificar.result.patternsTitle')}
             </h3>
             <div id="result-patterns" class="flex flex-col gap-sm"></div>
           </div>
@@ -167,14 +181,14 @@ export const prerender = true
             <h3
               class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider"
             >
-              Fuentes y evidencias
+              {t('verificar.result.sourcesTitle')}
             </h3>
             <ul id="result-sources" class="flex flex-col gap-xs"></ul>
             <p
               id="result-sources-empty"
               class="hidden font-body-sm text-body-sm text-on-surface-variant"
             >
-              No se encontraron fuentes para esta consulta.
+              {t('verificar.result.sourcesEmpty')}
             </p>
           </div>
         </div>
@@ -182,11 +196,21 @@ export const prerender = true
     </div>
   </main>
 
-  <BottomNav active="Verificar" />
+  <BottomNav active="verificar" />
 </Layout>
 
 <script>
   import { api } from '../lib/api'
+
+  // Cadenas traducidas inyectadas por el server (bloque application/json).
+  const I18N = JSON.parse(
+    document.getElementById('i18n-data')?.textContent || '{}',
+  ) as {
+    verifying: string
+    verdict: Record<string, string>
+    conf: Record<'alta' | 'media' | 'baja', string>
+    error: string
+  }
 
   // Acordeón de contexto opcional
   const ctxToggle = document.getElementById('context-toggle')
@@ -202,19 +226,16 @@ export const prerender = true
       banner: 'border-secondary bg-secondary-container/10',
       text: 'text-secondary',
       icon: 'check_circle',
-      label: 'VERDADERO',
     },
     falso: {
       banner: 'border-error bg-error-container/10',
       text: 'text-error',
       icon: 'cancel',
-      label: 'FALSO',
     },
     dudoso: {
       banner: 'border-tertiary bg-tertiary-container/10',
       text: 'text-tertiary',
       icon: 'help',
-      label: 'DUDOSO',
     },
   } as const
 
@@ -222,7 +243,7 @@ export const prerender = true
 
   function confidenceLabel(c: number): string {
     const pct = Math.round(c * 100)
-    const tier = c >= 0.7 ? 'ALTA' : c >= 0.4 ? 'MEDIA' : 'BAJA'
+    const tier = c >= 0.7 ? I18N.conf.alta : c >= 0.4 ? I18N.conf.media : I18N.conf.baja
     return `${tier} · ${pct}%`
   }
 
@@ -241,7 +262,7 @@ export const prerender = true
     if (!submitBtn) return
     submitBtn.disabled = loading
     submitBtn.innerHTML = loading
-      ? 'VERIFICANDO<span class="material-symbols-outlined text-[18px] animate-spin" aria-hidden="true">progress_activity</span>'
+      ? `${I18N.verifying}<span class="material-symbols-outlined text-[18px] animate-spin" aria-hidden="true">progress_activity</span>`
       : submitHtml
   }
 
@@ -266,7 +287,7 @@ export const prerender = true
     const verdict = $('result-verdict')
     if (verdict) {
       verdict.className = `font-headline-md text-headline-md tracking-widest uppercase ${cfg.text}`
-      verdict.textContent = cfg.label
+      verdict.textContent = I18N.verdict[res.verdict] ?? I18N.verdict.dudoso
     }
 
     const conf = $('result-confidence')
@@ -352,9 +373,7 @@ export const prerender = true
       renderResult(res)
     } catch (err) {
       console.error('verifyClaim failed', err)
-      if (errorMsg)
-        errorMsg.textContent =
-          'No se pudo completar la verificación. Intenta de nuevo en unos segundos.'
+      if (errorMsg) errorMsg.textContent = I18N.error
       errorBox?.classList.remove('hidden')
       errorBox?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     } finally {

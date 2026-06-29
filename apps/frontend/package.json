@@ -2,7 +2,7 @@
   "name": "frontend",
   "private": true,
   "scripts": {
-    "dev": "ASTRO_DEV_BACKGROUND=1 astro dev",
+    "dev": "ASTRO_DEV_BACKGROUND=1 astro dev --host",
     "build": "astro build",
     "preview": "astro preview",
     "deploy": "astro build && wrangler deploy -c dist/server/wrangler.json"

@@ -5,6 +5,10 @@ import BottomNav from '../components/BottomNav.astro'
 import PatternCard from '../components/PatternCard.astro'
 import { api } from '../lib/api'
 import { PATTERNS, type Pattern } from '@repo/core'
+import { i18n } from '../i18n'
+
+// El idioma se deriva del prefijo de la URL (i18n fallbackType: 'rewrite').
+const { t } = i18n(Astro)
 
 // Catálogo desde el backend (getAllPatterns). Si el backend falla, caemos a los
 // PATTERNS de @repo/core (la misma fuente de verdad) para que la página no rompa.
@@ -16,10 +20,7 @@ try {
 }
 ---
 
-<Layout
-  title="Catálogo de Patrones - VerificaVzla"
-  description="Análisis técnico de las estrategias estructurales utilizadas para propagar fake news en Venezuela."
->
+<Layout title={t('patrones.meta.title')} description={t('patrones.meta.description')}>
   <Header />
 
   <main class="max-w-container mx-auto px-lg py-xl pb-24 md:pb-xl">
@@ -28,17 +29,15 @@ try {
       <div
         class="inline-block bg-primary-container text-on-primary-container px-3 py-1 rounded-sm mb-md font-label-caps text-label-caps"
       >
-        RECURSOS TÉCNICOS
+        {t('patrones.badge')}
       </div>
       <h1
         class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-md leading-tight"
       >
-        Catálogo de Patrones de Desinformación
+        {t('patrones.title')}
       </h1>
       <p class="font-body-lg text-body-lg text-on-surface-variant">
-        Análisis técnico de las estrategias estructurales utilizadas para
-        propagar fake news en Venezuela. Este catálogo identifica firmas
-        digitales y heurísticas de manipulación.
+        {t('patrones.subtitle')}
       </p>
     </div>
 
@@ -73,5 +72,5 @@ try {
     </div>
   </main>
 
-  <BottomNav active="Patrones" />
+  <BottomNav active="patrones" />
 </Layout>

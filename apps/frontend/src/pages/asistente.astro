@@ -4,9 +4,11 @@ import Header from '../components/Header.astro'
 import BottomNav from '../components/BottomNav.astro'
 import ChatBubble from '../components/ChatBubble.astro'
 import { QUICK_QUESTIONS, type ChatSource } from '../lib/chat'
+import { i18n } from '../i18n'
 import { useMock } from '../lib/api'
 
-export const prerender = true
+// El idioma se deriva del prefijo de la URL (i18n fallbackType: 'rewrite').
+const { t } = i18n(Astro)
 
 const seedSources: ChatSource[] = [
   { title: 'Funvisis Oficial', url: 'funvisis.gob.ve/reporte_sismico_actualizado', icon: 'language' },
@@ -14,10 +16,8 @@ const seedSources: ChatSource[] = [
 ]
 ---
 
-<Layout
-  title="VerificaVzla - Chat de Verificación"
-  description="Asistente virtual para verificar noticias, alertas sismológicas y reportes de crisis sobre el sismo de junio 2026."
->
+<Layout title={t('asistente.meta.title')} description={t('asistente.meta.description')}>
+  <script is:inline type="application/json" id="i18n-data" set:html={JSON.stringify({ error: t('asistente.js.error') })} />
   <!-- Cabecera compartida (el hamburguesa abre el sidebar de consultas) -->
   <Header hasSidebar={true} />
 
@@ -29,10 +29,10 @@ const seedSources: ChatSource[] = [
     >
       <div class="px-md mb-lg">
         <h2 class="font-label-caps text-label-caps text-on-surface-variant tracking-wider">
-          CONSULTAS FRECUENTES
+          {t('asistente.sidebar.title')}
         </h2>
       </div>
-      <nav class="flex-1 space-y-2 px-2" aria-label="Consultas frecuentes">
+      <nav class="flex-1 space-y-2 px-2" aria-label={t('asistente.sidebar.title')}>
         {
           QUICK_QUESTIONS.map((q) => (
             <button
@@ -52,7 +52,7 @@ const seedSources: ChatSource[] = [
           class="w-full flex items-center gap-md px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg text-left"
         >
           <span class="material-symbols-outlined" aria-hidden="true">settings</span>
-          <span class="font-body-md text-body-md">Configuración</span>
+          <span class="font-body-md text-body-md">{t('asistente.sidebar.settings')}</span>
         </button>
       </div>
     </aside>
@@ -65,8 +65,7 @@ const seedSources: ChatSource[] = [
       >
         <span class="material-symbols-outlined text-[#B45309] shrink-0" aria-hidden="true">info</span>
         <p class="font-body-sm text-body-sm text-[#92400E] leading-tight">
-          Monitoreo del sismo de junio 2026. Respuestas basadas estrictamente en
-          datos e investigación verificada.
+          {t('asistente.banner')}
         </p>
       </div>
 
@@ -79,7 +78,7 @@ const seedSources: ChatSource[] = [
             <>
               <div class="flex justify-center">
                 <span class="bg-surface-variant px-3 py-1 rounded-full font-label-caps text-[10px] text-on-surface-variant">
-                  HOY - 14 DE JUNIO, 2026
+                  {t('asistente.dateLabel')}
                 </span>
               </div>
 
@@ -105,7 +104,7 @@ const seedSources: ChatSource[] = [
             <span class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce [animation-delay:-0.3s]"></span>
           </div>
           <p class="font-body-sm text-body-sm italic text-on-surface-variant">
-            La IA está procesando...
+            {t('asistente.typing')}
           </p>
         </div>
       </div>
@@ -117,21 +116,21 @@ const seedSources: ChatSource[] = [
             id="chat-form"
             class="flex items-center gap-sm bg-surface-container-lowest border border-outline focus-within:border-secondary transition-colors rounded-xl px-md py-sm"
           >
-            <button type="button" aria-label="Adjuntar archivo" class="text-on-surface-variant hover:text-primary p-1">
+            <button type="button" aria-label={t('asistente.attachAria')} class="text-on-surface-variant hover:text-primary p-1">
               <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
             </button>
-            <label for="chat-input" class="sr-only">Escribe tu consulta</label>
+            <label for="chat-input" class="sr-only">{t('asistente.inputLabel')}</label>
             <input
               id="chat-input"
               name="message"
               type="text"
               autocomplete="off"
               class="flex-1 bg-transparent border-none focus:ring-0 font-body-md text-on-surface"
-              placeholder="Escribe tu consulta aquí..."
+              placeholder={t('asistente.inputPlaceholder')}
             />
             <button
               type="submit"
-              aria-label="Enviar"
+              aria-label={t('asistente.sendAria')}
               class="bg-primary text-on-primary w-10 h-10 rounded-lg flex items-center justify-center hover:bg-secondary-container transition-transform active:scale-90"
             >
               <span class="material-symbols-outlined" aria-hidden="true">send</span>
@@ -140,7 +139,7 @@ const seedSources: ChatSource[] = [
           <p
             class="text-center text-[10px] text-on-surface-variant mt-2 font-label-caps uppercase tracking-tighter"
           >
-            Utiliza el chat para verificar noticias, alertas sismológicas o reportes de crisis.
+            {t('asistente.disclaimer')}
           </p>
         </div>
       </div>
@@ -148,7 +147,7 @@ const seedSources: ChatSource[] = [
   </main>
 
   <!-- Navegación inferior móvil (componente compartido) -->
-  <BottomNav active="Asistente" />
+  <BottomNav active="asistente" />
 </Layout>
 
 <style is:global>
@@ -193,6 +192,11 @@ const seedSources: ChatSource[] = [
 <script>
   import { api } from '../lib/api'
   import { renderMarkdown } from '../lib/markdown'
+
+  // Cadenas traducidas inyectadas por el server (bloque application/json).
+  const I18N = JSON.parse(
+    document.getElementById('i18n-data')?.textContent || '{}',
+  ) as { error: string }
 
   const sidebar = document.getElementById('sidebar')
   const form = document.getElementById('chat-form') as HTMLFormElement | null
@@ -306,9 +310,7 @@ const seedSources: ChatSource[] = [
     } catch (err) {
       console.error('chat failed', err)
       showTyping(false)
-      appendAssistant(
-        'No se pudo conectar con el asistente. Intenta de nuevo en unos segundos.',
-      )
+      appendAssistant(I18N.error)
     }
     scrollToBottom()
   }

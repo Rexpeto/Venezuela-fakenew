@@ -1,19 +1,21 @@
 ---
 import type { Severity } from '@repo/core'
+import { i18n } from '../i18n'
 
 interface Props {
   level: Severity
 }
 
 const { level } = Astro.props
+const { t } = i18n(Astro)
 
-const styles: Record<Severity, { bg: string; text: string; label: string }> = {
-  alta: { bg: 'bg-error', text: 'text-on-error', label: 'Alta' },
-  media: { bg: 'bg-warning', text: 'text-on-warning', label: 'Media' },
-  baja: { bg: 'bg-secondary', text: 'text-on-secondary', label: 'Baja' },
+const styles: Record<Severity, { bg: string; text: string }> = {
+  alta: { bg: 'bg-error', text: 'text-on-error' },
+  media: { bg: 'bg-warning', text: 'text-on-warning' },
+  baja: { bg: 'bg-secondary', text: 'text-on-secondary' },
 }
 
-const { bg, text, label } = styles[level]
+const { bg, text } = styles[level]
 ---
 
 <span
@@ -23,5 +25,5 @@ const { bg, text, label } = styles[level]
     'px-3 py-1 text-[11px] font-bold uppercase rounded-sm whitespace-nowrap',
   ]}
 >
-  Riesgo: {label}
+  {t('riskBadge.prefix')} {t(`riskBadge.${level}`)}
 </span>

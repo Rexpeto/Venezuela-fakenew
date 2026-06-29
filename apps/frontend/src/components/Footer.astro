@@ -1,7 +1,9 @@
 ---
 import Icon from "./Icon.astro";
+import { i18n } from "../i18n";
 
 const year = new Date().getFullYear();
+const { t, href } = i18n(Astro);
 ---
 
 <footer class="w-full border-t border-white/5 bg-tertiary py-xl">
@@ -15,28 +17,28 @@ const year = new Date().getFullYear();
         <p
             class="text-body-sm text-tertiary-fixed-dim/80 text-center md:text-left"
         >
-            © {year} VerificaVzla. Al servicio de la verdad.
+            © {year} VerificaVzla. {t('footer.tagline')}
         </p>
     </div>
 
     <div class="flex flex-wrap justify-center gap-lg">
         <a
-            href="/verificar"
+            href={href('/verificar')}
             class="font-label-caps text-label-caps text-tertiary-fixed-dim/80 transition-colors hover:text-on-tertiary hover:underline"
         >
-            Verificar
+            {t('nav.verificar')}
         </a>
         <a
-            href="/asistente"
+            href={href('/asistente')}
             class="font-label-caps text-label-caps text-tertiary-fixed-dim/80 transition-colors hover:text-on-tertiary hover:underline"
         >
-            Asistente
+            {t('nav.asistente')}
         </a>
         <a
-            href="/patrones"
+            href={href('/patrones')}
             class="font-label-caps text-label-caps text-tertiary-fixed-dim/80 transition-colors hover:text-on-tertiary hover:underline"
         >
-            Patrones
+            {t('nav.patrones')}
         </a>
     </div>
 
